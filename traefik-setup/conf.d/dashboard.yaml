@@ -29,5 +29,7 @@ http:
     dashboard-auth:
       basicAuth:
         users:
-          # Injected by deploy.sh from .env ($ signs are escaped automatically)
+          # TEST USER: traefiktest / traefiktest
+          - "traefiktest:$$apr1$$XQZ.P7Z.$6JzXmOn5jYn85rYFzU6pC1"
+          # Injected by deploy.sh from .env
           - ${DASHBOARD_AUTH_HASH}
