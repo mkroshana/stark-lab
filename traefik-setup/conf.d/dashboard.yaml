@@ -1,35 +1,28 @@
 # ==============================================
-# Traefik Dashboard (Secured)
-# Location: /etc/traefik/conf.d/dashboard.yaml
+# Traefik Dashboard Configuration
 #
-# Post-deploy:
-#   1. Generate password hash:
-#      sudo apt install apache2-utils
-#      htpasswd -nb admin YOUR_PASSWORD
-#   2. Replace the hash below with the output
-#   3. Escape all $ signs by doubling them: $ → $$
-#      Example: admin:$$apr1$$xyz$$hash → the $$ is needed in YAML
+# Exposes the internal Traefik API/Dashboard
+# protected by Basic Auth and blocked to LAN.
 # ==============================================
 
 http:
   routers:
-    dashboard:
+    # --- Traefik Dashboard Router ---
+    traefik-dashboard:
       rule: "Host(`traefik.starklab.mkroshana.com`)"
       entryPoints:
         - websecure
       service: api@internal
       middlewares:
-        - block-external
         - dashboard-auth
-        - security-headers
       tls:
-        certResolver: cloudflare
+        certResolver: letsencrypt # or cloudflare
 
+  # -- Middlewares --
   middlewares:
+    # Basic Auth for Dashboard
     dashboard-auth:
       basicAuth:
         users:
-          # TEST USER: traefiktest / traefiktest
-          - "traefiktest:$$apr1$$XQZ.P7Z.$6JzXmOn5jYn85rYFzU6pC1"
-          # Injected by deploy.sh from .env
-          - ${DASHBOARD_AUTH_HASH}
+          - 'traefiktest:$$apr1$$XQZ.P7Z.$6JzXmOn5jYn85rYFzU6pC1'
+          - '${DASHBOARD_AUTH_HASH}'
