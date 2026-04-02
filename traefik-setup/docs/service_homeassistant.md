@@ -24,7 +24,7 @@ The Home Assistant config is already included in the repo at `conf.d/homeassista
 Deploy with:
 
 ```bash
-cd /opt/traefik-setup
+cd /opt/stark-lab/traefik-setup
 sudo ./deploy.sh
 ```
 

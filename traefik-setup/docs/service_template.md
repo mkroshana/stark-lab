@@ -61,7 +61,7 @@ http:
 ## Deploy
 
 ```bash
-cd /opt/traefik-setup
+cd /opt/stark-lab/traefik-setup
 # Add your new config file to conf.d/
 sudo ./deploy.sh
 ```
@@ -126,7 +126,7 @@ If the service has a login endpoint:
 rm conf.d/<service-name>.yaml
 
 # Re-deploy (removes from /etc/traefik/conf.d/ too)
-cd /opt/traefik-setup
+cd /opt/stark-lab/traefik-setup
 sudo ./deploy.sh
 ```
 

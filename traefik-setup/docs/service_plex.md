@@ -24,7 +24,7 @@ The Plex config is already included in the repo at `conf.d/plex.yaml`. It includ
 Deploy with:
 
 ```bash
-cd /opt/traefik-setup
+cd /opt/stark-lab/traefik-setup
 sudo ./deploy.sh
 ```
 

@@ -140,8 +140,8 @@ nslookup ha.starklab.mkroshana.com 1.1.1.1
 ```bash
 ssh root@10.10.10.101
 cd /opt
-git clone <YOUR_REPO_URL> traefik-setup
-cd /opt/traefik-setup
+git clone <YOUR_REPO_URL>   # clones into /opt/stark-lab
+cd /opt/stark-lab/traefik-setup
 ```
 
 ### 4.2 Create the `.env` file
@@ -268,7 +268,7 @@ cscli bouncers add traefik-bouncer
 **Copy the key** and add it to your `.env`:
 
 ```bash
-cd /opt/traefik-setup
+cd /opt/stark-lab/traefik-setup
 nano .env
 # Set: CROWDSEC_BOUNCER_API_KEY=<the_key_from_above>
 ```
@@ -302,7 +302,7 @@ This outputs something like: `admin:$apr1$xyz123$abcdefghijklmnop`
 ### 7.3 Add to `.env`
 
 ```bash
-nano /opt/traefik-setup/.env
+nano /opt/stark-lab/traefik-setup/.env
 # Set: DASHBOARD_AUTH_HASH=admin:$apr1$xyz123$abcdefghijklmnop
 ```
 
@@ -322,7 +322,7 @@ apt install -y gettext-base
 ### 8.2 Run the deploy script
 
 ```bash
-cd /opt/traefik-setup
+cd /opt/stark-lab/traefik-setup
 chmod +x deploy.sh
 sudo ./deploy.sh
 ```
@@ -418,7 +418,8 @@ curl -sIk --tlsv1.1 --tls-max 1.1 https://jellyfin.starklab.mkroshana.com
 ## File Layout (Final)
 
 ```
-/opt/traefik-setup/                    # Git repo (source of truth)
+/opt/stark-lab/                        # Git repo (source of truth)
+├── traefik-setup/                     # Traefik configs + deploy script
 ├── .env.example                       # Template — committed to git
 ├── .env                               # Real secrets — NOT in git
 ├── .gitignore                         # Excludes .env
@@ -481,7 +482,7 @@ curl -sIk --tlsv1.1 --tls-max 1.1 https://jellyfin.starklab.mkroshana.com
 When you change any config files in the repo:
 
 ```bash
-cd /opt/traefik-setup
+cd /opt/stark-lab/traefik-setup
 git pull
 sudo ./deploy.sh
 
@@ -530,7 +531,7 @@ cscli metrics                         # View parsing stats
 cscli hub update && cscli hub upgrade # Update threat intel
 
 # --- Deploy ---
-cd /opt/traefik-setup
+cd /opt/stark-lab/traefik-setup
 sudo ./deploy.sh                      # Re-deploy after config changes
 
 # --- DDNS ---

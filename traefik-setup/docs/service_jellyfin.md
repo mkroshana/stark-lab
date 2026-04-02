@@ -26,7 +26,7 @@ The Jellyfin config is already included in the repo at `conf.d/jellyfin.yaml`. I
 Deploy with:
 
 ```bash
-cd /opt/traefik-setup
+cd /opt/stark-lab/traefik-setup
 sudo ./deploy.sh
 ```
 

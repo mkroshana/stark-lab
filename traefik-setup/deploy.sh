@@ -37,10 +37,18 @@ if ! command -v envsubst &>/dev/null; then
   exit 1
 fi
 
-# --- Load Environment ---
-set -a
-source "$ENV_FILE"
-set +a
+# --- Load Environment (without expanding $ in values) ---
+while IFS= read -r line; do
+  # Skip empty lines and comments
+  [[ -z "$line" || "$line" =~ ^[[:space:]]*# ]] && continue
+  # Split on first = only (values may contain =)
+  key="${line%%=*}"
+  value="${line#*=}"
+  # Trim whitespace from key
+  key=$(echo "$key" | tr -d '[:space:]')
+  [[ -z "$key" ]] && continue
+  export "$key=$value"
+done < "$ENV_FILE"
 
 # --- Validate Required Variables ---
 REQUIRED_VARS=(
