@@ -1,0 +1,27 @@
+# ==============================================
+# Catch-All Router
+# Location: /etc/traefik/conf.d/catch-all.yaml
+#
+# Blocks any request that doesn't match a known
+# Host header. Priority 1 = lowest (other routers
+# take precedence). Combined with sniStrict in
+# tls.yaml, this provides defense-in-depth.
+# ==============================================
+
+http:
+  routers:
+    catch-all:
+      rule: "HostRegexp(`.+`)"
+      entryPoints:
+        - websecure
+      service: noop-svc
+      priority: 1
+      tls: {}
+      middlewares:
+        - block-external
+
+  services:
+    noop-svc:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1"

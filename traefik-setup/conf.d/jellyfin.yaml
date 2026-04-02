@@ -1,0 +1,67 @@
+# ==============================================
+# Jellyfin Dynamic Configuration
+# Location: /etc/traefik/conf.d/jellyfin.yaml
+#
+# Shared middlewares are in _shared.yaml
+# ==============================================
+
+http:
+  routers:
+    # -- Main Jellyfin Router --
+    jellyfin:
+      rule: "Host(`jellyfin.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: jellyfin-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - general-rate-limit
+      tls:
+        certResolver: cloudflare
+      priority: 1
+
+    # -- Block Swagger / API Docs --
+    jellyfin-block-swagger:
+      rule: "Host(`jellyfin.starklab.mkroshana.com`) && PathPrefix(`/api-docs`)"
+      entryPoints:
+        - websecure
+      service: jellyfin-svc
+      middlewares:
+        - block-external
+      tls:
+        certResolver: cloudflare
+      priority: 100
+
+    # -- Strict rate limit on auth endpoint --
+    jellyfin-auth:
+      rule: "Host(`jellyfin.starklab.mkroshana.com`) && PathPrefix(`/Users/AuthenticateByName`)"
+      entryPoints:
+        - websecure
+      service: jellyfin-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - auth-rate-limit
+      tls:
+        certResolver: cloudflare
+      priority: 50
+
+    # -- Block QuickConnect from external access --
+    jellyfin-block-quickconnect:
+      rule: "Host(`jellyfin.starklab.mkroshana.com`) && PathPrefix(`/QuickConnect`)"
+      entryPoints:
+        - websecure
+      service: jellyfin-svc
+      middlewares:
+        - block-external
+      tls:
+        certResolver: cloudflare
+      priority: 90
+
+  services:
+    jellyfin-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.121:8096"
+        passHostHeader: true

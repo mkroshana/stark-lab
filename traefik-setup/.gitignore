@@ -1,0 +1,8 @@
+# Secrets
+.env
+
+# ACME certificate storage
+ssl/acme.json
+
+# Generated files (output of deploy.sh)
+# These are created on the server, not tracked in git

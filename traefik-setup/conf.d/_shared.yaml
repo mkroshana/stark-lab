@@ -1,0 +1,58 @@
+# ==============================================
+# Shared Middlewares
+# Location: /etc/traefik/conf.d/_shared.yaml
+#
+# These middlewares are available to ALL service
+# configs in this directory. To add a new service,
+# just reference these middleware names in your
+# router's middlewares list.
+# ==============================================
+
+http:
+  middlewares:
+    # -- CrowdSec Bouncer (community threat intelligence) --
+    crowdsec-bouncer:
+      plugin:
+        crowdsec:
+          enabled: true
+          crowdsecLapiScheme: http
+          crowdsecLapiHost: "127.0.0.1:6060"
+          # Injected by deploy.sh from .env
+          crowdsecLapiKey: "${CROWDSEC_BOUNCER_API_KEY}"
+
+    # -- General Rate Limit (100 req/min, burst 200) --
+    general-rate-limit:
+      rateLimit:
+        average: 100
+        period: "1m"
+        burst: 200
+
+    # -- Auth Rate Limit (5 req/min, burst 3) --
+    auth-rate-limit:
+      rateLimit:
+        average: 5
+        period: "1m"
+        burst: 3
+
+    # -- Security Headers --
+    security-headers:
+      headers:
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
+        forceSTSHeader: true
+        frameDeny: true
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: "strict-origin-when-cross-origin"
+        customResponseHeaders:
+          X-Robots-Tag: "noindex, nofollow"
+          X-Permitted-Cross-Domain-Policies: "none"
+
+    # -- Block External Access (allows only LAN) --
+    block-external:
+      ipAllowList:
+        sourceRange:
+          - "127.0.0.1/32"
+          - "10.10.10.0/24"
+          - "192.168.0.0/16"
