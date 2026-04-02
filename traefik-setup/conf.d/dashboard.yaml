@@ -30,4 +30,4 @@ http:
       basicAuth:
         users:
           # Injected by deploy.sh from .env ($ signs are escaped automatically)
-          - "${DASHBOARD_AUTH_HASH}"
+          - ${DASHBOARD_AUTH_HASH}
