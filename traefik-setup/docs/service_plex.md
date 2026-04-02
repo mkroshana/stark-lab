@@ -102,7 +102,7 @@ Mobile App / Browser
    *.starklab.mkroshana.com (Cloudflare DNS → your public IP)
         │
         ▼ :443
-   Router → Traefik (10.10.10.101)
+   Router → Traefik (10.10.10.100)
         │
         ▼ sniStrict → CrowdSec check → Rate limit → Security headers
         │

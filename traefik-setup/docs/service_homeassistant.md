@@ -60,7 +60,7 @@ Add or update the `http` section:
 http:
   use_x_forwarded_for: true
   trusted_proxies:
-    - 10.10.10.101    # Traefik LXC IP
+    - 10.10.10.100    # Traefik LXC IP
 ```
 
 > [!NOTE]
@@ -123,7 +123,7 @@ You are not allowed to access this resource.
 ```
 - `trusted_proxies` is not set or wrong IP
 - Verify: `grep trusted_proxies /config/configuration.yaml`
-- Ensure the IP matches Traefik's LXC: `10.10.10.101`
+- Ensure the IP matches Traefik's LXC: `10.10.10.100`
 - Restart HA after changes
 
 ### Page loads but UI is blank / spinning

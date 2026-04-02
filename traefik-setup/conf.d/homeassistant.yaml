@@ -6,7 +6,7 @@
 #   http:
 #     use_x_forwarded_for: true
 #     trusted_proxies:
-#       - 10.10.10.101  # Traefik LXC IP
+#       - 10.10.10.100  # Traefik LXC IP
 #
 # Then restart Home Assistant.
 # WebSocket is handled natively by Traefik v3.

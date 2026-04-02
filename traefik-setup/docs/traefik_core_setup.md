@@ -9,7 +9,7 @@ graph TD
     User["Remote User"] -->|"HTTP :80"| Router["Router Port Forward"]
     User -->|"HTTPS :443"| Router
     Router -->|":80"| TFK80["Traefik :80 HTTP to HTTPS redirect"]
-    Router -->|":443"| TFK["Traefik LXC 10.10.10.101"]
+    Router -->|":443"| TFK["Traefik LXC 10.10.10.100"]
 
     TFK80 -->|"301 Redirect"| TFK
 
@@ -49,8 +49,7 @@ graph TD
 
 | CTID | Name | IP |
 |------|------|-----|
-| 100 | NPM Plus nginx | 10.10.10.100 |
-| **101** | **Traefik** | **10.10.10.101** |
+| **100** | **Traefik** | **10.10.10.100** |
 | 110 | SMB Server | 10.10.10.110 |
 | 111 | qBittorrent | 10.10.10.111 |
 | 112 | AutoBrr | 10.10.10.112 |
@@ -68,7 +67,7 @@ Use the Proxmox community helper script: [community-scripts.org/scripts/traefik]
 
 - **CTID:** 101
 - **Hostname:** traefik
-- **IP:** 10.10.10.101
+- **IP:** 10.10.10.100
 - **OS:** Debian 13
 - **RAM:** 512 MiB
 - **Disk:** 2 GB
@@ -77,7 +76,7 @@ Use the Proxmox community helper script: [community-scripts.org/scripts/traefik]
 ### Verify
 
 ```bash
-ssh root@10.10.10.101
+ssh root@10.10.10.100
 systemctl status traefik
 ```
 
@@ -138,7 +137,7 @@ nslookup ha.starklab.mkroshana.com 1.1.1.1
 ### 4.1 Clone the repo on the Traefik LXC
 
 ```bash
-ssh root@10.10.10.101
+ssh root@10.10.10.100
 cd /opt
 git clone <YOUR_REPO_URL>   # clones into /opt/stark-lab
 cd /opt/stark-lab/traefik-setup
@@ -155,7 +154,13 @@ Fill in your real values:
 
 ```bash
 # -- Cloudflare --
+# Used by DDNS script
 CF_API_TOKEN=<your_cloudflare_api_token>
+# Used by Traefik (DNS Challenge)
+# You can use the same token for both
+CF_DNS_API_TOKEN=<your_cloudflare_api_token>
+CF_ZONE_API_TOKEN=<your_cloudflare_api_token>
+
 CF_ZONE_NAME=mkroshana.com
 CF_RECORD_NAME=*.starklab.mkroshana.com
 
@@ -362,8 +367,8 @@ Log into your Huawei HG8245H5 at `http://10.10.10.1` → **Forward Rules** → *
 
 | Port | Destination | Protocol | Purpose |
 |------|-------------|----------|---------|
-| 80 | **10.10.10.101** (Traefik) | TCP | HTTP → HTTPS redirect |
-| 443 | **10.10.10.101** (Traefik) | TCP | HTTPS traffic |
+| 80 | **10.10.10.100** (Traefik) | TCP | HTTP → HTTPS redirect |
+| 443 | **10.10.10.100** (Traefik) | TCP | HTTPS traffic |
 
 > [!WARNING]
 > **Delete** any other forwards for ports like 8096, 32400, 8123, or 8080. All traffic must flow through Traefik.
