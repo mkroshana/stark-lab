@@ -76,10 +76,9 @@ fi
 
 log_info "All required environment variables are set."
 
-# --- Escape $ signs in DASHBOARD_AUTH_HASH for YAML ---
-# htpasswd output contains $ signs which need to be $$ in Traefik YAML
-DASHBOARD_AUTH_HASH_ESCAPED=$(echo "$DASHBOARD_AUTH_HASH" | sed 's/\$/\$\$/g')
-export DASHBOARD_AUTH_HASH="$DASHBOARD_AUTH_HASH_ESCAPED"
+# --- Escape ALL $ signs in DASHBOARD_AUTH_HASH for YAML ---
+# Use a specific variable for the YAML-safe version to avoid confusion
+export DASH_AUTH_YAML_READY=$(echo "$DASHBOARD_AUTH_HASH" | sed 's/\$/\$\$/g')
 
 # --- Create Deploy Directory Structure ---
 sudo mkdir -p "${DEPLOY_DIR}/conf.d"
@@ -93,7 +92,7 @@ envsubst '${ACME_EMAIL}' < "${SCRIPT_DIR}/traefik.yaml" | sudo tee "${DEPLOY_DIR
 for FILE in "${SCRIPT_DIR}"/conf.d/*.yaml; do
   FILENAME=$(basename "$FILE")
   log_info "Processing conf.d/${FILENAME}..."
-  envsubst '${CROWDSEC_BOUNCER_API_KEY} ${DASHBOARD_AUTH_HASH}' < "$FILE" \
+  envsubst '${CROWDSEC_BOUNCER_API_KEY} ${DASH_AUTH_YAML_READY}' < "$FILE" \
     | sudo tee "${DEPLOY_DIR}/conf.d/${FILENAME}" > /dev/null
 done
 

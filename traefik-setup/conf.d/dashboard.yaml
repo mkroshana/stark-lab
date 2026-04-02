@@ -1,8 +1,5 @@
 # ==============================================
 # Traefik Dashboard Configuration
-#
-# Exposes the internal Traefik API/Dashboard
-# protected by Basic Auth and blocked to LAN.
 # ==============================================
 
 http:
@@ -16,7 +13,7 @@ http:
       middlewares:
         - dashboard-auth
       tls:
-        certResolver: letsencrypt # or cloudflare
+        certResolver: cloudflare
 
   # -- Middlewares --
   middlewares:
@@ -24,5 +21,4 @@ http:
     dashboard-auth:
       basicAuth:
         users:
-          - 'traefiktest:$$apr1$$XQZ.P7Z.$6JzXmOn5jYn85rYFzU6pC1'
-          - '${DASHBOARD_AUTH_HASH}'
+          - "${DASH_AUTH_YAML_READY}"
