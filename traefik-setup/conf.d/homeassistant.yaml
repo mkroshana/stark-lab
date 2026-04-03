@@ -26,7 +26,6 @@ http:
         - general-rate-limit
       tls:
         certResolver: cloudflare
-      priority: 1
 
     # -- Strict rate limit on HA auth endpoint --
     homeassistant-auth:
