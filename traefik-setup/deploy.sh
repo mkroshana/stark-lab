@@ -53,11 +53,13 @@ done < "$ENV_FILE"
 # --- Validate Required Variables ---
 REQUIRED_VARS=(
   "CF_API_TOKEN"
+  "CF_DNS_API_TOKEN"
+  "CF_ZONE_API_TOKEN"
   "CF_ZONE_NAME"
   "CF_RECORD_NAME"
   "ACME_EMAIL"
   "CROWDSEC_BOUNCER_API_KEY"
-  "DASHBOARD_AUTH_HASH"
+  "DASHBOARD_PASSWORD"
 )
 
 MISSING=0
@@ -75,6 +77,11 @@ if [ "$MISSING" -eq 1 ]; then
 fi
 
 log_info "All required environment variables are set."
+
+# --- Handle Dashboard Credentials ---
+log_info "Generating hash for DASHBOARD_PASSWORD..."
+# Generate the hash for user 'admin' using the provided password
+DASHBOARD_AUTH_HASH="admin:$(openssl passwd -apr1 "$DASHBOARD_PASSWORD")"
 
 # --- Escape ALL $ signs in DASHBOARD_AUTH_HASH for YAML ---
 # Use a specific variable for the YAML-safe version to avoid confusion
