@@ -11,7 +11,9 @@ http:
         - websecure
       service: api@internal
       middlewares:
+        - block-external
         - dashboard-auth
+        - security-headers
       tls:
         certResolver: cloudflare
 
