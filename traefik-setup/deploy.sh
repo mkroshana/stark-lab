@@ -83,10 +83,6 @@ log_info "Generating hash for DASHBOARD_PASSWORD..."
 # Generate the hash for user 'admin' using the provided password
 DASHBOARD_AUTH_HASH="admin:$(openssl passwd -apr1 "$DASHBOARD_PASSWORD")"
 
-# --- Escape ALL $ signs in DASHBOARD_AUTH_HASH for YAML ---
-# Use a specific variable for the YAML-safe version to avoid confusion
-export DASH_AUTH_YAML_READY=$(echo "$DASHBOARD_AUTH_HASH" | sed 's/\$/\$\$/g')
-
 # --- Create Deploy Directory Structure ---
 sudo mkdir -p "${DEPLOY_DIR}/conf.d"
 sudo mkdir -p "${DEPLOY_DIR}/ssl"
@@ -101,8 +97,9 @@ for FILE in "${SCRIPT_DIR}"/conf.d/*.yaml; do
   log_info "Processing conf.d/${FILENAME}..."
   
   if [ "$FILENAME" == "dashboard.yaml" ]; then
-    # Special handling for dashboard.yaml to avoid envsubst eating the hash $ signs
-    sed "s|\${DASH_AUTH_YAML_READY}|${DASH_AUTH_YAML_READY}|g" "$FILE" \
+    # Inject the password hash securely using sed so $ signs aren't corrupted by envsubst
+    # Note: Traefik File Provider YAML needs SINGLE $ signs for password hashes
+    sed "s|\${DASH_AUTH_YAML_READY}|${DASHBOARD_AUTH_HASH}|g" "$FILE" \
       | sudo tee "${DEPLOY_DIR}/conf.d/${FILENAME}" > /dev/null
   else
     envsubst '${CROWDSEC_BOUNCER_API_KEY}' < "$FILE" \
