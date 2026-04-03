@@ -92,8 +92,15 @@ envsubst '${ACME_EMAIL}' < "${SCRIPT_DIR}/traefik.yaml" | sudo tee "${DEPLOY_DIR
 for FILE in "${SCRIPT_DIR}"/conf.d/*.yaml; do
   FILENAME=$(basename "$FILE")
   log_info "Processing conf.d/${FILENAME}..."
-  envsubst '${CROWDSEC_BOUNCER_API_KEY} ${DASH_AUTH_YAML_READY}' < "$FILE" \
-    | sudo tee "${DEPLOY_DIR}/conf.d/${FILENAME}" > /dev/null
+  
+  if [ "$FILENAME" == "dashboard.yaml" ]; then
+    # Special handling for dashboard.yaml to avoid envsubst eating the hash $ signs
+    sed "s|\${DASH_AUTH_YAML_READY}|${DASH_AUTH_YAML_READY}|g" "$FILE" \
+      | sudo tee "${DEPLOY_DIR}/conf.d/${FILENAME}" > /dev/null
+  else
+    envsubst '${CROWDSEC_BOUNCER_API_KEY}' < "$FILE" \
+      | sudo tee "${DEPLOY_DIR}/conf.d/${FILENAME}" > /dev/null
+  fi
 done
 
 # --- Deploy DDNS Script ---
