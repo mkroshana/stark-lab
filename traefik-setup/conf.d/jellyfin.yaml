@@ -15,6 +15,7 @@ http:
       service: jellyfin-svc
       middlewares:
         - crowdsec-bouncer
+        - cloudflare-only
         - security-headers
         - general-rate-limit
       tls:
@@ -40,6 +41,7 @@ http:
       service: jellyfin-svc
       middlewares:
         - crowdsec-bouncer
+        - cloudflare-only
         - security-headers
         - auth-rate-limit
       tls:
