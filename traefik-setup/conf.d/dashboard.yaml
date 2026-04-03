@@ -1,26 +1,14 @@
 # ==============================================
-# Traefik Dashboard Configuration
+# DEBUG: Traefik Dashboard (No Auth)
 # ==============================================
 
 http:
   routers:
-    # --- Traefik Dashboard Router ---
     traefik-dashboard:
       rule: "Host(`traefik.starklab.mkroshana.com`)"
       entryPoints:
         - websecure
       service: api@internal
-      middlewares:
-        - block-external
-        - dashboard-auth
-        - security-headers
+      # middlewares: []  <-- TEMPORARILY DISABLED
       tls:
         certResolver: cloudflare
-
-  # -- Middlewares --
-  middlewares:
-    # Basic Auth for Dashboard
-    dashboard-auth:
-      basicAuth:
-        users:
-          - "${DASH_AUTH_YAML_READY}"
