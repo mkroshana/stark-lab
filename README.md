@@ -1,4 +1,4 @@
-# 🛡️ Stark-Lab: Enterprise-Grade Traefik Infrastructure for your Homelab
+# 🛡️ Stark-Lab: Highly Secure Traefik Infrastructure for your Homelab
 (Disclosure: AI helped me with this and I'm new to Traefik and this is a work in progress. Open to any suggestions.)
 
 ![Traefik](https://img.shields.io/badge/Traefik-v3-blue?style=for-the-badge&logo=traefik)
