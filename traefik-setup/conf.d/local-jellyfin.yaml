@@ -1,0 +1,11 @@
+http:
+  routers:
+    local-jellyfin:
+      rule: "Host(`jellyfin.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: jellyfin-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare

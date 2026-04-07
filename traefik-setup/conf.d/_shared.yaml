@@ -9,6 +9,10 @@
 # ==============================================
 
 http:
+  serversTransports:
+    insecure-transport:
+      insecureSkipVerify: true
+
   middlewares:
     # -- CrowdSec Bouncer (community threat intelligence) --
     crowdsec-bouncer:
@@ -91,3 +95,10 @@ http:
           - "10.0.0.0/8"
           - "192.168.0.0/16"
           - "172.16.0.0/12"
+
+    # -- Local-Only Access Chain --
+    local-only:
+      chain:
+        middlewares:
+          - block-external
+          - security-headers

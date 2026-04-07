@@ -30,6 +30,7 @@ entryPoints:
           - main: "starklab.mkroshana.com"
             sans:
               - "*.starklab.mkroshana.com"
+              - "*.local.starklab.mkroshana.com"
   # Dashboard — internal LAN access only (NOT port-forwarded)
   traefik:
     address: ":8080"

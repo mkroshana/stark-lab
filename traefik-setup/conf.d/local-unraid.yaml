@@ -1,0 +1,19 @@
+http:
+  routers:
+    local-unraid:
+      rule: "Host(`tower.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: unraid-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare
+
+  services:
+    unraid-svc:
+      loadBalancer:
+        serversTransport: insecure-transport
+        servers:
+          - url: "https://10.10.10.30"
+        passHostHeader: true

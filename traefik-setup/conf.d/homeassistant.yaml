@@ -45,5 +45,5 @@ http:
     homeassistant-svc:
       loadBalancer:
         servers:
-          - url: "http://10.10.10.154:8123"
+          - url: "http://10.10.10.150:8123"
         passHostHeader: true

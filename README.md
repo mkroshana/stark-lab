@@ -39,6 +39,7 @@ stark-lab/
 │       ├── dashboard.yaml    # Secure Traefik dashboard
 │       ├── homeassistant.yaml# HA Routing
 │       ├── jellyfin.yaml     # Jellyfin Routing
+│       ├── local-*.yaml      # Local-only routing configurations (PVE, Unraid, etc.)
 │       ├── plex.yaml         # Plex Routing
 │       └── tls.yaml          # Strict TLS/SNI enforcement
 ```
@@ -78,6 +79,24 @@ stark-lab/
 
 4. **Verify:**
    Navigate to the Traefik dashboard (e.g., `https://traefik.yourdomain.com`). Log in using the `admin` username and the plain-text password you defined in your `.env` file.
+
+---
+
+## 🏠 Local-Only Service Access
+
+In addition to external access, this setup provides a secure local-only routing for specific subdomains using the `*.local.starklab.mkroshana.com` pattern. Services routed here use Traefik's `block-external` middleware, restricting access strictly to your home LAN. 
+
+**Exposed Local Services:**
+- Jellyfin, Plex, Home Assistant (Reusing external backends)
+- Proxmox PVE1 (`https://10.10.10.31:8006` via `insecure-transport` SkipVerify)
+- Unraid Tower (`https://10.10.10.30` via `insecure-transport` SkipVerify)
+
+### DNS Setup (Hybrid Strategy)
+For best performance and reliability, we employ both local DNS rewrites and a public DNS fallback:
+1. **Local DNS (Pi-hole/AdGuard Router)**:
+   Add a wildcard DNS rewrite for `*.local.starklab.mkroshana.com` pointing to the Traefik LXC IP (`10.10.10.100`). This ensures instant connection without leaving your local network.
+2. **Cloudflare Fallback**:
+   Create an A Record for `*.local.starklab` pointing to `10.10.10.100` (Proxy **OFF** / DNS-only). While returning a local/private IP via a public DNS resolver, it acts as a reliable fallback for devices without local DNS set up, and is safely protected against internet exploitation by the `block-external` restriction rules.
 
 ---
 

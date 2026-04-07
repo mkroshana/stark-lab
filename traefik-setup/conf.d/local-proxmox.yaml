@@ -1,0 +1,19 @@
+http:
+  routers:
+    local-proxmox:
+      rule: "Host(`pve1.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: proxmox-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare
+
+  services:
+    proxmox-svc:
+      loadBalancer:
+        serversTransport: insecure-transport
+        servers:
+          - url: "https://10.10.10.31:8006"
+        passHostHeader: true
