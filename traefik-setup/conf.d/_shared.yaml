@@ -53,6 +53,23 @@ http:
           X-Robots-Tag: "noindex, nofollow"
           X-Permitted-Cross-Domain-Policies: "none"
 
+    # -- Security Headers for services with Web UI Console iFrames (Proxmox, Unraid) --
+    security-headers-iframe:
+      headers:
+        stsSeconds: 31536000
+        stsIncludeSubdomains: true
+        stsPreload: true
+        forceSTSHeader: true
+        # Using SAMEORIGIN instead of frameDeny to allow terminal/console nested iframes
+        customFrameOptionsValue: "SAMEORIGIN"
+        contentTypeNosniff: true
+        browserXssFilter: true
+        referrerPolicy: "strict-origin-when-cross-origin"
+        customResponseHeaders:
+          X-Robots-Tag: "noindex, nofollow"
+          X-Permitted-Cross-Domain-Policies: "none"
+
+
     # -- Block External Access (allows only LAN) --
     block-external:
       ipAllowList:
@@ -102,3 +119,10 @@ http:
         middlewares:
           - block-external
           - security-headers
+
+    # -- Local-Only Access Chain (Allows iFrames for Proxmox/Unraid) --
+    local-iframe-only:
+      chain:
+        middlewares:
+          - block-external
+          - security-headers-iframe

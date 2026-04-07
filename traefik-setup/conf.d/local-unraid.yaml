@@ -6,7 +6,7 @@ http:
         - websecure
       service: unraid-svc
       middlewares:
-        - local-only
+        - local-iframe-only
       tls:
         certResolver: cloudflare
 
