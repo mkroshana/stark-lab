@@ -129,6 +129,7 @@ sudo mkdir -p /etc/systemd/system/traefik.service.d
 sudo tee /etc/systemd/system/traefik.service.d/env.conf > /dev/null <<EOF
 [Service]
 EnvironmentFile=/etc/traefik/.env
+ExecStartPre=/bin/sleep 10
 EOF
 sudo systemctl daemon-reload
 
