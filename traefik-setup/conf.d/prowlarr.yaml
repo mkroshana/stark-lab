@@ -1,0 +1,43 @@
+# ==============================================
+# Prowlarr Dynamic Configuration
+# Location: /etc/traefik/conf.d/prowlarr.yaml
+#
+# Shared middlewares are in _shared.yaml
+# Default Web UI port: 9696
+# ==============================================
+
+http:
+  routers:
+    # -- Main Prowlarr Router --
+    prowlarr:
+      rule: "Host(`prowlarr.starklab.mkroshana.com`) || Host(`indexer.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: prowlarr-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - general-rate-limit
+      tls:
+        certResolver: cloudflare
+
+    # -- Strict rate limit on Prowlarr auth endpoint --
+    prowlarr-auth:
+      rule: "(Host(`prowlarr.starklab.mkroshana.com`) || Host(`indexer.starklab.mkroshana.com`)) && PathPrefix(`/login`)"
+      entryPoints:
+        - websecure
+      service: prowlarr-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - auth-rate-limit
+      tls:
+        certResolver: cloudflare
+      priority: 50
+
+  services:
+    prowlarr-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.114:9696"
+        passHostHeader: true

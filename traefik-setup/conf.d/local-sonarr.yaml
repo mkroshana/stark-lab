@@ -1,0 +1,11 @@
+http:
+  routers:
+    local-sonarr:
+      rule: "Host(`sonarr.local.starklab.mkroshana.com`) || Host(`tvshows.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: sonarr-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare

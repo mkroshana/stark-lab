@@ -1,7 +1,7 @@
 http:
   routers:
     local-unraid:
-      rule: "Host(`tower.local.starklab.mkroshana.com`)"
+      rule: "Host(`tower.local.starklab.mkroshana.com`) || Host(`nas.local.starklab.mkroshana.com`)"
       entryPoints:
         - websecure
       service: unraid-svc

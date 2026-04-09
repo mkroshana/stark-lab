@@ -1,0 +1,43 @@
+# ==============================================
+# Sonarr Dynamic Configuration
+# Location: /etc/traefik/conf.d/sonarr.yaml
+#
+# Shared middlewares are in _shared.yaml
+# Default Web UI port: 8989
+# ==============================================
+
+http:
+  routers:
+    # -- Main Sonarr Router --
+    sonarr:
+      rule: "Host(`sonarr.starklab.mkroshana.com`) || Host(`tvshows.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: sonarr-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - general-rate-limit
+      tls:
+        certResolver: cloudflare
+
+    # -- Strict rate limit on Sonarr auth endpoint --
+    sonarr-auth:
+      rule: "(Host(`sonarr.starklab.mkroshana.com`) || Host(`tvshows.starklab.mkroshana.com`)) && PathPrefix(`/login`)"
+      entryPoints:
+        - websecure
+      service: sonarr-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - auth-rate-limit
+      tls:
+        certResolver: cloudflare
+      priority: 50
+
+  services:
+    sonarr-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.118:8989"
+        passHostHeader: true

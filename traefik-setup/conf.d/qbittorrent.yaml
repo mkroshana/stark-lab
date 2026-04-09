@@ -1,0 +1,43 @@
+# ==============================================
+# qBittorrent Dynamic Configuration
+# Location: /etc/traefik/conf.d/qbittorrent.yaml
+#
+# Shared middlewares are in _shared.yaml
+# Default Web UI port: 8080
+# ==============================================
+
+http:
+  routers:
+    # -- Main qBittorrent Router --
+    qbittorrent:
+      rule: "Host(`qbittorrent.starklab.mkroshana.com`) || Host(`downloads.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: qbittorrent-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - general-rate-limit
+      tls:
+        certResolver: cloudflare
+
+    # -- Strict rate limit on qBittorrent auth endpoint --
+    qbittorrent-auth:
+      rule: "(Host(`qbittorrent.starklab.mkroshana.com`) || Host(`downloads.starklab.mkroshana.com`)) && PathPrefix(`/api/v2/auth/login`)"
+      entryPoints:
+        - websecure
+      service: qbittorrent-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - auth-rate-limit
+      tls:
+        certResolver: cloudflare
+      priority: 50
+
+  services:
+    qbittorrent-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.111:8080"
+        passHostHeader: true

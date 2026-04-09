@@ -1,0 +1,11 @@
+http:
+  routers:
+    local-n8n:
+      rule: "Host(`n8n.local.starklab.mkroshana.com`) || Host(`automations.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: n8n-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare

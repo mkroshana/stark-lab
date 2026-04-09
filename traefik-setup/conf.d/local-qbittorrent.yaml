@@ -1,0 +1,11 @@
+http:
+  routers:
+    local-qbittorrent:
+      rule: "Host(`qbittorrent.local.starklab.mkroshana.com`) || Host(`downloads.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: qbittorrent-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare

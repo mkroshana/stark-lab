@@ -1,0 +1,11 @@
+http:
+  routers:
+    local-radarr:
+      rule: "Host(`radarr.local.starklab.mkroshana.com`) || Host(`movies.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: radarr-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare
