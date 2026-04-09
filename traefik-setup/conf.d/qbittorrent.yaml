@@ -3,7 +3,7 @@
 # Location: /etc/traefik/conf.d/qbittorrent.yaml
 #
 # Shared middlewares are in _shared.yaml
-# Default Web UI port: 8080
+# Default Web UI port: 8090
 # ==============================================
 
 http:
@@ -39,5 +39,5 @@ http:
     qbittorrent-svc:
       loadBalancer:
         servers:
-          - url: "http://10.10.10.111:8080"
+          - url: "http://10.10.10.111:8090"
         passHostHeader: true
