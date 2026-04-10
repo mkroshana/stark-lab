@@ -1,0 +1,16 @@
+# ==============================================
+# CrowdSec Home IP Whitelist
+# Location: /etc/crowdsec/postoverflows/s01-whitelist/home-whitelist.yaml
+#
+# Prevents CrowdSec from creating ban decisions
+# against our home ISP IP range. This matches the
+# same range trusted in Traefik's block-external
+# middleware for hairpin NAT.
+# ==============================================
+
+name: crowdsecurity/home-whitelist
+description: "Whitelist home ISP range to prevent self-bans"
+whitelist:
+  reason: "Home ISP range (hairpin NAT)"
+  cidr:
+    - "112.135.0.0/16"

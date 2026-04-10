@@ -112,6 +112,23 @@ log_info "Deploying cloudflare-ddns.sh..."
 sudo cp "${SCRIPT_DIR}/scripts/cloudflare-ddns.sh" /usr/local/bin/cloudflare-ddns.sh
 sudo chmod +x /usr/local/bin/cloudflare-ddns.sh
 
+# --- Deploy CrowdSec Postoverflows (Whitelists) ---
+CROWDSEC_SRC="${SCRIPT_DIR}/crowdsec/postoverflows/s01-whitelist"
+CROWDSEC_DST="/etc/crowdsec/postoverflows/s01-whitelist"
+if [ -d "$CROWDSEC_SRC" ]; then
+  log_info "Deploying CrowdSec postoverflow whitelists..."
+  sudo mkdir -p "$CROWDSEC_DST"
+  for FILE in "${CROWDSEC_SRC}"/*.yaml; do
+    [ -f "$FILE" ] || continue
+    FILENAME=$(basename "$FILE")
+    sudo cp "$FILE" "${CROWDSEC_DST}/${FILENAME}"
+    sudo chmod 644 "${CROWDSEC_DST}/${FILENAME}"
+    log_info "  → ${FILENAME}"
+  done
+  log_info "Reloading CrowdSec to apply whitelists..."
+  sudo systemctl reload crowdsec 2>/dev/null || log_warn "CrowdSec reload failed — check 'systemctl status crowdsec'"
+fi
+
 # --- Deploy .env to Server ---
 log_info "Deploying .env to ${DEPLOY_DIR}/.env..."
 sudo cp "$ENV_FILE" "${DEPLOY_DIR}/.env"
