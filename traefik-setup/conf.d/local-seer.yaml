@@ -1,0 +1,16 @@
+# ==============================================
+# Local Seer Dynamic Configuration
+# Location: /etc/traefik/conf.d/local-seer.yaml
+# ==============================================
+
+http:
+  routers:
+    local-seer:
+      rule: "Host(`seer.local.starklab.mkroshana.com`) || Host(`request.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: seer-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare

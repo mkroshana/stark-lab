@@ -9,3 +9,10 @@ http:
         - local-only
       tls:
         certResolver: cloudflare
+
+  services:
+    prowlarr-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.114:9696"
+        passHostHeader: true

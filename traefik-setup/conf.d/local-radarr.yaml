@@ -9,3 +9,10 @@ http:
         - local-only
       tls:
         certResolver: cloudflare
+
+  services:
+    radarr-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.117:7878"
+        passHostHeader: true
