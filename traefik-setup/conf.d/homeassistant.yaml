@@ -22,7 +22,7 @@ http:
       service: homeassistant-svc
       middlewares:
         - crowdsec-bouncer
-        - security-headers
+        - security-headers-iframe
         - general-rate-limit
       tls:
         certResolver: cloudflare
@@ -35,7 +35,7 @@ http:
       service: homeassistant-svc
       middlewares:
         - crowdsec-bouncer
-        - security-headers
+        - security-headers-iframe
         - auth-rate-limit
       tls:
         certResolver: cloudflare

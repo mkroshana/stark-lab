@@ -6,6 +6,6 @@ http:
         - websecure
       service: homeassistant-svc
       middlewares:
-        - local-only
+        - local-iframe-only
       tls:
         certResolver: cloudflare
