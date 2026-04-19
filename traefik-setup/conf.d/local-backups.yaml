@@ -1,0 +1,18 @@
+http:
+  routers:
+    local-backups:
+      rule: "Host(`backups.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: backups-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare
+
+  services:
+    backups-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.101:4096"
+        passHostHeader: true
