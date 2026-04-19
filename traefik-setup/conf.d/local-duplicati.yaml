@@ -1,0 +1,18 @@
+http:
+  routers:
+    local-duplicati:
+      rule: "Host(`duplicati.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: duplicati-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare
+
+  services:
+    duplicati-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.102:8200"
+        passHostHeader: true
