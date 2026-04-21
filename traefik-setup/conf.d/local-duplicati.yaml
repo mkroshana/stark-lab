@@ -15,4 +15,4 @@ http:
       loadBalancer:
         servers:
           - url: "http://10.10.10.101:8200"
-        passHostHeader: true
+        passHostHeader: false
