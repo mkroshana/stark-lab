@@ -14,5 +14,5 @@ http:
     duplicati-svc:
       loadBalancer:
         servers:
-          - url: "http://10.10.10.102:8200"
+          - url: "http://10.10.10.101:8200"
         passHostHeader: false
