@@ -1,0 +1,28 @@
+# ==============================================
+# Pterodactyl Panel Dynamic Configuration
+# Location: /etc/traefik/conf.d/pterodactyl.yaml
+#
+# Shared middlewares are in _shared.yaml
+# ==============================================
+
+http:
+  routers:
+    pterodactyl:
+      rule: "Host(`pterodactyl.starklab.mkroshana.com`) || Host(`gaming.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: pterodactyl-svc
+      middlewares:
+        - crowdsec-bouncer
+        - cloudflare-only
+        - security-headers
+        - general-rate-limit
+      tls:
+        certResolver: cloudflare
+
+  services:
+    pterodactyl-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.140:80"
+        passHostHeader: true

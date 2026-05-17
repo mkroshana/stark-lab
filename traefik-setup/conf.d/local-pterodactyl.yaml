@@ -1,0 +1,16 @@
+# ==============================================
+# Local Pterodactyl Panel Dynamic Configuration
+# Location: /etc/traefik/conf.d/local-pterodactyl.yaml
+# ==============================================
+
+http:
+  routers:
+    local-pterodactyl:
+      rule: "Host(`pterodactyl.local.starklab.mkroshana.com`) || Host(`gaming.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: pterodactyl-svc
+      middlewares:
+        - local-iframe-only
+      tls:
+        certResolver: cloudflare

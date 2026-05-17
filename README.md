@@ -88,10 +88,12 @@ In addition to external access, this setup provides a secure local-only routing 
 
 **Exposed Local Services:**
 - Traefik Dashboard (`https://traefik.local.yourdomain.com` via Basic Auth)
-- Jellyfin, Plex, Home Assistant (Reusing external backends)
+- Jellyfin, Plex, Home Assistant, Seerr, Pterodactyl Panel (Reusing external backends)
+- Duplicati (`https://10.x.x.x:8200`)
 - Proxmox PVE1 (`https://10.x.x.x:8006` via `insecure-transport` SkipVerify)
 - Proxmox Backup Server PBS (`https://10.x.x.x:8007` via `insecure-transport` SkipVerify)
 - Unraid Tower (`https://10.x.x.x` via `insecure-transport` SkipVerify)
+- Pterodactyl Wings (`10.x.x.x:8080` / `:2022` - Backend daemon/SFTP only)
 
 ### DNS Setup (Hybrid Strategy)
 For best performance and reliability, we employ both local DNS rewrites and a public DNS fallback:
@@ -109,7 +111,8 @@ To expose a new homelab service:
 2. Copy the structure from an existing file like `plex.yaml`.
 3. Update the `rule` matching (e.g., `Host('myservice.yourdomain.com')`) and point the `loadBalancer` to your internal IP and port.
 4. Rely on Traefik's native rule-length sorting (avoid setting a hard `priority` unless strictly necessary) and attach the `_shared.yaml` middlewares to instantly secure the route.
-5. Re-run `sudo ./deploy.sh`.
+5. **CRITICAL STEP**: Update `D:\Development\service_links.md` to track the new service's public/local URLs, VM ID, IP address, and port.
+6. Re-run `sudo ./deploy.sh`.
 
 ---
 
