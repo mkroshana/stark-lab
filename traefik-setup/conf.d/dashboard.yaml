@@ -6,7 +6,7 @@ http:
   routers:
     # --- Traefik Dashboard Router ---
     traefik-dashboard:
-      rule: "Host(`traefik.starklab.mkroshana.com`)"
+      rule: "Host(`traefik.local.starklab.mkroshana.com`)"
       entryPoints:
         - websecure
       service: api@internal

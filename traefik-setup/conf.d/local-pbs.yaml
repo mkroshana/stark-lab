@@ -1,0 +1,19 @@
+http:
+  routers:
+    local-pbs:
+      rule: "Host(`pbs.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: pbs-svc
+      middlewares:
+        - local-iframe-only
+      tls:
+        certResolver: cloudflare
+
+  services:
+    pbs-svc:
+      loadBalancer:
+        serversTransport: insecure-transport
+        servers:
+          - url: "https://10.10.10.32:8007"
+        passHostHeader: true
