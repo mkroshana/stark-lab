@@ -1,0 +1,23 @@
+# ==============================================
+# Local Homelable Dynamic Configuration
+# Location: /etc/traefik/conf.d/local-homelable.yaml
+# ==============================================
+
+http:
+  routers:
+    local-homelable:
+      rule: "Host(`homelable.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: homelable-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare
+
+  services:
+    homelable-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.102:3000"
+        passHostHeader: true
