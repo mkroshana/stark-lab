@@ -1,0 +1,28 @@
+# ==============================================
+# TV Dynamic Configuration
+# Location: /etc/traefik/conf.d/tv.yaml
+#
+# Shared middlewares are in _shared.yaml
+# ==============================================
+
+http:
+  routers:
+    # -- Main TV Router --
+    tv:
+      rule: "Host(`tv.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: tv-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - general-rate-limit
+      tls:
+        certResolver: cloudflare
+
+  services:
+    tv-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.116:9191"
+        passHostHeader: true

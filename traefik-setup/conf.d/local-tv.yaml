@@ -1,0 +1,16 @@
+# ==============================================
+# Local TV Dynamic Configuration
+# Location: /etc/traefik/conf.d/local-tv.yaml
+# ==============================================
+
+http:
+  routers:
+    local-tv:
+      rule: "Host(`tv.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: tv-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare
