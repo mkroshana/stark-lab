@@ -1,0 +1,16 @@
+# ==============================================
+# Local Bazarr Dynamic Configuration
+# Location: /etc/traefik/conf.d/local-bazarr.yaml
+# ==============================================
+
+http:
+  routers:
+    local-bazarr:
+      rule: "Host(`bazarr.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: bazarr-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare

@@ -1,0 +1,28 @@
+# ==============================================
+# Bazarr Dynamic Configuration
+# Location: /etc/traefik/conf.d/bazarr.yaml
+#
+# Shared middlewares are in _shared.yaml
+# ==============================================
+
+http:
+  routers:
+    # -- Main Bazarr Router --
+    bazarr:
+      rule: "Host(`bazarr.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: bazarr-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - general-rate-limit
+      tls:
+        certResolver: cloudflare
+
+  services:
+    bazarr-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.115:6767"
+        passHostHeader: true
