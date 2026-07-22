@@ -46,17 +46,6 @@ http:
         certResolver: cloudflare
       priority: 50
 
-    # -- Block QuickConnect from external access --
-    jellyfin-block-quickconnect:
-      rule: "Host(`jellyfin.starklab.mkroshana.com`) && PathPrefix(`/QuickConnect`)"
-      entryPoints:
-        - websecure
-      service: jellyfin-svc
-      middlewares:
-        - block-external
-      tls:
-        certResolver: cloudflare
-      priority: 90
 
   services:
     jellyfin-svc:
