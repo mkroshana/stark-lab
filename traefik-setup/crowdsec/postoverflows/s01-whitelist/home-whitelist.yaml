@@ -11,6 +11,8 @@
 name: crowdsecurity/home-whitelist
 description: "Whitelist home ISP range to prevent self-bans"
 whitelist:
-  reason: "Home ISP range (hairpin NAT)"
+  reason: "Home ISP range and trusted user pool"
   cidr:
     - "112.135.0.0/16"
+    - "112.134.0.0/16"
+
