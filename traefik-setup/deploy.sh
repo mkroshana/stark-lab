@@ -126,7 +126,8 @@ if [ -d "$CROWDSEC_SRC" ]; then
     log_info "  → ${FILENAME}"
   done
   log_info "Reloading CrowdSec to apply whitelists..."
-  sudo systemctl reload crowdsec 2>/dev/null || log_warn "CrowdSec reload failed — check 'systemctl status crowdsec'"
+  sudo systemctl reload crowdsec 2>/dev/null || sudo systemctl restart crowdsec 2>/dev/null || log_warn "CrowdSec reload failed — check 'systemctl status crowdsec'"
+
 fi
 
 # --- Deploy .env to Server ---

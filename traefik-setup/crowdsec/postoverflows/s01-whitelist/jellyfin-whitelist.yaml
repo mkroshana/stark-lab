@@ -11,4 +11,5 @@ description: "Whitelist Jellyfin traffic from http-crawl-non_statics scenario fa
 whitelist:
   reason: "Jellyfin media streaming dynamic API calls"
   expression:
-    - "evt.Overflow.Scenario == 'crowdsecurity/http-crawl-non_statics' && evt.Meta.http_host == 'jellyfin.starklab.mkroshana.com'"
+    - "evt.Overflow.Scenario == 'crowdsecurity/http-crawl-non_statics' && (evt.Overflow.GetMeta('http_host') == 'jellyfin.starklab.mkroshana.com' || evt.Overflow.GetMeta('target_fqdn') == 'jellyfin.starklab.mkroshana.com')"
+
