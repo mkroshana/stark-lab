@@ -1,0 +1,14 @@
+# ==============================================
+# CrowdSec Jellyfin Whitelist
+# Location: /etc/crowdsec/postoverflows/s01-whitelist/jellyfin-whitelist.yaml
+#
+# Prevents CrowdSec from triggering false positive crawl bans
+# on Jellyfin due to frequent dynamic media API requests.
+# ==============================================
+
+name: crowdsecurity/jellyfin-whitelist
+description: "Whitelist Jellyfin traffic from http-crawl-non_statics scenario false positives"
+whitelist:
+  reason: "Jellyfin media streaming dynamic API calls"
+  expression:
+    - "evt.Overflow.Scenario == 'crowdsecurity/http-crawl-non_statics' && evt.Meta.http_host == 'jellyfin.starklab.mkroshana.com'"
