@@ -159,7 +159,7 @@
     /* Display control */
     --extraCardButtonsVisibility: none;
     --libraryLabelVisibility: none;
-    --cardHoverEffect: '';
+    --cardHoverEffect: none;
 
     --appBarHeight: 5em;
     --backdropPositionY: 50%;
@@ -363,7 +363,7 @@ body {
     border: var(--darkerBorderColor) solid var(--borderWidthDouble) !important;
     overflow: hidden !important;
     box-shadow: 0 0 0.25em 0 rgba(0, 0, 0, 0.4);
-    transition: transform 125ms;
+    transition: transform 125ms, border-color 0.2s ease;
 }
 
 @supports (aspect-ratio: 1 / 1) {
@@ -459,32 +459,7 @@ body {
 }
 
 .cardOverlayContainer:after {
-    content: var(--cardHoverEffect);
-    transition: 0.5s;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%) translateX(0);
-    background: var(--hoverGradientV);
-}
-
-.card-hoverable:hover .cardOverlayContainer:after {
-    transform: translateY(50%) translateX(0);
-    opacity: 0;
-}
-
-.backdropCard.card-hoverable .cardOverlayContainer:after,
-.overflowBackdropCard.card-hoverable .cardOverlayContainer:after {
-    transform: translateY(0) translateX(-50%);
-    background: var(--hoverGradientH);
-}
-
-.backdropCard.card-hoverable:hover .cardOverlayContainer:after,
-.overflowBackdropCard.card-hoverable:hover .cardOverlayContainer:after {
-    transform: translateY(0) translateX(50%);
-    opacity: 0;
+    display: none !important;
 }
 
 .cardBox:not(.visualCardBox) .cardPadder {
