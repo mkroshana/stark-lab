@@ -1,15 +1,16 @@
 # Jellyfin Themes
 
-This directory contains the self-contained base theme for Jellyfin, sourced from **NeutralFin v1.3.0** (MIT/GPL-2.0).
+This directory contains the self-contained base theme for Jellyfin, sourced from **NeutralFin v1.3.0** with **Jellyfin-Lucide** icons.
 
 ## Files
 
 | File | Purpose |
 | --- | --- |
 | 
-eutralfin.css | Unminified, structured source with commented sections. Use this file to edit variables and add custom rules one by one. |
+eutralfin.css | Unminified, structured source with commented sections, including Lucide icon mappings. Use this file to make changes one by one. |
 | 
-eutralfin.min.css | Minified stylesheet for direct pasting into Jellyfin's custom CSS box. |
+eutralfin.min.css | Minified all-in-one stylesheet for direct pasting into Jellyfin's custom CSS box. |
+| jellyfin-lucide.css | Standalone Lucide icons stylesheet for Jellyfin. |
 
 ## How to Apply
 
