@@ -4682,22 +4682,41 @@ svg[data-testid="FullscreenExitIcon"] {
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.3) !important;
 }
 
-
-
 /* ==========================================================================
-   🎬 NETFLIX-STYLE POPUP MENU & TRIGGER
+   🎬 NETFLIX-STYLE POPUP MENU & TRIGGER (1:1 PIXEL MATCH)
    ========================================================================== */
 
-/* 1. Profile Avatar Button with Netflix Caret Triangle */
+/* 1. Header Trigger: Tight avatar + attached caret with zero gap */
+.MuiToolbar-root .MuiBox-root:has(.MuiAvatar-root) {
+    display: inline-flex !important;
+    width: auto !important;
+    flex-grow: 0 !important;
+    align-items: center !important;
+}
+
 .MuiIconButton-root:has(.MuiAvatar-root) {
     display: inline-flex !important;
     align-items: center !important;
+    justify-content: flex-start !important;
+    width: auto !important;
+    min-width: unset !important;
+    max-width: fit-content !important;
+    padding: 0 !important;
+    margin: 0 !important;
     gap: 6px !important;
-    padding: 3px 6px 3px 3px !important;
-    border-radius: 4px !important;
     background: transparent !important;
+    border-radius: 4px !important;
 }
 
+.MuiIconButton-root:has(.MuiAvatar-root) .MuiAvatar-root {
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 4px !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    flex-shrink: 0 !important;
+}
+
+/* Caret Arrow: small crisp isosceles triangle placed directly beside avatar */
 .MuiIconButton-root:has(.MuiAvatar-root)::after {
     content: '' !important;
     display: inline-block !important;
@@ -4707,30 +4726,61 @@ svg[data-testid="FullscreenExitIcon"] {
     border-right: 4.5px solid transparent !important;
     border-top: 5px solid #ffffff !important;
     border-bottom: none !important;
-    transition: transform 0.25s ease, opacity 0.2s ease !important;
-    margin-left: 3px !important;
-    opacity: 0.9 !important;
+    transition: transform 0.25s ease !important;
+    margin-left: 4px !important;
+    flex-shrink: 0 !important;
+    opacity: 0.95 !important;
 }
 
-/* Caret rotates UP when menu is open */
+/* Caret flips UP when menu is open */
 body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display: none"])) .MuiIconButton-root:has(.MuiAvatar-root)::after,
 .MuiIconButton-root:has(.MuiAvatar-root)[aria-expanded="true"]::after {
     transform: rotate(180deg) !important;
 }
 
-/* 2. Netflix Popup Window (Dark, 4px Rounded, Border) */
+/* 2. Netflix Popup Window (Sharp corners, pitch black, 195px width) */
 #app-user-menu .MuiPaper-root,
 .MuiPopover-paper:has(#app-user-menu),
 #app-user-menu.MuiPopover-paper {
-    background-color: rgba(18, 18, 18, 0.96) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
+    background-color: rgba(0, 0, 0, 0.92) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    border-radius: 4px !important;
+    border-radius: 0px !important; /* Netflix has crisp square corners */
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.85) !important;
-    min-width: 220px !important;
-    padding: 8px 0 !important;
+    width: 195px !important;
+    min-width: 195px !important;
+    max-width: 200px !important;
+    padding: 10px 0 0 0 !important;
     margin-top: 10px !important;
+    overflow: visible !important;
+}
+
+/* Top pointer arrow pointing to caret */
+#app-user-menu .MuiPaper-root::before {
+    content: '' !important;
+    position: absolute !important;
+    top: -6px !important;
+    right: 22px !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-left: 6px solid transparent !important;
+    border-right: 6px solid transparent !important;
+    border-bottom: 6px solid rgba(255, 255, 255, 0.2) !important;
+    z-index: 10 !important;
+}
+
+#app-user-menu .MuiPaper-root::after {
+    content: '' !important;
+    position: absolute !important;
+    top: -5px !important;
+    right: 22px !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-left: 6px solid transparent !important;
+    border-right: 6px solid transparent !important;
+    border-bottom: 6px solid rgba(0, 0, 0, 0.92) !important;
+    z-index: 11 !important;
 }
 
 #app-user-menu .MuiList-root {
@@ -4738,69 +4788,87 @@ body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display:
     padding: 0 !important;
 }
 
-/* 3. Menu Items (Compact 13.5px typography, subtle hover) */
-#app-user-menu .MuiMenuItem-root {
-    padding: 8px 16px !important;
-    min-height: unset !important;
-    font-size: 13.5px !important;
-    font-weight: 500 !important;
-    color: #ffffff !important;
+/* 3. Menu Items (Compact 32px height, NO hover capsule background) */
+#app-user-menu .MuiMenuItem-root,
+#app-user-menu .MuiMenuItem-root:hover,
+#app-user-menu .MuiMenuItem-root.Mui-focusVisible {
+    min-height: 32px !important;
+    height: 32px !important;
+    padding: 0 16px !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
     display: flex !important;
     align-items: center !important;
-    transition: background 0.15s ease, color 0.15s ease !important;
+    gap: 12px !important;
+    transition: none !important;
 }
 
-#app-user-menu .MuiMenuItem-root:hover {
-    background: rgba(255, 255, 255, 0.08) !important;
-}
-
-/* Underline text on hover matching Netflix */
+/* Netflix Hover: Underline ONLY, zero background highlight */
 #app-user-menu .MuiMenuItem-root:hover .MuiListItemText-root span {
     text-decoration: underline !important;
 }
 
-/* Menu Icons */
+/* Icons (Small, crisp 16px, proper spacing) */
 #app-user-menu .MuiListItemIcon-root {
-    min-width: 28px !important;
-    width: 28px !important;
-    color: rgba(255, 255, 255, 0.85) !important;
-    margin-right: 10px !important;
+    min-width: 18px !important;
+    width: 18px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #ffffff !important;
     display: flex !important;
     align-items: center !important;
+    justify-content: center !important;
+    opacity: 0.9 !important;
 }
 
 #app-user-menu .MuiListItemIcon-root svg {
-    width: 18px !important;
-    height: 18px !important;
-    font-size: 18px !important;
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 16px !important;
 }
 
-/* Menu Text */
+/* Typography (13px, weight 400, crisp white) */
 #app-user-menu .MuiListItemText-root {
     margin: 0 !important;
+    padding: 0 !important;
 }
 
 #app-user-menu .MuiListItemText-root .MuiTypography-root {
-    font-size: 13.5px !important;
-    font-weight: 500 !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
     color: #ffffff !important;
-    letter-spacing: 0.1px !important;
+    letter-spacing: normal !important;
+    line-height: 32px !important;
 }
 
-/* Menu Dividers */
+/* Dividers */
 #app-user-menu .MuiDivider-root {
     border-color: rgba(255, 255, 255, 0.15) !important;
-    margin: 8px 0 !important;
+    margin: 6px 0 !important;
 }
 
-/* Sign Out Row: border divider, no icon, matching Netflix */
+/* 4. Sign Out Row: border divider, no icon, matching Netflix 1:1 */
 #app-user-menu .MuiMenuItem-root:has([data-testid="LogoutIcon"]) {
     border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
     margin-top: 6px !important;
-    padding-top: 12px !important;
-    padding-bottom: 12px !important;
+    min-height: 40px !important;
+    height: 40px !important;
+    padding: 0 16px !important;
+    display: flex !important;
+    align-items: center !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    border-radius: 0 !important;
 }
 
 #app-user-menu .MuiMenuItem-root:has([data-testid="LogoutIcon"]) .MuiListItemIcon-root {
     display: none !important;
+}
+
+#app-user-menu .MuiMenuItem-root:has([data-testid="LogoutIcon"]) .MuiListItemText-root .MuiTypography-root {
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    color: #ffffff !important;
+    line-height: 40px !important;
 }
