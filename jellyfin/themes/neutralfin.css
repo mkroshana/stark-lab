@@ -4681,3 +4681,126 @@ svg[data-testid="FullscreenExitIcon"] {
     transform: scale(1.06) !important;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.3) !important;
 }
+
+
+
+/* ==========================================================================
+   🎬 NETFLIX-STYLE POPUP MENU & TRIGGER
+   ========================================================================== */
+
+/* 1. Profile Avatar Button with Netflix Caret Triangle */
+.MuiIconButton-root:has(.MuiAvatar-root) {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    padding: 3px 6px 3px 3px !important;
+    border-radius: 4px !important;
+    background: transparent !important;
+}
+
+.MuiIconButton-root:has(.MuiAvatar-root)::after {
+    content: '' !important;
+    display: inline-block !important;
+    width: 0 !important;
+    height: 0 !important;
+    border-left: 4.5px solid transparent !important;
+    border-right: 4.5px solid transparent !important;
+    border-top: 5px solid #ffffff !important;
+    border-bottom: none !important;
+    transition: transform 0.25s ease, opacity 0.2s ease !important;
+    margin-left: 3px !important;
+    opacity: 0.9 !important;
+}
+
+/* Caret rotates UP when menu is open */
+body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display: none"])) .MuiIconButton-root:has(.MuiAvatar-root)::after,
+.MuiIconButton-root:has(.MuiAvatar-root)[aria-expanded="true"]::after {
+    transform: rotate(180deg) !important;
+}
+
+/* 2. Netflix Popup Window (Dark, 4px Rounded, Border) */
+#app-user-menu .MuiPaper-root,
+.MuiPopover-paper:has(#app-user-menu),
+#app-user-menu.MuiPopover-paper {
+    background-color: rgba(18, 18, 18, 0.96) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: 4px !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.85) !important;
+    min-width: 220px !important;
+    padding: 8px 0 !important;
+    margin-top: 10px !important;
+}
+
+#app-user-menu .MuiList-root {
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+/* 3. Menu Items (Compact 13.5px typography, subtle hover) */
+#app-user-menu .MuiMenuItem-root {
+    padding: 8px 16px !important;
+    min-height: unset !important;
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    transition: background 0.15s ease, color 0.15s ease !important;
+}
+
+#app-user-menu .MuiMenuItem-root:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Underline text on hover matching Netflix */
+#app-user-menu .MuiMenuItem-root:hover .MuiListItemText-root span {
+    text-decoration: underline !important;
+}
+
+/* Menu Icons */
+#app-user-menu .MuiListItemIcon-root {
+    min-width: 28px !important;
+    width: 28px !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    margin-right: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+#app-user-menu .MuiListItemIcon-root svg {
+    width: 18px !important;
+    height: 18px !important;
+    font-size: 18px !important;
+}
+
+/* Menu Text */
+#app-user-menu .MuiListItemText-root {
+    margin: 0 !important;
+}
+
+#app-user-menu .MuiListItemText-root .MuiTypography-root {
+    font-size: 13.5px !important;
+    font-weight: 500 !important;
+    color: #ffffff !important;
+    letter-spacing: 0.1px !important;
+}
+
+/* Menu Dividers */
+#app-user-menu .MuiDivider-root {
+    border-color: rgba(255, 255, 255, 0.15) !important;
+    margin: 8px 0 !important;
+}
+
+/* Sign Out Row: border divider, no icon, matching Netflix */
+#app-user-menu .MuiMenuItem-root:has([data-testid="LogoutIcon"]) {
+    border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+    margin-top: 6px !important;
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+}
+
+#app-user-menu .MuiMenuItem-root:has([data-testid="LogoutIcon"]) .MuiListItemIcon-root {
+    display: none !important;
+}
