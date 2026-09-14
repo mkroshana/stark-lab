@@ -395,11 +395,26 @@
 
         try {
             // 1. Personalize Continue Watching title (only if not already done)
-            const cwTitle = document.querySelector('#homeTab .ContinueWatchingNextUp h2.sectionTitle');
+            const cwSection = document.querySelector('#homeTab .ContinueWatchingNextUp');
+            const cwTitle = cwSection ? cwSection.querySelector('h2.sectionTitle') : null;
             if (cwTitle && cwTitle.textContent.includes('Continue Watching') && !cwTitle.textContent.startsWith('Continue Watching for')) {
                 const rawName = window.ApiClient?.getCurrentUser()?.Name || 'Roshana';
                 const displayName = rawName.replace(/^mk/i, '').replace(/^[a-z]/, c => c.toUpperCase()) || 'Roshana';
                 cwTitle.textContent = 'Continue Watching for ' + displayName;
+            }
+
+            // Clean episode names in Continue Watching to show clean Show Name like Netflix
+            if (cwSection) {
+                const cwCards = cwSection.querySelectorAll('.card');
+                cwCards.forEach(card => {
+                    const a = card.querySelector('.cardText-first a');
+                    if (a && a.textContent.includes(' - S')) {
+                        if (!a.getAttribute('data-full-title')) {
+                            a.setAttribute('data-full-title', a.textContent);
+                        }
+                        a.textContent = a.textContent.split(/ - S\d+/i)[0].trim();
+                    }
+                });
             }
 
             // 2. Set up dynamic pagination indicator dashes & slider buttons for each scroller

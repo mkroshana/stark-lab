@@ -5478,10 +5478,65 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     box-shadow: 0 0 4px rgba(229, 9, 20, 0.6) !important;
 }
 
-/* 6. Hide Card Titles & Years Underneath on Content Sections */
+/* 6. Netflix In-Card Title Overlay inside Thumbnail & Poster */
+#homeTab .cardBox,
+.verticalSection.emby-scroller-container .cardBox {
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: 4px !important;
+}
+
 #homeTab .verticalSection .cardText,
 .verticalSection.emby-scroller-container .cardText {
     display: none !important;
+}
+
+#homeTab .verticalSection .cardText-first,
+.verticalSection.emby-scroller-container .cardText-first {
+    display: flex !important;
+    align-items: flex-end !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    padding: 34px 10px 9px 10px !important;
+    background: linear-gradient(0deg, rgba(14, 14, 14, 0.94) 0%, rgba(14, 14, 14, 0.6) 50%, transparent 100%) !important;
+    z-index: 7 !important;
+    pointer-events: none !important;
+    text-align: left !important;
+    margin: 0 !important;
+    border-radius: 0 0 4px 4px !important;
+    box-sizing: border-box !important;
+}
+
+#homeTab .verticalSection .cardText-first bdi,
+.verticalSection.emby-scroller-container .cardText-first bdi {
+    display: block !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+#homeTab .verticalSection .cardText-first a,
+.verticalSection.emby-scroller-container .cardText-first a {
+    color: #ffffff !important;
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 2px 8px rgba(0, 0, 0, 0.8) !important;
+    letter-spacing: -0.015em !important;
+    line-height: 1.2 !important;
+    text-decoration: none !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    display: block !important;
+    pointer-events: auto !important;
+}
+
+.innerCardFooter,
+.fullInnerCardFooter {
+    z-index: 10 !important;
 }
 
 /* 7. Pagination Indicator Dashes */
