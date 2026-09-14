@@ -4874,149 +4874,9 @@ body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display:
 }
 
 /* ==========================================================================
-   SLEEKFIN HERO & DETAIL PAGE STYLING (Netflix Aesthetic Harmony)
+   DETAIL PAGE HERO & BUTTON STYLING (Netflix Style Pills)
    ========================================================================== */
 
-/* 1. SleekFin Home Hero Section */
-.sleekfin-hero {
-    position: relative !important;
-    width: 100% !important;
-    overflow: hidden !important;
-}
-
-.sleekfin-hero-backdrop {
-    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 60%, rgba(0, 0, 0, 0.7) 75%, rgba(0, 0, 0, 0.3) 88%, transparent 100%) !important;
-    mask-image: linear-gradient(180deg, #000 0%, #000 60%, rgba(0, 0, 0, 0.7) 75%, rgba(0, 0, 0, 0.3) 88%, transparent 100%) !important;
-}
-
-.sleekfin-hero-vignette {
-    background: linear-gradient(180deg, rgba(15, 15, 15, 0.3) 0%, transparent 40%, rgba(15, 15, 15, 0.7) 80%, #0f0f0f 100%),
-                linear-gradient(90deg, rgba(15, 15, 15, 0.9) 0%, rgba(15, 15, 15, 0.6) 25%, transparent 65%) !important;
-}
-
-.sleekfin-hero-seam {
-    background: linear-gradient(180deg, transparent 0%, rgba(15, 15, 15, 0.8) 70%, #0f0f0f 100%) !important;
-    bottom: 0 !important;
-}
-
-/* SleekFin Hero Pill Action Buttons */
-.sleekfin-hero-actions {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    gap: 14px !important;
-    margin-top: 20px !important;
-}
-
-/* Primary Play Button: Solid White Pill */
-.sleekfin-button-primary,
-.sleekfin-hero-actions .sleekfin-button-primary {
-    background: #ffffff !important;
-    color: #000000 !important;
-    border-radius: 9999px !important;
-    font-weight: 700 !important;
-    font-size: 15px !important;
-    padding: 0.6rem 1.6rem !important;
-    height: 42px !important;
-    border: none !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
-    transition: background 0.2s ease, transform 0.15s ease !important;
-}
-
-.sleekfin-button-primary:hover,
-.sleekfin-hero-actions .sleekfin-button-primary:hover {
-    background: rgba(255, 255, 255, 0.82) !important;
-    color: #000000 !important;
-    transform: scale(1.03) !important;
-}
-
-.sleekfin-button-primary .sleekfin-icon,
-.sleekfin-button-primary svg {
-    color: #000000 !important;
-    fill: #000000 !important;
-}
-
-/* Secondary Info / Watchlist Button: Frosted Pill */
-.sleekfin-button-control,
-.sleekfin-hero-actions .sleekfin-button-control {
-    background: rgba(255, 255, 255, 0.22) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    color: #ffffff !important;
-    border-radius: 9999px !important;
-    font-weight: 600 !important;
-    font-size: 14px !important;
-    padding: 0.6rem 1.5rem !important;
-    height: 42px !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease !important;
-}
-
-.sleekfin-button-control:hover,
-.sleekfin-hero-actions .sleekfin-button-control:hover {
-    background: rgba(255, 255, 255, 0.32) !important;
-    border-color: rgba(255, 255, 255, 0.45) !important;
-    transform: scale(1.03) !important;
-}
-
-.sleekfin-button-control .sleekfin-icon,
-.sleekfin-button-control svg {
-    color: #ffffff !important;
-    fill: #ffffff !important;
-}
-
-/* Rating badge & metadata in hero */
-.sleekfin-hero-score {
-    display: inline-flex !important;
-    align-items: center !important;
-    gap: 4px !important;
-    font-weight: 700 !important;
-    color: #e50914 !important;
-}
-
-/* 2. SleekFin Detail Page Hero */
-html.sleekfin-details-mounted #itemDetailPage[data-sleekfin-details] > #itemBackdrop {
-    height: 75vh !important;
-}
-
-html.sleekfin-details-mounted #itemDetailPage[data-sleekfin-details] > #itemBackdrop::after {
-    background: linear-gradient(180deg, transparent 40%, rgba(15, 15, 15, 0.6) 70%, #0f0f0f 100%) !important;
-}
-
-.sleekfin-details-stack > .mainDetailButtons {
-    gap: 14px !important;
-}
-
-.sleekfin-details-stack > .mainDetailButtons .btnPlay,
-.sleekfin-details-stack > .mainDetailButtons .btnReplay {
-    background: #ffffff !important;
-    color: #000000 !important;
-    border-radius: 9999px !important;
-    font-weight: 700 !important;
-    height: 42px !important;
-    padding: 0 24px !important;
-    border: none !important;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
-}
-
-.sleekfin-details-stack > .mainDetailButtons .btnPlay:hover,
-.sleekfin-details-stack > .mainDetailButtons .btnReplay:hover {
-    background: rgba(255, 255, 255, 0.82) !important;
-    transform: scale(1.03) !important;
-}
-
-.sleekfin-details-stack > .mainDetailButtons :is(.btnDownload, .btnUserRating) {
-    background: rgba(255, 255, 255, 0.22) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    border-radius: 9999px !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    color: #ffffff !important;
-    height: 42px !important;
-    padding: 0 20px !important;
-}
-
-/* 3. Native Jellyfin Detail Page Fallback (when SleekFin is unmounted/loading) */
 #itemDetailPage .detailPagePrimaryContainer {
     position: relative !important;
 }
@@ -5029,6 +4889,7 @@ html.sleekfin-details-mounted #itemDetailPage[data-sleekfin-details] > #itemBack
     padding-top: 10px !important;
 }
 
+/* Primary Play Button: Solid White Pill */
 #itemDetailPage .mainDetailButtons .btnPlay {
     background: #ffffff !important;
     color: #000000 !important;
@@ -5052,6 +4913,7 @@ html.sleekfin-details-mounted #itemDetailPage[data-sleekfin-details] > #itemBack
     fill: #000000 !important;
 }
 
+/* Secondary Action Buttons: Frosted Translucent Pills */
 #itemDetailPage .mainDetailButtons .detailButton:not(.btnPlay) {
     background: rgba(255, 255, 255, 0.2) !important;
     backdrop-filter: blur(12px) !important;
@@ -5079,4 +4941,5 @@ html.sleekfin-details-mounted #itemDetailPage[data-sleekfin-details] > #itemBack
     letter-spacing: 0.5px !important;
     color: rgba(255, 255, 255, 0.9) !important;
 }
+
 
