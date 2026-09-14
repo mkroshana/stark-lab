@@ -5642,3 +5642,18 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     color: #ffffff !important;
 }
 
+/* 9. Remove Play Icon from Card Thumbnails */
+.card .cardOverlayFab-primary,
+.card .cardOverlayButton[data-action="resume"],
+.card .cardOverlayButton[data-action="play"],
+.card .cardOverlayButton:has(.play_arrow),
+.card .cardOverlayButtonIcon.play_arrow,
+.cardScalable .cardOverlayFab-primary,
+.cardScalable .cardOverlayButton-hover[data-action="resume"],
+.cardOverlayContainer > .cardOverlayFab-primary {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
