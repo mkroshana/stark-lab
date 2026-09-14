@@ -350,16 +350,21 @@
 
         if (cachedEntries.length > 0) {
             renderHero(cachedEntries, apiClient);
+            initNetflixSections();
             return;
         }
 
-        if (isFetching) return;
+        if (isFetching) {
+            initNetflixSections();
+            return;
+        }
         isFetching = true;
 
         try {
             cachedEntries = await fetchHeroEntries(apiClient);
             if (isHome()) {
                 renderHero(cachedEntries, apiClient);
+                initNetflixSections();
             }
         } catch (e) {
             console.error('[NetflixHero] Failed to initialize hero', e);
@@ -368,29 +373,175 @@
         }
     }
 
+    let isUpdatingSections = false;
+    let sectionDebounceTimer = null;
+
+    function scheduleNetflixSections(delay = 150) {
+        if (sectionDebounceTimer) clearTimeout(sectionDebounceTimer);
+        sectionDebounceTimer = setTimeout(() => {
+            initNetflixSections();
+        }, delay);
+    }
+
+    /**
+     * Netflix Content Sections Controller
+     * - Personalizes Continue Watching title with user's name
+     * - Injects and syncs Netflix pagination indicator dashes on row headers
+     * - Controls slider scroll buttons with smooth sliding
+     */
+    function initNetflixSections() {
+        if (!isHome() || isUpdatingSections) return;
+        isUpdatingSections = true;
+
+        try {
+            // 1. Personalize Continue Watching title (only if not already done)
+            const cwTitle = document.querySelector('#homeTab .ContinueWatchingNextUp h2.sectionTitle');
+            if (cwTitle && cwTitle.textContent.includes('Continue Watching') && !cwTitle.textContent.startsWith('Continue Watching for')) {
+                const rawName = window.ApiClient?.getCurrentUser()?.Name || 'Roshana';
+                const displayName = rawName.replace(/^mk/i, '').replace(/^[a-z]/, c => c.toUpperCase()) || 'Roshana';
+                cwTitle.textContent = 'Continue Watching for ' + displayName;
+            }
+
+            // 2. Set up dynamic pagination indicator dashes & slider buttons for each scroller
+            const sections = document.querySelectorAll('#homeTab .verticalSection.emby-scroller-container');
+            sections.forEach(sec => {
+                const titleContainer = sec.querySelector('.sectionTitleContainer');
+                const scroller = sec.querySelector('.emby-scroller');
+                if (!titleContainer || !scroller) return;
+
+                let indContainer = titleContainer.querySelector('.netflix-indicators');
+                if (!indContainer) {
+                    indContainer = document.createElement('div');
+                    indContainer.className = 'netflix-indicators';
+                    titleContainer.appendChild(indContainer);
+                }
+
+                function updateIndicators() {
+                    const scrollLeft = scroller.scrollLeft;
+                    const maxScroll = scroller.scrollWidth - scroller.clientWidth;
+                    if (maxScroll <= 10) {
+                        if (indContainer.children.length > 0) indContainer.innerHTML = '';
+                        return;
+                    }
+
+                    const totalPages = Math.max(2, Math.min(6, Math.ceil(scroller.scrollWidth / scroller.clientWidth) + 1));
+                    const currentPage = Math.min(totalPages - 1, Math.round((scrollLeft / maxScroll) * (totalPages - 1)));
+
+                    if (indContainer.children.length !== totalPages) {
+                        indContainer.innerHTML = '';
+                        for (let i = 0; i < totalPages; i++) {
+                            const dash = document.createElement('span');
+                            dash.className = 'netflix-indicator-dash' + (i === currentPage ? ' active' : '');
+                            dash.title = 'Page ' + (i + 1);
+                            dash.onclick = (e) => {
+                                e.stopPropagation();
+                                scroller.scrollTo({
+                                    left: (maxScroll / (totalPages - 1)) * i,
+                                    behavior: 'smooth'
+                                });
+                            };
+                            indContainer.appendChild(dash);
+                        }
+                    } else {
+                        Array.from(indContainer.children).forEach((dash, idx) => {
+                            dash.classList.toggle('active', idx === currentPage);
+                        });
+                    }
+                }
+
+                if (!scroller._netflixScrollBound) {
+                    scroller._netflixScrollBound = true;
+                    scroller.addEventListener('scroll', updateIndicators, { passive: true });
+                }
+                updateIndicators();
+
+                // Wire up left and right scroll buttons to smooth scroll by 85% of visible width
+                const leftBtn = sec.querySelector('.emby-scrollbuttons-button[data-direction="left"]');
+                const rightBtn = sec.querySelector('.emby-scrollbuttons-button[data-direction="right"]');
+                if (leftBtn && !leftBtn._netflixClickBound) {
+                    leftBtn._netflixClickBound = true;
+                    leftBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const step = scroller.clientWidth * 0.85;
+                        scroller.scrollBy({ left: -step, behavior: 'smooth' });
+                    });
+                }
+                if (rightBtn && !rightBtn._netflixClickBound) {
+                    rightBtn._netflixClickBound = true;
+                    rightBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const step = scroller.clientWidth * 0.85;
+                        scroller.scrollBy({ left: step, behavior: 'smooth' });
+                    });
+                }
+            });
+        } finally {
+            setTimeout(() => {
+                isUpdatingSections = false;
+            }, 50);
+        }
+    }
+
+    // MutationObserver to catch dynamically rendered sections without recursive loop
+    let sectionObserver = null;
+    function observeSections() {
+        if (sectionObserver) return;
+        const target = document.getElementById('indexPage') || document.body;
+        sectionObserver = new MutationObserver((mutations) => {
+            if (!isHome() || isUpdatingSections) return;
+            const isSelfMutation = mutations.every(m => {
+                const t = m.target;
+                return t && (t.classList?.contains('netflix-indicators') ||
+                             t.classList?.contains('netflix-indicator-dash') ||
+                             t.parentElement?.classList?.contains('netflix-indicators'));
+            });
+            if (!isSelfMutation) {
+                scheduleNetflixSections(200);
+            }
+        });
+        sectionObserver.observe(target, { childList: true, subtree: true });
+    }
+
     // Lifecycle events
     window.addEventListener('hashchange', () => {
         setTimeout(initHero, 80);
+        setTimeout(initNetflixSections, 150);
+        setTimeout(initNetflixSections, 600);
     });
 
     window.addEventListener('pageshow', () => {
         setTimeout(initHero, 80);
+        setTimeout(initNetflixSections, 150);
+        setTimeout(initNetflixSections, 600);
     });
 
     document.addEventListener('viewshow', () => {
         setTimeout(initHero, 80);
+        setTimeout(initNetflixSections, 150);
+        setTimeout(initNetflixSections, 600);
     });
 
     window.addEventListener('resize', () => {
-        if (isHome()) alignHeroToTop();
+        if (isHome()) {
+            alignHeroToTop();
+            initNetflixSections();
+        }
     }, { passive: true });
 
     window.addEventListener('scroll', updateHeaderStyle, { passive: true });
 
     // Initial trigger
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => setTimeout(initHero, 150));
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(initHero, 150);
+            setTimeout(initNetflixSections, 300);
+            setTimeout(observeSections, 500);
+        });
     } else {
         setTimeout(initHero, 150);
+        setTimeout(initNetflixSections, 300);
+        setTimeout(observeSections, 500);
     }
 })();
