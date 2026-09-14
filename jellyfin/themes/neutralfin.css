@@ -4947,8 +4947,12 @@ body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display:
    ========================================================================== */
 
 /* Full-bleed layout: Reset top padding when Hero is mounted on Home */
+#indexPage.homePage.libraryPage,
+#indexPage.pageWithAbsoluteTabs,
+#indexPage.libraryPage:not(.noSecondaryNavPage),
+.layout-desktop #indexPage.libraryPage:not(.noSecondaryNavPage),
 body.has-netflix-hero #indexPage,
-body.has-netflix-hero .libraryPage,
+body.has-netflix-hero #indexPage.libraryPage,
 body.has-netflix-hero .pageWithAbsoluteTabs,
 body.has-netflix-hero .pageTabContent,
 body.has-netflix-hero #homeTab,
@@ -4962,7 +4966,8 @@ body.has-netflix-hero #homeTab,
 
 /* Seamless Transparent Top Header with Netflix Gradient Overlay */
 body.has-netflix-hero .skinHeader:not(.osdHeader):not(.headroom--not-top),
-#indexPage:has(.netflix-hero) ~ .skinHeader:not(.osdHeader):not(.headroom--not-top) {
+body.has-netflix-hero .skinHeader-blurred:not(.osdHeader):not(.headroom--not-top),
+body.has-netflix-hero .MuiAppBar-root:not(.osdHeader):not(.headroom--not-top) {
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%) !important;
     background-color: transparent !important;
     backdrop-filter: none !important;
@@ -4971,8 +4976,20 @@ body.has-netflix-hero .skinHeader:not(.osdHeader):not(.headroom--not-top),
     border: none !important;
 }
 
+/* Kill the NeutralFin blur layer pseudo-element on the header at top */
+body.has-netflix-hero .skinHeader:not(.headroom--not-top)::after,
+body.has-netflix-hero .skinHeader-blurred:not(.headroom--not-top)::after,
+body.has-netflix-hero .MuiAppBar-root:not(.headroom--not-top)::after {
+    display: none !important;
+    content: none !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
 /* Scrolled Header past hero */
-body.has-netflix-hero .skinHeader.headroom--not-top:not(.osdHeader) {
+body.has-netflix-hero .skinHeader.headroom--not-top:not(.osdHeader),
+body.has-netflix-hero .skinHeader-blurred.headroom--not-top:not(.osdHeader) {
     background: rgba(16, 16, 16, 0.92) !important;
     backdrop-filter: blur(16px) !important;
     -webkit-backdrop-filter: blur(16px) !important;

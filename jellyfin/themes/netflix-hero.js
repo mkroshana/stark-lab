@@ -16,6 +16,57 @@
         return hash === '' || hash === '#/' || hash === '#/home' || hash.startsWith('#/home?');
     }
 
+    function applyHeroLayoutStyles() {
+        document.body.classList.add('has-netflix-hero');
+        const indexPage = document.getElementById('indexPage');
+        if (indexPage) {
+            indexPage.classList.add('has-netflix-hero');
+            indexPage.style.setProperty('padding-top', '0px', 'important');
+            indexPage.style.setProperty('margin-top', '0px', 'important');
+        }
+        const homeTab = document.getElementById('homeTab');
+        if (homeTab) {
+            homeTab.classList.add('has-netflix-hero');
+            homeTab.style.setProperty('padding-top', '0px', 'important');
+            homeTab.style.setProperty('margin-top', '0px', 'important');
+        }
+        // Force header transparency over hero
+        const skinHeader = document.querySelector('.skinHeader');
+        if (skinHeader && !skinHeader.classList.contains('headroom--not-top')) {
+            skinHeader.style.setProperty('background', 'linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%)', 'important');
+            skinHeader.style.setProperty('background-color', 'transparent', 'important');
+            skinHeader.style.setProperty('backdrop-filter', 'none', 'important');
+            skinHeader.style.setProperty('-webkit-backdrop-filter', 'none', 'important');
+            skinHeader.style.setProperty('box-shadow', 'none', 'important');
+            skinHeader.style.setProperty('border', 'none', 'important');
+        }
+    }
+
+    function removeHeroLayoutStyles() {
+        document.body.classList.remove('has-netflix-hero');
+        const indexPage = document.getElementById('indexPage');
+        if (indexPage) {
+            indexPage.classList.remove('has-netflix-hero');
+            indexPage.style.removeProperty('padding-top');
+            indexPage.style.removeProperty('margin-top');
+        }
+        const homeTab = document.getElementById('homeTab');
+        if (homeTab) {
+            homeTab.classList.remove('has-netflix-hero');
+            homeTab.style.removeProperty('padding-top');
+            homeTab.style.removeProperty('margin-top');
+        }
+        const skinHeader = document.querySelector('.skinHeader');
+        if (skinHeader) {
+            skinHeader.style.removeProperty('background');
+            skinHeader.style.removeProperty('background-color');
+            skinHeader.style.removeProperty('backdrop-filter');
+            skinHeader.style.removeProperty('-webkit-backdrop-filter');
+            skinHeader.style.removeProperty('box-shadow');
+            skinHeader.style.removeProperty('border');
+        }
+    }
+
     function removeHero() {
         if (heroTimer) {
             clearInterval(heroTimer);
@@ -25,11 +76,7 @@
             currentHeroEl.remove();
             currentHeroEl = null;
         }
-        document.body.classList.remove('has-netflix-hero');
-        const indexPage = document.getElementById('indexPage');
-        if (indexPage) {
-            indexPage.classList.remove('has-netflix-hero');
-        }
+        removeHeroLayoutStyles();
     }
 
     async function fetchHeroEntries(apiClient) {
@@ -203,12 +250,8 @@
 
         if (!host) return;
 
-        // Mark document body and indexPage
-        document.body.classList.add('has-netflix-hero');
-        const indexPage = document.getElementById('indexPage');
-        if (indexPage) {
-            indexPage.classList.add('has-netflix-hero');
-        }
+        // Apply zero-padding overrides directly
+        applyHeroLayoutStyles();
 
         // If hero already mounted on current host, don't re-create
         if (currentHeroEl && currentHeroEl.parentNode === host.parentNode && currentHeroEl.nextSibling === host) {
@@ -304,6 +347,23 @@
     document.addEventListener('viewshow', () => {
         setTimeout(initHero, 80);
     });
+
+    // Scroll listener for header opacity transition
+    window.addEventListener('scroll', () => {
+        if (!isHome()) return;
+        const skinHeader = document.querySelector('.skinHeader');
+        if (!skinHeader) return;
+        if (window.scrollY > 50) {
+            skinHeader.style.setProperty('background', 'rgba(16, 16, 16, 0.92)', 'important');
+            skinHeader.style.setProperty('backdrop-filter', 'blur(16px)', 'important');
+            skinHeader.style.setProperty('-webkit-backdrop-filter', 'blur(16px)', 'important');
+        } else {
+            skinHeader.style.setProperty('background', 'linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%)', 'important');
+            skinHeader.style.setProperty('background-color', 'transparent', 'important');
+            skinHeader.style.setProperty('backdrop-filter', 'none', 'important');
+            skinHeader.style.setProperty('-webkit-backdrop-filter', 'none', 'important');
+        }
+    }, { passive: true });
 
     // Initial trigger
     if (document.readyState === 'loading') {
