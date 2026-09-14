@@ -13,7 +13,7 @@
 
     function isHome() {
         const hash = window.location.hash;
-        return hash === '' || hash === '#/' || hash === '#/home' || hash.startsWith('#/home?');
+        return hash === '' || hash === '#/' || hash === '#/home' || hash === '#/home?tab=0';
     }
 
     function alignHeroToTop() {
@@ -34,37 +34,44 @@
             homeTab.style.setProperty('margin-top', '0px', 'important');
         }
 
-        // Measure hero position relative to viewport
-        currentHeroEl.style.removeProperty('margin-top');
-        const rect = currentHeroEl.getBoundingClientRect();
-        if (rect.top > 0) {
-            currentHeroEl.style.setProperty('margin-top', '-' + Math.round(rect.top) + 'px', 'important');
-        } else {
-            currentHeroEl.style.setProperty('margin-top', '-4.25rem', 'important');
-        }
+        // Hero starts at y=0 with spacer collapsed via CSS
+        currentHeroEl.style.setProperty('margin-top', '0px', 'important');
 
         // Make header transparent
         updateHeaderStyle();
     }
 
     function updateHeaderStyle() {
-        if (!isHome()) return;
-        const skinHeader = document.querySelector('.skinHeader') || document.querySelector('.MuiAppBar-root');
-        if (!skinHeader) return;
+        const headers = document.querySelectorAll('header.MuiAppBar-root, header, .skinHeader');
+        if (!headers.length) return;
+
+        if (!isHome()) {
+            headers.forEach(h => {
+                h.style.removeProperty('background');
+                h.style.removeProperty('background-color');
+                h.style.removeProperty('backdrop-filter');
+                h.style.removeProperty('-webkit-backdrop-filter');
+                h.style.removeProperty('box-shadow');
+                h.style.removeProperty('border');
+            });
+            return;
+        }
 
         const isScrolled = window.scrollY > 40;
-        if (isScrolled) {
-            skinHeader.style.setProperty('background', 'rgba(16, 16, 16, 0.92)', 'important');
-            skinHeader.style.setProperty('backdrop-filter', 'blur(16px)', 'important');
-            skinHeader.style.setProperty('-webkit-backdrop-filter', 'blur(16px)', 'important');
-        } else {
-            skinHeader.style.setProperty('background', 'linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%)', 'important');
-            skinHeader.style.setProperty('background-color', 'transparent', 'important');
-            skinHeader.style.setProperty('backdrop-filter', 'none', 'important');
-            skinHeader.style.setProperty('-webkit-backdrop-filter', 'none', 'important');
-            skinHeader.style.setProperty('box-shadow', 'none', 'important');
-            skinHeader.style.setProperty('border', 'none', 'important');
-        }
+        headers.forEach(h => {
+            if (isScrolled) {
+                h.style.setProperty('background', 'rgba(16, 16, 16, 0.92)', 'important');
+                h.style.setProperty('backdrop-filter', 'blur(16px)', 'important');
+                h.style.setProperty('-webkit-backdrop-filter', 'blur(16px)', 'important');
+            } else {
+                h.style.setProperty('background', 'linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%)', 'important');
+                h.style.setProperty('background-color', 'transparent', 'important');
+                h.style.setProperty('backdrop-filter', 'none', 'important');
+                h.style.setProperty('-webkit-backdrop-filter', 'none', 'important');
+                h.style.setProperty('box-shadow', 'none', 'important');
+                h.style.setProperty('border', 'none', 'important');
+            }
+        });
     }
 
     function removeHeroLayoutStyles() {
@@ -81,15 +88,15 @@
             homeTab.style.removeProperty('padding-top');
             homeTab.style.removeProperty('margin-top');
         }
-        const skinHeader = document.querySelector('.skinHeader') || document.querySelector('.MuiAppBar-root');
-        if (skinHeader) {
-            skinHeader.style.removeProperty('background');
-            skinHeader.style.removeProperty('background-color');
-            skinHeader.style.removeProperty('backdrop-filter');
-            skinHeader.style.removeProperty('-webkit-backdrop-filter');
-            skinHeader.style.removeProperty('box-shadow');
-            skinHeader.style.removeProperty('border');
-        }
+        const headers = document.querySelectorAll('header.MuiAppBar-root, header, .skinHeader');
+        headers.forEach(h => {
+            h.style.removeProperty('background');
+            h.style.removeProperty('background-color');
+            h.style.removeProperty('backdrop-filter');
+            h.style.removeProperty('-webkit-backdrop-filter');
+            h.style.removeProperty('box-shadow');
+            h.style.removeProperty('border');
+        });
     }
 
     function removeHero() {
@@ -270,8 +277,7 @@
     function renderHero(entries, apiClient) {
         if (!entries || !entries.length) return;
         const host = document.querySelector('#indexPage #homeTab.is-active .sections')
-            || document.querySelector('#indexPage #homeTab .sections')
-            || document.querySelector('#indexPage .sections');
+            || (document.querySelector('#homeTab.is-active') ? document.querySelector('#indexPage #homeTab .sections') : null);
 
         if (!host) return;
 
@@ -335,8 +341,7 @@
         }
 
         const host = document.querySelector('#indexPage #homeTab.is-active .sections')
-            || document.querySelector('#indexPage #homeTab .sections')
-            || document.querySelector('#indexPage .sections');
+            || (document.querySelector('#homeTab.is-active') ? document.querySelector('#indexPage #homeTab .sections') : null);
 
         if (!host) {
             setTimeout(initHero, 200);

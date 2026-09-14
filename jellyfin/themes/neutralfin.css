@@ -4947,10 +4947,10 @@ body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display:
    ========================================================================== */
 
 /* Full-bleed layout: Reset top padding when Hero is mounted on Home */
-#indexPage.homePage.libraryPage,
-#indexPage.pageWithAbsoluteTabs,
-#indexPage.libraryPage:not(.noSecondaryNavPage),
-.layout-desktop #indexPage.libraryPage:not(.noSecondaryNavPage),
+body.has-netflix-hero #indexPage.homePage.libraryPage,
+body.has-netflix-hero #indexPage.pageWithAbsoluteTabs,
+body.has-netflix-hero #indexPage.libraryPage:not(.noSecondaryNavPage),
+body.has-netflix-hero .layout-desktop #indexPage.libraryPage:not(.noSecondaryNavPage),
 body.has-netflix-hero #indexPage,
 body.has-netflix-hero #indexPage.libraryPage,
 body.has-netflix-hero .pageWithAbsoluteTabs,
@@ -4962,6 +4962,18 @@ body.has-netflix-hero #homeTab,
 #indexPage:has(.netflix-hero) #homeTab {
     padding-top: 0 !important;
     margin-top: 0 !important;
+}
+
+/* Collapse MUI fixed AppBar spacer div on Home when hero is active */
+body.has-netflix-hero header.MuiAppBar-root + div[aria-hidden="true"],
+body.has-netflix-hero .MuiAppBar-root + div[aria-hidden="true"] {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+}
+
+header.MuiAppBar-root {
+    transition: background 0.35s ease, backdrop-filter 0.35s ease, -webkit-backdrop-filter 0.35s ease !important;
 }
 
 /* Seamless Transparent Top Header with Netflix Gradient Overlay */
@@ -4995,7 +5007,7 @@ body.has-netflix-hero .skinHeader-blurred.headroom--not-top:not(.osdHeader) {
     -webkit-backdrop-filter: blur(16px) !important;
 }
 
-/* Hero Container: 82vh cinematic aspect ratio, pulled behind header */
+/* Hero Container: 82vh cinematic aspect ratio, starting at y=0 */
 .netflix-hero {
     position: relative !important;
     width: 100% !important;
@@ -5006,7 +5018,7 @@ body.has-netflix-hero .skinHeader-blurred.headroom--not-top:not(.osdHeader) {
     box-sizing: border-box !important;
     display: flex !important;
     align-items: flex-end !important;
-    margin-top: -4.25rem !important; /* Pull up behind the header */
+    margin-top: 0 !important;
     margin-bottom: 0 !important;
     background: #101010 !important;
 }
@@ -5272,7 +5284,7 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     .netflix-hero {
         height: 65vh !important;
         min-height: 440px !important;
-        margin-top: -3.5rem !important;
+        margin-top: 0 !important;
     }
     .netflix-hero-content {
         padding-left: 5% !important;
