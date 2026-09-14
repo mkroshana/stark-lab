@@ -4946,19 +4946,52 @@ body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display:
    NETFLIX HERO BANNER (Home Screen)
    ========================================================================== */
 
+/* Full-bleed layout: Reset top padding when Hero is mounted on Home */
+body.has-netflix-hero #indexPage,
+body.has-netflix-hero .libraryPage,
+body.has-netflix-hero .pageWithAbsoluteTabs,
+body.has-netflix-hero .pageTabContent,
+body.has-netflix-hero #homeTab,
+#indexPage:has(.netflix-hero),
+#indexPage:has(.netflix-hero).libraryPage,
+#indexPage:has(.netflix-hero) .pageTabContent,
+#indexPage:has(.netflix-hero) #homeTab {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Seamless Transparent Top Header with Netflix Gradient Overlay */
+body.has-netflix-hero .skinHeader:not(.osdHeader):not(.headroom--not-top),
+#indexPage:has(.netflix-hero) ~ .skinHeader:not(.osdHeader):not(.headroom--not-top) {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%) !important;
+    background-color: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* Scrolled Header past hero */
+body.has-netflix-hero .skinHeader.headroom--not-top:not(.osdHeader) {
+    background: rgba(16, 16, 16, 0.92) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+}
+
+/* Hero Container: 80vh cinematic aspect ratio */
 .netflix-hero {
     position: relative !important;
     width: 100% !important;
-    height: 72vh !important;
-    min-height: 480px !important;
-    max-height: 800px !important;
+    height: 80vh !important;
+    min-height: 540px !important;
+    max-height: 850px !important;
     overflow: hidden !important;
     box-sizing: border-box !important;
     display: flex !important;
     align-items: flex-end !important;
-    margin-top: -4.5rem !important; /* Pull behind transparent Netflix topbar */
-    margin-bottom: 1.5rem !important;
-    background: #0f0f0f !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    background: #101010 !important;
 }
 
 .netflix-hero-slide {
@@ -4969,7 +5002,7 @@ body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display:
     display: flex !important;
     align-items: flex-end !important;
     box-sizing: border-box !important;
-    animation: netflixHeroFadeIn 0.5s ease-out forwards !important;
+    animation: netflixHeroFadeIn 0.45s ease-out forwards !important;
 }
 
 @keyframes netflixHeroFadeIn {
@@ -4995,122 +5028,143 @@ body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display:
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
-    object-position: center 25% !important;
+    object-position: center 20% !important;
     position: absolute !important;
     inset: 0 !important;
 }
 
+/* Netflix Vignette: subtle top navbar shadow + deep left text contrast shadow */
 .netflix-hero-vignette {
     position: absolute !important;
     inset: 0 !important;
-    background: linear-gradient(180deg, rgba(15, 15, 15, 0.4) 0%, transparent 40%, rgba(15, 15, 15, 0.7) 80%, #0f0f0f 100%),
-                linear-gradient(90deg, rgba(15, 15, 15, 0.95) 0%, rgba(15, 15, 15, 0.65) 30%, transparent 70%) !important;
+    background: linear-gradient(180deg, rgba(16, 16, 16, 0.75) 0%, rgba(16, 16, 16, 0.25) 15%, transparent 35%),
+                linear-gradient(90deg, rgba(16, 16, 16, 0.88) 0%, rgba(16, 16, 16, 0.65) 28%, rgba(16, 16, 16, 0.2) 55%, transparent 75%) !important;
     pointer-events: none !important;
 }
 
+/* Netflix Seam: smooth fade directly into page background */
 .netflix-hero-seam {
     position: absolute !important;
     bottom: 0 !important;
     left: 0 !important;
     right: 0 !important;
-    height: 140px !important;
-    background: linear-gradient(180deg, transparent 0%, rgba(15, 15, 15, 0.8) 70%, #0f0f0f 100%) !important;
+    height: 180px !important;
+    background: linear-gradient(180deg, transparent 0%, rgba(16, 16, 16, 0.25) 35%, rgba(16, 16, 16, 0.75) 75%, #101010 100%) !important;
     pointer-events: none !important;
 }
 
+/* Content Container: perfectly aligned horizontally with navbar and cards */
 .netflix-hero-content {
     position: relative !important;
     z-index: 2 !important;
-    padding: 0 4% 3rem 4% !important;
-    max-width: 580px !important;
+    padding-left: 4% !important;
+    padding-right: 4% !important;
+    padding-bottom: 2.25rem !important;
+    max-width: 620px !important;
     box-sizing: border-box !important;
     display: flex !important;
     flex-direction: column !important;
-    gap: 14px !important;
+    gap: 12px !important;
 }
 
+/* Title / Logo Brand Area */
 .netflix-hero-brand {
     display: flex !important;
     align-items: flex-end !important;
-    max-width: 440px !important;
-    min-height: 50px !important;
-    max-height: 140px !important;
+    width: 100% !important;
+    max-width: 480px !important;
+    min-height: 60px !important;
+    max-height: 160px !important;
+    margin-bottom: 2px !important;
 }
 
 .netflix-hero-logo {
     max-width: 100% !important;
-    max-height: 130px !important;
+    width: auto !important;
+    height: auto !important;
+    max-height: 155px !important;
     object-fit: contain !important;
     object-position: left bottom !important;
-    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.75)) !important;
+    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.85)) !important;
 }
 
 .netflix-hero-title {
-    font-size: 2.8rem !important;
+    font-size: clamp(2.2rem, 3.8vw, 3.4rem) !important;
     font-weight: 800 !important;
     color: #ffffff !important;
     margin: 0 !important;
     line-height: 1.1 !important;
     text-transform: uppercase !important;
     letter-spacing: -0.02em !important;
-    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.85) !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.9) !important;
 }
 
+/* Metadata Row (Match %, Year, Rating Badge, Genres) */
 .netflix-hero-meta {
     display: flex !important;
     flex-wrap: wrap !important;
     align-items: center !important;
-    gap: 10px !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    color: rgba(255, 255, 255, 0.9) !important;
+    gap: 12px !important;
+    font-size: 14.5px !important;
+    font-weight: 600 !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+    letter-spacing: 0.1px !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8) !important;
 }
 
 .netflix-hero-score {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 4px !important;
-    font-weight: 700 !important;
+    gap: 5px !important;
+    font-weight: 800 !important;
     color: #46d369 !important; /* Netflix Match Green */
 }
 
 .netflix-hero-star {
-    color: #e50914 !important;
+    color: #e50914 !important; /* Netflix Red Star */
+    font-size: 14px !important;
 }
 
 .netflix-hero-year {
     color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500 !important;
 }
 
 .netflix-hero-rating {
     border: 1px solid rgba(255, 255, 255, 0.45) !important;
-    border-radius: 4px !important;
-    padding: 1px 6px !important;
-    font-size: 11px !important;
-    font-weight: 600 !important;
-    color: rgba(255, 255, 255, 0.9) !important;
+    background: rgba(0, 0, 0, 0.25) !important;
+    border-radius: 3px !important;
+    padding: 1px 7px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    line-height: 1.3 !important;
 }
 
 .netflix-hero-genres {
     color: rgba(255, 255, 255, 0.75) !important;
+    font-weight: 500 !important;
 }
 
+/* Synopsis / Overview */
 .netflix-hero-overview {
     color: rgba(255, 255, 255, 0.9) !important;
-    font-size: 14px !important;
-    line-height: 1.45 !important;
+    font-size: 14.5px !important;
+    line-height: 1.48 !important;
     margin: 0 !important;
+    max-width: 520px !important;
     display: -webkit-box !important;
     -webkit-line-clamp: 3 !important;
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7) !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95) !important;
 }
 
+/* Action Buttons (Pills: Solid White + Frosted Glass) */
 .netflix-hero-actions {
     display: flex !important;
     align-items: center !important;
-    gap: 14px !important;
+    gap: 12px !important;
     margin-top: 6px !important;
 }
 
@@ -5121,13 +5175,16 @@ body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display:
     gap: 8px !important;
     border-radius: 9999px !important;
     height: 42px !important;
-    padding: 0 24px !important;
+    padding: 0 26px !important;
     font-size: 15px !important;
     font-weight: 700 !important;
     cursor: pointer !important;
     border: none !important;
-    transition: transform 0.15s ease, background 0.2s ease !important;
+    letter-spacing: 0.2px !important;
+    transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease !important;
     outline: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
 }
 
 .netflix-hero-btn:hover {
@@ -5139,8 +5196,10 @@ body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display:
 }
 
 .netflix-hero-btn-icon {
-    width: 20px !important;
-    height: 20px !important;
+    width: 18px !important;
+    height: 18px !important;
+    display: block !important;
+    flex-shrink: 0 !important;
 }
 
 .netflix-hero-btn-play {
@@ -5166,5 +5225,46 @@ body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display:
     border-color: rgba(255, 255, 255, 0.45) !important;
 }
 
+/* Seamless Transition to First Section Below Hero */
+body.has-netflix-hero .netflix-hero {
+    margin-bottom: 0 !important;
+}
 
+body.has-netflix-hero .sections,
+#indexPage:has(.netflix-hero) .sections {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
 
+body.has-netflix-hero .sections > .verticalSection:first-child,
+#indexPage:has(.netflix-hero) .sections > .verticalSection:first-child {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+body.has-netflix-hero .sections > .verticalSection:first-child > h2.sectionTitle,
+body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleContainer-cards,
+#indexPage:has(.netflix-hero) .sections > .verticalSection:first-child > h2.sectionTitle,
+#indexPage:has(.netflix-hero) .sections > .verticalSection:first-child > .sectionTitleContainer-cards {
+    padding-top: 0.5rem !important;
+    margin-top: 0 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .netflix-hero {
+        height: 65vh !important;
+        min-height: 440px !important;
+    }
+    .netflix-hero-content {
+        padding-left: 5% !important;
+        padding-right: 5% !important;
+        padding-bottom: 1.5rem !important;
+    }
+    .netflix-hero-logo {
+        max-height: 110px !important;
+    }
+    .netflix-hero-overview {
+        -webkit-line-clamp: 2 !important;
+    }
+}

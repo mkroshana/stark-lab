@@ -1,6 +1,6 @@
 /**
  * Netflix Hero Banner for Jellyfin 12
- * Standalone, lightweight script (~160 lines) with zero third-party plugin dependencies.
+ * Standalone, lightweight script with zero third-party plugin dependencies.
  */
 (function () {
     'use strict';
@@ -24,6 +24,11 @@
         if (currentHeroEl) {
             currentHeroEl.remove();
             currentHeroEl = null;
+        }
+        document.body.classList.remove('has-netflix-hero');
+        const indexPage = document.getElementById('indexPage');
+        if (indexPage) {
+            indexPage.classList.remove('has-netflix-hero');
         }
     }
 
@@ -98,27 +103,28 @@
         const slide = document.createElement('div');
         slide.className = 'netflix-hero-slide';
 
-        // Backdrop URL
+        // High quality backdrop URL
         let backdropUrl = '';
+        const targetWidth = Math.min(window.innerWidth ? Math.round(window.innerWidth * (window.devicePixelRatio || 1)) : 1920, 2560);
         if (display.BackdropImageTags && display.BackdropImageTags.length > 0) {
             backdropUrl = apiClient.getUrl(`Items/${display.Id}/Images/Backdrop/0`, {
-                maxWidth: Math.min(window.innerWidth || 1920, 1920),
-                quality: 85,
+                maxWidth: targetWidth,
+                quality: 90,
                 tag: display.BackdropImageTags[0]
             });
         } else if (display.ImageTags && display.ImageTags.Primary) {
             backdropUrl = apiClient.getUrl(`Items/${display.Id}/Images/Primary`, {
-                maxWidth: Math.min(window.innerWidth || 1920, 1920),
-                quality: 85,
+                maxWidth: targetWidth,
+                quality: 90,
                 tag: display.ImageTags.Primary
             });
         }
 
-        // Logo URL
+        // Title Logo URL
         let logoUrl = '';
         if (display.ImageTags && display.ImageTags.Logo) {
             logoUrl = apiClient.getUrl(`Items/${display.Id}/Images/Logo`, {
-                maxWidth: 500,
+                maxWidth: 600,
                 tag: display.ImageTags.Logo
             });
         }
@@ -126,19 +132,19 @@
         const rating = display.CommunityRating ? Number(display.CommunityRating).toFixed(1) : null;
         const year = display.ProductionYear || (display.PremiereDate ? new Date(display.PremiereDate).getFullYear() : '');
         const officialRating = display.OfficialRating || null;
-        const genres = (display.Genres || []).slice(0, 2).join(' • ');
+        const genres = (display.Genres || []).slice(0, 3).join(' • ');
         const overview = display.Overview || play.Overview || '';
 
         slide.innerHTML = `
             <div class="netflix-hero-backdrop-container">
-                ${backdropUrl ? `<img class="netflix-hero-backdrop" src="${backdropUrl}" alt="${display.Name || ''}" />` : ''}
+                ${backdropUrl ? `<img class="netflix-hero-backdrop" src="${backdropUrl}" alt="${display.Name || ''}" fetchpriority="high" />` : ''}
                 <div class="netflix-hero-vignette"></div>
                 <div class="netflix-hero-seam"></div>
             </div>
             <div class="netflix-hero-content">
                 <div class="netflix-hero-brand">
                     ${logoUrl
-                        ? `<img class="netflix-hero-logo" src="${logoUrl}" alt="${display.Name || ''}" />`
+                        ? `<img class="netflix-hero-logo" src="${logoUrl}" alt="${display.Name || ''}" draggable="false" />`
                         : `<h1 class="netflix-hero-title">${display.Name || ''}</h1>`
                     }
                 </div>
@@ -197,12 +203,26 @@
 
         if (!host) return;
 
+        // Mark document body and indexPage
+        document.body.classList.add('has-netflix-hero');
+        const indexPage = document.getElementById('indexPage');
+        if (indexPage) {
+            indexPage.classList.add('has-netflix-hero');
+        }
+
         // If hero already mounted on current host, don't re-create
         if (currentHeroEl && currentHeroEl.parentNode === host.parentNode && currentHeroEl.nextSibling === host) {
             return;
         }
 
-        removeHero();
+        if (currentHeroEl) {
+            currentHeroEl.remove();
+            currentHeroEl = null;
+        }
+        if (heroTimer) {
+            clearInterval(heroTimer);
+            heroTimer = null;
+        }
 
         const hero = document.createElement('div');
         hero.className = 'netflix-hero';
