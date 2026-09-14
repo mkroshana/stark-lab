@@ -16,7 +16,10 @@
         return hash === '' || hash === '#/' || hash === '#/home' || hash.startsWith('#/home?');
     }
 
-    function applyHeroLayoutStyles() {
+    function alignHeroToTop() {
+        if (!currentHeroEl) return;
+        
+        // Ensure body flag is active
         document.body.classList.add('has-netflix-hero');
         const indexPage = document.getElementById('indexPage');
         if (indexPage) {
@@ -30,9 +33,31 @@
             homeTab.style.setProperty('padding-top', '0px', 'important');
             homeTab.style.setProperty('margin-top', '0px', 'important');
         }
-        // Force header transparency over hero
-        const skinHeader = document.querySelector('.skinHeader');
-        if (skinHeader && !skinHeader.classList.contains('headroom--not-top')) {
+
+        // Measure hero position relative to viewport
+        currentHeroEl.style.removeProperty('margin-top');
+        const rect = currentHeroEl.getBoundingClientRect();
+        if (rect.top > 0) {
+            currentHeroEl.style.setProperty('margin-top', '-' + Math.round(rect.top) + 'px', 'important');
+        } else {
+            currentHeroEl.style.setProperty('margin-top', '-4.25rem', 'important');
+        }
+
+        // Make header transparent
+        updateHeaderStyle();
+    }
+
+    function updateHeaderStyle() {
+        if (!isHome()) return;
+        const skinHeader = document.querySelector('.skinHeader') || document.querySelector('.MuiAppBar-root');
+        if (!skinHeader) return;
+
+        const isScrolled = window.scrollY > 40;
+        if (isScrolled) {
+            skinHeader.style.setProperty('background', 'rgba(16, 16, 16, 0.92)', 'important');
+            skinHeader.style.setProperty('backdrop-filter', 'blur(16px)', 'important');
+            skinHeader.style.setProperty('-webkit-backdrop-filter', 'blur(16px)', 'important');
+        } else {
             skinHeader.style.setProperty('background', 'linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%)', 'important');
             skinHeader.style.setProperty('background-color', 'transparent', 'important');
             skinHeader.style.setProperty('backdrop-filter', 'none', 'important');
@@ -56,7 +81,7 @@
             homeTab.style.removeProperty('padding-top');
             homeTab.style.removeProperty('margin-top');
         }
-        const skinHeader = document.querySelector('.skinHeader');
+        const skinHeader = document.querySelector('.skinHeader') || document.querySelector('.MuiAppBar-root');
         if (skinHeader) {
             skinHeader.style.removeProperty('background');
             skinHeader.style.removeProperty('background-color');
@@ -250,11 +275,9 @@
 
         if (!host) return;
 
-        // Apply zero-padding overrides directly
-        applyHeroLayoutStyles();
-
         // If hero already mounted on current host, don't re-create
         if (currentHeroEl && currentHeroEl.parentNode === host.parentNode && currentHeroEl.nextSibling === host) {
+            alignHeroToTop();
             return;
         }
 
@@ -292,6 +315,11 @@
 
         host.parentNode.insertBefore(hero, host);
         currentHeroEl = hero;
+
+        // Immediately align hero to top of viewport
+        requestAnimationFrame(alignHeroToTop);
+        setTimeout(alignHeroToTop, 100);
+        setTimeout(alignHeroToTop, 300);
     }
 
     async function initHero() {
@@ -348,22 +376,11 @@
         setTimeout(initHero, 80);
     });
 
-    // Scroll listener for header opacity transition
-    window.addEventListener('scroll', () => {
-        if (!isHome()) return;
-        const skinHeader = document.querySelector('.skinHeader');
-        if (!skinHeader) return;
-        if (window.scrollY > 50) {
-            skinHeader.style.setProperty('background', 'rgba(16, 16, 16, 0.92)', 'important');
-            skinHeader.style.setProperty('backdrop-filter', 'blur(16px)', 'important');
-            skinHeader.style.setProperty('-webkit-backdrop-filter', 'blur(16px)', 'important');
-        } else {
-            skinHeader.style.setProperty('background', 'linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%)', 'important');
-            skinHeader.style.setProperty('background-color', 'transparent', 'important');
-            skinHeader.style.setProperty('backdrop-filter', 'none', 'important');
-            skinHeader.style.setProperty('-webkit-backdrop-filter', 'none', 'important');
-        }
+    window.addEventListener('resize', () => {
+        if (isHome()) alignHeroToTop();
     }, { passive: true });
+
+    window.addEventListener('scroll', updateHeaderStyle, { passive: true });
 
     // Initial trigger
     if (document.readyState === 'loading') {

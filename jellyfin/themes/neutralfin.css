@@ -4968,7 +4968,7 @@ body.has-netflix-hero #homeTab,
 body.has-netflix-hero .skinHeader:not(.osdHeader):not(.headroom--not-top),
 body.has-netflix-hero .skinHeader-blurred:not(.osdHeader):not(.headroom--not-top),
 body.has-netflix-hero .MuiAppBar-root:not(.osdHeader):not(.headroom--not-top) {
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%) !important;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%) !important;
     background-color: transparent !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
@@ -4995,18 +4995,18 @@ body.has-netflix-hero .skinHeader-blurred.headroom--not-top:not(.osdHeader) {
     -webkit-backdrop-filter: blur(16px) !important;
 }
 
-/* Hero Container: 80vh cinematic aspect ratio */
+/* Hero Container: 82vh cinematic aspect ratio, pulled behind header */
 .netflix-hero {
     position: relative !important;
     width: 100% !important;
-    height: 80vh !important;
-    min-height: 540px !important;
-    max-height: 850px !important;
+    height: 82vh !important;
+    min-height: 560px !important;
+    max-height: 860px !important;
     overflow: hidden !important;
     box-sizing: border-box !important;
     display: flex !important;
     align-items: flex-end !important;
-    margin-top: 0 !important;
+    margin-top: -4.25rem !important; /* Pull up behind the header */
     margin-bottom: 0 !important;
     background: #101010 !important;
 }
@@ -5272,6 +5272,7 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     .netflix-hero {
         height: 65vh !important;
         min-height: 440px !important;
+        margin-top: -3.5rem !important;
     }
     .netflix-hero-content {
         padding-left: 5% !important;
