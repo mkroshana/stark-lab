@@ -16,7 +16,7 @@ http:
       middlewares:
         - crowdsec-bouncer
         - security-headers
-        - general-rate-limit
+        - jellyfin-rate-limit
       tls:
         certResolver: cloudflare
 

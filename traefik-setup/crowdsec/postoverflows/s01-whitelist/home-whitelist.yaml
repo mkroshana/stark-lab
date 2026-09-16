@@ -9,10 +9,11 @@
 # ==============================================
 
 name: crowdsecurity/home-whitelist
-description: "Whitelist home ISP range to prevent self-bans"
+description: "Whitelist internal LAN ranges to prevent self-bans"
 whitelist:
-  reason: "Home ISP range and trusted user pool"
+  reason: "Internal LAN ranges"
   cidr:
-    - "112.135.0.0/16"
-    - "112.134.0.0/16"
+    - "127.0.0.1/32"
+    - "10.10.10.0/24"
+    - "192.168.0.0/16"
 

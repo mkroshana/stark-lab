@@ -31,6 +31,13 @@ http:
         period: "1m"
         burst: 200
 
+    # -- Jellyfin Rate Limit (1000 req/min, burst 500) --
+    jellyfin-rate-limit:
+      rateLimit:
+        average: 1000
+        period: "1m"
+        burst: 500
+
     # -- Auth Rate Limit (5 req/min, burst 3) --
     auth-rate-limit:
       rateLimit:
