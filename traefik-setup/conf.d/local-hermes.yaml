@@ -1,0 +1,23 @@
+# ==============================================
+# Local Hermes Agent Dynamic Configuration
+# Location: /etc/traefik/conf.d/local-hermes.yaml
+# ==============================================
+
+http:
+  routers:
+    local-hermes:
+      rule: "Host(`hermes.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: hermes-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare
+
+  services:
+    hermes-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.200:9119"
+        passHostHeader: true
