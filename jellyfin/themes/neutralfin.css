@@ -5657,3 +5657,381 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     pointer-events: none !important;
 }
 
+/* ==========================================================================
+   10. Netflix Item Detail Page Modernization (Movies & TV Shows)
+   ========================================================================== */
+
+/* Page container: transparent so background backdrop is visible */
+#itemDetailPage {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Detail Page Wrapper: smooth cinematic top-to-bottom vignette gradient */
+.detailPageWrapperContainer {
+    background: linear-gradient(180deg, transparent 0%, rgba(20, 20, 20, 0.4) 15vh, rgba(20, 20, 20, 0.85) 30vh, #141414 45vh, #141414 100%) !important;
+    background-color: transparent !important;
+    margin-top: 0 !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.detailPagePrimaryContainer {
+    background: transparent !important;
+    background-color: transparent !important;
+}
+
+/* Detail Ribbon: remove dark grey rectangular background */
+.detailRibbon {
+    background: transparent !important;
+    background-color: transparent !important;
+    background-image: none !important;
+    box-shadow: none !important;
+    position: relative !important;
+    z-index: 4 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 4% !important;
+    margin-top: 0 !important;
+    min-height: unset !important;
+    height: auto !important;
+}
+
+/* Detail Logo: crisp, high contrast, top layer with drop shadow */
+.detailLogo {
+    display: block !important;
+    position: relative !important;
+    z-index: 6 !important;
+    height: 16vh !important;
+    max-height: 130px !important;
+    width: 440px !important;
+    max-width: 85% !important;
+    margin: 0 auto 1.2rem auto !important;
+    background-position: center bottom !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.95)) !important;
+    transform: none !important;
+    top: auto !important;
+    left: auto !important;
+}
+
+/* Text title fallback when clear logo is absent */
+.detailLogo.hide ~ .detailPageWrapperContainer .nameContainer h1,
+#itemDetailPage .itemName,
+#itemDetailPage .nameContainer h1 {
+    font-size: 2.6rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    letter-spacing: -0.02em !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95) !important;
+    margin: 0 0 0.8rem 0 !important;
+    text-align: center !important;
+}
+
+/* Metadata row */
+.infoWrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 0.6rem !important;
+    z-index: 5 !important;
+}
+
+.itemMiscInfo-primary {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.75rem !important;
+    font-size: 0.95rem !important;
+    color: #a3a3a3 !important;
+    margin: 0 0 0.5rem 0 !important;
+}
+
+.mediaInfoOfficialRating {
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    padding: 1px 6px !important;
+    border-radius: 2px !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+}
+
+.starRatingContainer {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.25rem !important;
+    color: #46d369 !important;
+    font-weight: 700 !important;
+}
+
+.starIcon {
+    color: #46d369 !important;
+    background: none !important;
+    -webkit-text-fill-color: initial !important;
+    font-size: 1.1rem !important;
+}
+
+/* Detail Action Buttons */
+.mainDetailButtons {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.75rem !important;
+    margin-top: 0.4rem !important;
+    z-index: 5 !important;
+}
+
+.btnPlay.detailButton {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-radius: 4px !important;
+    padding: 0.5rem 1.6rem !important;
+    height: 42px !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5) !important;
+    transition: background 0.2s ease, transform 0.15s ease !important;
+    border: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.btnPlay.detailButton:hover {
+    background: rgba(255, 255, 255, 0.85) !important;
+    transform: scale(1.04) !important;
+}
+
+.btnPlay.detailButton .detailButton-icon {
+    color: #000000 !important;
+    font-size: 1.6rem !important;
+}
+
+.btnPlay.detailButton::after {
+    content: "Play" !important;
+    font-family: inherit !important;
+    font-weight: 700 !important;
+    font-size: 1rem !important;
+    color: #000000 !important;
+    margin-left: 0.4rem !important;
+}
+
+.mainDetailButtons .detailButton:not(.btnPlay) {
+    background: rgba(42, 42, 42, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    border-radius: 50% !important;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    padding: 0 !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    color: #ffffff !important;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+.mainDetailButtons .detailButton:not(.btnPlay):hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-color: #ffffff !important;
+    transform: scale(1.08) !important;
+}
+
+.mainDetailButtons .detailButton:not(.btnPlay) .material-icons {
+    font-size: 1.3rem !important;
+    color: #ffffff !important;
+}
+
+/* Synopsis / Overview */
+.detailPagePrimaryContent {
+    margin: 1.5rem auto 0 auto !important;
+    padding: 0 4% !important;
+}
+
+.detailSectionContent {
+    text-align: center !important;
+    max-width: 820px !important;
+    margin: 0 auto !important;
+}
+
+.detailSectionContent .overview {
+    font-size: 1.05rem !important;
+    line-height: 1.65 !important;
+    color: #e5e5e5 !important;
+    margin-bottom: 1.2rem !important;
+}
+
+/* External IDs (IMDb, TheTVDB, TMDb) */
+.detailSectionContent a[is="emby-linkbutton"],
+.detailSectionContent .button-flat:has(.tagIcon) {
+    border-radius: 4px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    color: #a3a3a3 !important;
+    font-size: 0.82rem !important;
+    padding: 4px 10px !important;
+    margin: 0 3px !important;
+    transition: all 0.2s ease !important;
+}
+
+.detailSectionContent a[is="emby-linkbutton"]:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: #ffffff !important;
+}
+
+/* Studio & Genre: Clean Netflix Metadata Tags */
+.itemDetailsGroup {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    margin: 1.2rem auto !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 1.5rem !important;
+}
+
+.detailsGroupItem {
+    border: none !important;
+    padding: 0 !important;
+    background: transparent !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.detailsGroupItem > .label {
+    color: #777777 !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+}
+
+.detailsGroupItem > .content,
+.detailsGroupItem > .content > a {
+    color: #ffffff !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+}
+
+/* Section Titles on Detail Page */
+#itemDetailPage .sectionTitle {
+    font-size: 1.35rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    letter-spacing: -0.015em !important;
+    margin-bottom: 0.8rem !important;
+}
+
+/* Detail page cards: 4px border radius, hover zoom, elevation shadow */
+#itemDetailPage .card {
+    border-radius: 4px !important;
+    transition: transform 0.25s cubic-bezier(0.2, 0, 0.1, 1), box-shadow 0.25s ease !important;
+}
+
+#itemDetailPage .card:hover {
+    transform: scale(1.04) !important;
+    z-index: 10 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7) !important;
+}
+
+#itemDetailPage .cardBox {
+    border-radius: 4px !important;
+    overflow: hidden !important;
+}
+
+#itemDetailPage .cardScalable {
+    border-radius: 4px !important;
+    overflow: hidden !important;
+}
+
+/* Episode count badges on Season cards */
+#itemDetailPage .countIndicator {
+    background: #E50914 !important;
+    border-radius: 3px !important;
+    font-size: 0.75rem !important;
+    font-weight: 700 !important;
+    padding: 2px 6px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Cast & Crew: Circular avatar photos */
+#castCollapsible .cardPadder-square,
+#castCollapsible .cardScalable {
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    aspect-ratio: 1 / 1 !important;
+}
+
+#castCollapsible .cardImageContainer {
+    border-radius: 50% !important;
+}
+
+#castCollapsible .cardText-first {
+    font-weight: 600 !important;
+    color: #ffffff !important;
+    text-align: center !important;
+    margin-top: 0.5rem !important;
+}
+
+#castCollapsible .cardText-secondary {
+    color: #808080 !important;
+    font-size: 0.8rem !important;
+    text-align: center !important;
+}
+
+/* More Like This: in-card title overlay */
+#similarCollapsible .cardBox {
+    position: relative !important;
+    overflow: hidden !important;
+    border-radius: 4px !important;
+}
+
+#similarCollapsible .cardText-first {
+    display: flex !important;
+    align-items: flex-end !important;
+    position: absolute !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    padding: 34px 10px 9px 10px !important;
+    background: linear-gradient(0deg, rgba(14, 14, 14, 0.94) 0%, rgba(14, 14, 14, 0.6) 50%, transparent 100%) !important;
+    z-index: 7 !important;
+    pointer-events: none !important;
+    text-align: left !important;
+    margin: 0 !important;
+    border-radius: 0 0 4px 4px !important;
+    box-sizing: border-box !important;
+}
+
+#similarCollapsible .cardText-first bdi {
+    display: block !important;
+    width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+#similarCollapsible .cardText-first a {
+    color: #ffffff !important;
+    font-size: 0.88rem !important;
+    font-weight: 700 !important;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.95), 0 2px 8px rgba(0, 0, 0, 0.8) !important;
+    letter-spacing: -0.015em !important;
+    line-height: 1.2 !important;
+    text-decoration: none !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    display: block !important;
+}
+
+
