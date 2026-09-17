@@ -5263,8 +5263,8 @@ body.has-netflix-hero .netflix-hero {
     margin-bottom: 0 !important;
 }
 
-body.has-netflix-hero .sections,
-#indexPage:has(.netflix-hero) .sections {
+body.has-netflix-hero:not(:has(#slides-container)) .sections,
+#indexPage:has(.netflix-hero):not(:has(#slides-container)) .sections {
     padding-top: 0 !important;
     margin-top: 0 !important;
 }
@@ -5300,6 +5300,703 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     }
     .netflix-hero-overview {
         -webkit-line-clamp: 2 !important;
+    }
+}
+
+/* ==========================================================================
+   Media Bar Plugin - Netflix Theme Integration
+   ========================================================================== */
+:root {
+    --netflix-hero-height: clamp(580px, 80vh, 860px);
+}
+
+/* Full-bleed Slides Container */
+#slides-container {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: var(--netflix-hero-height) !important;
+    overflow: hidden !important;
+    z-index: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #101010 !important;
+}
+
+/* Backdrop */
+#slides-container .backdrop-container {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 0 !important;
+}
+
+#slides-container .backdrop {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center 20% !important;
+}
+
+/* Hide Media Bar default overlays */
+#slides-container .backdrop-overlay,
+#slides-container .gradient-overlay {
+    display: none !important;
+}
+
+/* Video Trailer Container */
+#slides-container .video-container {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 1 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+}
+
+#slides-container .video-player {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 177.78vh !important;
+    min-height: 100vh !important;
+}
+
+/* Netflix 3-Way Vignette */
+#slides-container .slide::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: 
+        linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.35) 16%, transparent 36%),
+        linear-gradient(90deg, rgba(16, 16, 16, 0.95) 0%, rgba(16, 16, 16, 0.72) 30%, rgba(16, 16, 16, 0.2) 58%, transparent 78%),
+        linear-gradient(180deg, transparent 0%, rgba(16, 16, 16, 0.2) 45%, rgba(16, 16, 16, 0.8) 75%, #101010 100%) !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+}
+
+/* Content Area */
+#slides-container .slide-content {
+    position: absolute !important;
+    left: 4% !important;
+    bottom: clamp(4.2rem, 7.5vh, 6rem) !important;
+    width: min(50%, 620px) !important;
+    max-width: 620px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+    z-index: 5 !important;
+    color: #ffffff !important;
+    max-height: none !important;
+    overflow: visible !important;
+}
+
+/* Logo / Brand */
+#slides-container .logo-container {
+    display: flex !important;
+    align-items: flex-end !important;
+    width: 100% !important;
+    max-width: 460px !important;
+    height: auto !important;
+    min-height: 50px !important;
+    max-height: 145px !important;
+    margin-bottom: 2px !important;
+}
+
+#slides-container .logo {
+    max-height: 140px !important;
+    max-width: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+    object-position: left bottom !important;
+    filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.9)) !important;
+    font-size: 2.8rem !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    text-transform: uppercase !important;
+}
+
+#slides-container .logo.logo-text-fallback {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: clamp(2rem, 3.8vw, 3.2rem) !important;
+    font-weight: 800 !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+    line-height: 1.15 !important;
+    letter-spacing: -0.02em !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.95) !important;
+    text-transform: none !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+}
+
+/* Spec Line / Metadata Row */
+#slides-container .spec-line {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-items: center !important;
+    gap: 12px !important;
+    font-family: 'Inter', -apple-system, sans-serif !important;
+    font-size: 14.5px !important;
+    font-weight: 600 !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8) !important;
+    line-height: 1.3 !important;
+}
+
+#slides-container .spec-item.spec-year {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500 !important;
+}
+
+#slides-container .spec-item.spec-rating {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    color: #46d369 !important;
+    font-weight: 800 !important;
+}
+
+#slides-container .spec-item.spec-rating .community-rating-star {
+    color: #f5c518 !important;
+    font-size: 14px !important;
+    margin-right: 2px !important;
+}
+
+#slides-container .spec-item.spec-critics {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+}
+
+#slides-container .spec-item.spec-runtime {
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500 !important;
+}
+
+#slides-container .spec-item.spec-genre {
+    color: rgba(255, 255, 255, 0.75) !important;
+    font-weight: 500 !important;
+}
+
+#slides-container .spec-cert {
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+    background: rgba(0, 0, 0, 0.25) !important;
+    border-radius: 3px !important;
+    padding: 1px 7px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    line-height: 1.2 !important;
+}
+
+/* Spec Rail (Slide Progress Line) */
+#slides-container .spec-rail {
+    width: 100% !important;
+    max-width: 480px !important;
+    height: 2px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 1px !important;
+    overflow: hidden !important;
+    margin: 2px 0 !important;
+}
+
+#slides-container .spec-progress {
+    background: #e50914 !important;
+    height: 100% !important;
+    display: block !important;
+}
+
+/* Synopsis / Plot */
+#slides-container .plot-container {
+    width: 100% !important;
+    max-width: 540px !important;
+}
+
+#slides-container .plot {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-family: 'Inter', -apple-system, sans-serif !important;
+    font-size: 14.5px !important;
+    line-height: 1.48 !important;
+    margin: 0 !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95) !important;
+}
+
+/* Action Buttons Container */
+#slides-container .button-container {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin-top: 6px !important;
+}
+
+/* 1. Play Button: Netflix Solid White Pill */
+#slides-container .play-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    height: 42px !important;
+    padding: 0 26px !important;
+    border-radius: 9999px !important;
+    border: none !important;
+    font-family: 'Inter', -apple-system, sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+    transition: transform 0.15s ease, background 0.2s ease !important;
+    outline: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+#slides-container .play-button:hover {
+    background: rgba(255, 255, 255, 0.85) !important;
+    transform: scale(1.03) !important;
+}
+
+#slides-container .play-button:active {
+    transform: scale(0.97) !important;
+}
+
+#slides-container .play-button::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background-color: #000000 !important;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black"><polygon points="5 3 19 12 5 21 5 3"/></svg>') no-repeat center / contain !important;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black"><polygon points="5 3 19 12 5 21 5 3"/></svg>') no-repeat center / contain !important;
+    margin: 0 !important;
+    font-size: 0 !important;
+}
+
+#slides-container .play-button::after {
+    content: none !important;
+    display: none !important;
+}
+
+#slides-container .play-button .play-text {
+    color: #000000 !important;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+    display: inline !important;
+}
+
+/* 2. Details / Info Button: Frosted Glass Pill */
+#slides-container .detail-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    background: rgba(255, 255, 255, 0.22) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    color: #ffffff !important;
+    height: 42px !important;
+    width: auto !important;
+    padding: 0 22px !important;
+    border-radius: 9999px !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    font-family: 'Inter', -apple-system, sans-serif !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease !important;
+    outline: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+}
+
+#slides-container .detail-button:hover {
+    background: rgba(255, 255, 255, 0.32) !important;
+    border-color: rgba(255, 255, 255, 0.45) !important;
+    transform: scale(1.03) !important;
+}
+
+#slides-container .detail-button:active {
+    transform: scale(0.97) !important;
+}
+
+#slides-container .detail-button::before {
+    content: "" !important;
+    display: inline-block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background-color: #ffffff !important;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>') no-repeat center / contain !important;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>') no-repeat center / contain !important;
+    margin: 0 !important;
+    font-size: 0 !important;
+}
+
+#slides-container .detail-button .action-label {
+    display: inline !important;
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+}
+
+/* 3. Favorite Button: Frosted Glass Circle */
+#slides-container .favorite-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: rgba(255, 255, 255, 0.18) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+    transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease !important;
+    outline: none !important;
+}
+
+#slides-container .favorite-button:hover {
+    background: rgba(255, 255, 255, 0.28) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    transform: scale(1.05) !important;
+}
+
+#slides-container .favorite-button:active {
+    transform: scale(0.95) !important;
+}
+
+#slides-container .favorite-button::before {
+    content: "" !important;
+    display: block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background-color: #ffffff !important;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>') no-repeat center / contain !important;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>') no-repeat center / contain !important;
+    margin: 0 !important;
+    font-size: 0 !important;
+}
+
+#slides-container .favorite-button.favorited::before {
+    background-color: #e50914 !important;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>') no-repeat center / contain !important;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>') no-repeat center / contain !important;
+}
+
+#slides-container .favorite-button .action-label {
+    display: none !important;
+}
+
+/* Pagination Dots: Netflix Dashes */
+#slides-container .dots-container {
+    position: absolute !important;
+    left: 4% !important;
+    bottom: clamp(1.8rem, 3.2vh, 2.8rem) !important;
+    top: auto !important;
+    right: auto !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    z-index: 5 !important;
+}
+
+#slides-container .dot {
+    width: 14px !important;
+    height: 3px !important;
+    border-radius: 2px !important;
+    background: rgba(255, 255, 255, 0.35) !important;
+    margin: 0 !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transform: none !important;
+    border: none !important;
+}
+
+#slides-container .dot:hover {
+    background: rgba(255, 255, 255, 0.65) !important;
+}
+
+#slides-container .dot.active {
+    width: 28px !important;
+    background: #ffffff !important;
+    transform: none !important;
+}
+
+/* Media Bar Chrome Controls (Volume / Mute, Pause, Settings) */
+#slides-container .ss-chrome {
+    position: absolute !important;
+    z-index: 10 !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+    background: rgba(16, 16, 16, 0.65) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer !important;
+    opacity: 0.8 !important;
+    visibility: visible !important;
+    transition: opacity 0.2s ease, transform 0.15s ease, background 0.2s ease !important;
+    bottom: clamp(4.2rem, 7.5vh, 6rem) !important;
+    top: auto !important;
+}
+
+#slides-container .ss-chrome:hover {
+    opacity: 1 !important;
+    background: rgba(24, 24, 24, 0.9) !important;
+    transform: scale(1.08) !important;
+    border-color: rgba(255, 255, 255, 0.45) !important;
+}
+
+#slides-container .volume-toggle {
+    right: 4% !important;
+}
+
+#slides-container .pause-button {
+    right: calc(4% + 50px) !important;
+}
+
+#slides-container .ss-settings-toggle {
+    right: calc(4% + 100px) !important;
+}
+
+#slides-container .ss-chrome i {
+    font-size: 0 !important;
+    color: transparent !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 20px !important;
+    height: 20px !important;
+}
+
+/* Volume Toggle Icons (Muted default vs Unmuted) */
+#slides-container .volume-toggle i::before {
+    content: "" !important;
+    display: block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background-color: #ffffff !important;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>') no-repeat center / contain !important;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>') no-repeat center / contain !important;
+}
+
+#slides-container .volume-toggle.is-unmuted i::before {
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>') no-repeat center / contain !important;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>') no-repeat center / contain !important;
+}
+
+/* Pause Button (Pause bars vs Play triangle when is-paused) */
+#slides-container .pause-button i::before {
+    content: "" !important;
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+    background-color: #ffffff !important;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>') no-repeat center / contain !important;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>') no-repeat center / contain !important;
+}
+
+#slides-container.is-paused .pause-button i::before {
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>') no-repeat center / contain !important;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>') no-repeat center / contain !important;
+}
+
+/* Settings Toggle */
+#slides-container .ss-settings-toggle i::before {
+    content: "" !important;
+    display: block !important;
+    width: 18px !important;
+    height: 18px !important;
+    background-color: #ffffff !important;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>') no-repeat center / contain !important;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>') no-repeat center / contain !important;
+}
+
+/* Settings Dialog Close Button Icon */
+.ss-settings-close i {
+    font-size: 0 !important;
+    color: transparent !important;
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+}
+
+.ss-settings-close i::before {
+    content: "" !important;
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+    background-color: #ffffff !important;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>') no-repeat center / contain !important;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>') no-repeat center / contain !important;
+}
+
+/* Navigation Arrows */
+#slides-container .arrow {
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    width: 4vw !important;
+    max-width: 54px !important;
+    height: 100% !important;
+    background: transparent !important;
+    opacity: 0 !important;
+    transition: opacity 0.25s ease, background 0.25s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 4 !important;
+    cursor: pointer !important;
+    transform: none !important;
+}
+
+#slides-container .arrow::before {
+    content: none !important;
+    display: none !important;
+}
+
+#slides-container:hover .arrow {
+    opacity: 0.75 !important;
+}
+
+#slides-container .arrow:hover {
+    opacity: 1 !important;
+    background: rgba(0, 0, 0, 0.45) !important;
+}
+
+#slides-container .left-arrow {
+    left: 0 !important;
+}
+
+#slides-container .right-arrow {
+    right: 0 !important;
+}
+
+#slides-container .arrow i {
+    font-size: 0 !important;
+    color: transparent !important;
+    display: block !important;
+    width: 28px !important;
+    height: 28px !important;
+}
+
+#slides-container .left-arrow i::before {
+    content: "" !important;
+    display: block !important;
+    width: 28px !important;
+    height: 28px !important;
+    background-color: #ffffff !important;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>') no-repeat center / contain !important;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>') no-repeat center / contain !important;
+}
+
+#slides-container .right-arrow i::before {
+    content: "" !important;
+    display: block !important;
+    width: 28px !important;
+    height: 28px !important;
+    background-color: #ffffff !important;
+    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>') no-repeat center / contain !important;
+    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>') no-repeat center / contain !important;
+}
+
+/* Content Rows Positioning when Hero is active on Home Tab */
+body.has-netflix-hero #homeTab.is-active > .sections,
+body.has-netflix-hero #homeTab.has-netflix-hero > .sections {
+    position: relative !important;
+    margin-top: calc(var(--netflix-hero-height) + 1.25rem) !important;
+    z-index: 6 !important;
+    padding-top: 0 !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    :root {
+        --netflix-hero-height: clamp(480px, 70vh, 600px);
+    }
+    #slides-container .slide-content {
+        left: 5% !important;
+        right: 5% !important;
+        width: 90% !important;
+        max-width: 90% !important;
+        bottom: clamp(3.2rem, 5vh, 4.5rem) !important;
+        background: transparent !important;
+        border: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+    #slides-container .logo {
+        max-height: 85px !important;
+    }
+    #slides-container .plot {
+        -webkit-line-clamp: 2 !important;
+        line-clamp: 2 !important;
+        font-size: 13px !important;
+    }
+    #slides-container .button-container {
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+    }
+    #slides-container .play-button {
+        flex: 1 1 auto !important;
+        height: 40px !important;
+        padding: 0 16px !important;
+    }
+    #slides-container .detail-button {
+        flex: 1 1 auto !important;
+        height: 40px !important;
+        padding: 0 16px !important;
+    }
+    #slides-container .favorite-button {
+        flex: 0 0 40px !important;
+        width: 40px !important;
+        height: 40px !important;
+    }
+    #slides-container .ss-chrome {
+        top: 68px !important;
+        bottom: auto !important;
+        width: 36px !important;
+        height: 36px !important;
+    }
+    #slides-container .volume-toggle {
+        right: 14px !important;
+    }
+    #slides-container .pause-button {
+        right: 58px !important;
+    }
+    #slides-container .ss-settings-toggle {
+        right: 102px !important;
+    }
+    #slides-container .arrow {
+        display: none !important;
     }
 }
 
@@ -5812,7 +6509,7 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     font-size: 1.6rem !important;
 }
 
-.btnPlay.detailButton::after {
+#itemDetailPage .mainDetailButtons .btnPlay:not(.play-button)::after {
     content: "Play" !important;
     font-family: inherit !important;
     font-weight: 700 !important;

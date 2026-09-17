@@ -12,13 +12,125 @@
     let isFetching = false;
 
     function isHome() {
-        const hash = window.location.hash;
-        return hash === '' || hash === '#/' || hash === '#/home' || hash === '#/home?tab=0';
+        const hash = window.location.hash || '';
+        const cleanHash = hash.split('?')[0];
+        if (cleanHash !== '' && cleanHash !== '#/' && cleanHash !== '#/home' && cleanHash !== '#/home.html') {
+            return false;
+        }
+        if (hash.includes('tab=')) {
+            const params = new URLSearchParams(hash.split('?')[1] || '');
+            return params.get('tab') === '0';
+        }
+        return true;
+    }
+
+    function hasMediaBar() {
+        return Boolean(window.slideshowPure || document.getElementById('slides-container'));
+    }
+
+    function setupMediaBarBridge() {
+        const sc = document.getElementById('slides-container');
+        if (!sc) return;
+
+        // If Media Bar is hidden or we are not on the main home view, reset layout
+        if (sc.style.display === 'none' || !isHome()) {
+            removeHeroLayoutStyles();
+            return;
+        }
+
+        // Remove standalone hero if it was previously rendered
+        removeHero();
+
+        // Ensure full-bleed classes and header transparency
+        alignHeroToTop();
+
+        // Observe style changes on slides-container so tab switches update immediately
+        if (!sc.hasAttribute('data-display-observed')) {
+            sc.setAttribute('data-display-observed', 'true');
+            const displayObs = new MutationObserver(() => {
+                if (sc.style.display === 'none' || !isHome()) {
+                    removeHeroLayoutStyles();
+                } else {
+                    alignHeroToTop();
+                }
+            });
+            displayObs.observe(sc, { attributes: true, attributeFilter: ['style'] });
+        }
+
+        // Catch logo image 404s/errors and swap with bold Netflix typography
+        if (!sc.hasAttribute('data-logo-fallback-bound')) {
+            sc.setAttribute('data-logo-fallback-bound', 'true');
+            sc.addEventListener('error', (e) => {
+                if (e.target && e.target.tagName === 'IMG' && e.target.classList.contains('logo')) {
+                    const img = e.target;
+                    const title = img.alt || '';
+                    if (!title) return;
+                    const fallback = document.createElement('h1');
+                    fallback.className = 'logo logo-text-fallback';
+                    fallback.textContent = title;
+                    img.replaceWith(fallback);
+                }
+            }, true);
+        }
+
+        // Enable trailers and slide animations in config
+        if (window.slideshowPure && window.slideshowPure.CONFIG) {
+            window.slideshowPure.CONFIG.enableTrailers = true;
+            window.slideshowPure.CONFIG.slideAnimationEnabled = true;
+        }
+
+        // Clean up inline 'top' style on dots container and guard against script recalculations
+        const dots = sc.querySelector('.dots-container');
+        if (dots && !dots.hasAttribute('data-bridged')) {
+            dots.setAttribute('data-bridged', 'true');
+            if (dots.style.top) {
+                dots.style.top = '';
+            }
+            const dotObserver = new MutationObserver(() => {
+                if (dots.style.top) {
+                    dots.style.top = '';
+                }
+            });
+            dotObserver.observe(dots, { attributes: true, attributeFilter: ['style'] });
+        }
+
+        // Bridge volume toggle mute/unmute state class
+        const volumeBtn = sc.querySelector('.volume-toggle');
+        if (volumeBtn && !volumeBtn.hasAttribute('data-bridged')) {
+            volumeBtn.setAttribute('data-bridged', 'true');
+            const updateMuteClass = () => {
+                const isMuted = window.slideshowPure?.STATE?.slideshow?.isMuted ?? true;
+                volumeBtn.classList.toggle('is-unmuted', !isMuted);
+                volumeBtn.classList.toggle('is-muted', isMuted);
+            };
+            updateMuteClass();
+            volumeBtn.addEventListener('click', () => {
+                setTimeout(updateMuteClass, 50);
+                setTimeout(updateMuteClass, 200);
+            });
+            const innerI = volumeBtn.querySelector('i');
+            if (innerI) {
+                const iconObserver = new MutationObserver(() => {
+                    const text = innerI.textContent.trim();
+                    const isUnmuted = text === 'volume_up';
+                    volumeBtn.classList.toggle('is-unmuted', isUnmuted);
+                    volumeBtn.classList.toggle('is-muted', !isUnmuted);
+                });
+                iconObserver.observe(innerI, { childList: true, characterData: true, subtree: true });
+            }
+        }
     }
 
     function alignHeroToTop() {
-        if (!currentHeroEl) return;
+        const sc = document.getElementById('slides-container');
+        if (!currentHeroEl && !sc) return;
         
+        // If Media Bar is hidden or we are not on main home view, reset layout
+        if (sc && (sc.style.display === 'none' || !isHome())) {
+            removeHeroLayoutStyles();
+            return;
+        }
+
         // Ensure body flag is active
         document.body.classList.add('has-netflix-hero');
         const indexPage = document.getElementById('indexPage');
@@ -35,7 +147,9 @@
         }
 
         // Hero starts at y=0 with spacer collapsed via CSS
-        currentHeroEl.style.setProperty('margin-top', '0px', 'important');
+        if (currentHeroEl) {
+            currentHeroEl.style.setProperty('margin-top', '0px', 'important');
+        }
 
         // Make header transparent
         updateHeaderStyle();
@@ -334,6 +448,12 @@
             return;
         }
 
+        if (hasMediaBar()) {
+            setupMediaBarBridge();
+            initNetflixSections();
+            return;
+        }
+
         const apiClient = window.ApiClient;
         if (!apiClient || !apiClient.getCurrentUserId()) {
             setTimeout(initHero, 200);
@@ -349,7 +469,11 @@
         }
 
         if (cachedEntries.length > 0) {
-            renderHero(cachedEntries, apiClient);
+            if (hasMediaBar()) {
+                setupMediaBarBridge();
+            } else {
+                renderHero(cachedEntries, apiClient);
+            }
             initNetflixSections();
             return;
         }
@@ -363,7 +487,11 @@
         try {
             cachedEntries = await fetchHeroEntries(apiClient);
             if (isHome()) {
-                renderHero(cachedEntries, apiClient);
+                if (hasMediaBar()) {
+                    setupMediaBarBridge();
+                } else {
+                    renderHero(cachedEntries, apiClient);
+                }
                 initNetflixSections();
             }
         } catch (e) {
@@ -506,6 +634,9 @@
         const target = document.getElementById('indexPage') || document.body;
         sectionObserver = new MutationObserver((mutations) => {
             if (!isHome() || isUpdatingSections) return;
+            if (hasMediaBar()) {
+                setupMediaBarBridge();
+            }
             const isSelfMutation = mutations.every(m => {
                 const t = m.target;
                 return t && (t.classList?.contains('netflix-indicators') ||
