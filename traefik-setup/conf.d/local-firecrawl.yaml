@@ -1,0 +1,23 @@
+# ==============================================
+# Local Firecrawl Dynamic Configuration
+# Location: /etc/traefik/conf.d/local-firecrawl.yaml
+# ==============================================
+
+http:
+  routers:
+    local-firecrawl:
+      rule: "Host(`firecrawl.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: firecrawl-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare
+
+  services:
+    firecrawl-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.202:3002"
+        passHostHeader: true
