@@ -159,24 +159,14 @@
         const headers = document.querySelectorAll('header.MuiAppBar-root, header, .skinHeader');
         if (!headers.length) return;
 
-        if (!isHome()) {
-            headers.forEach(h => {
-                h.style.removeProperty('background');
-                h.style.removeProperty('background-color');
-                h.style.removeProperty('backdrop-filter');
-                h.style.removeProperty('-webkit-backdrop-filter');
-                h.style.removeProperty('box-shadow');
-                h.style.removeProperty('border');
-            });
-            return;
-        }
-
-        const isScrolled = window.scrollY > 40;
+        const isScrolled = window.scrollY > 30;
         headers.forEach(h => {
             if (isScrolled) {
-                h.style.setProperty('background', 'rgba(16, 16, 16, 0.92)', 'important');
+                h.style.setProperty('background', 'rgba(16, 16, 16, 0.95)', 'important');
                 h.style.setProperty('backdrop-filter', 'blur(16px)', 'important');
                 h.style.setProperty('-webkit-backdrop-filter', 'blur(16px)', 'important');
+                h.style.setProperty('box-shadow', '0 4px 20px rgba(0, 0, 0, 0.6)', 'important');
+                h.style.setProperty('border', 'none', 'important');
             } else {
                 h.style.setProperty('background', 'linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%)', 'important');
                 h.style.setProperty('background-color', 'transparent', 'important');
@@ -202,15 +192,7 @@
             homeTab.style.removeProperty('padding-top');
             homeTab.style.removeProperty('margin-top');
         }
-        const headers = document.querySelectorAll('header.MuiAppBar-root, header, .skinHeader');
-        headers.forEach(h => {
-            h.style.removeProperty('background');
-            h.style.removeProperty('background-color');
-            h.style.removeProperty('backdrop-filter');
-            h.style.removeProperty('-webkit-backdrop-filter');
-            h.style.removeProperty('box-shadow');
-            h.style.removeProperty('border');
-        });
+        updateHeaderStyle();
     }
 
     function removeHero() {
@@ -650,23 +632,212 @@
         sectionObserver.observe(target, { childList: true, subtree: true });
     }
 
+    /* ==========================================================================
+       Netflix Skeleton Loading Controller
+       ========================================================================== */
+    const SkeletonController = {
+        createHeroSkeleton() {
+            const wrap = document.createElement('div');
+            wrap.className = 'netflix-skeleton-hero';
+            wrap.id = 'netflix-skeleton-hero';
+            wrap.innerHTML = `
+                <div class="netflix-skeleton-hero-content">
+                    <div class="netflix-skeleton-hero-title"></div>
+                    <div class="netflix-skeleton-hero-meta"></div>
+                    <div class="netflix-skeleton-hero-desc"></div>
+                    <div class="netflix-skeleton-hero-buttons">
+                        <div class="netflix-skeleton-hero-btn primary"></div>
+                        <div class="netflix-skeleton-hero-btn secondary"></div>
+                    </div>
+                </div>
+            `;
+            return wrap;
+        },
+
+        createRailSkeleton(titleWidth, cardCount, isBackdrop) {
+            const rail = document.createElement('div');
+            rail.className = 'netflix-skeleton-row';
+            const cardsHtml = Array(cardCount).fill(0)
+                .map(() => `<div class="netflix-skeleton-card ${isBackdrop ? 'backdrop' : ''}"></div>`)
+                .join('');
+            rail.innerHTML = `
+                <div class="netflix-skeleton-row-title" style="width: ${titleWidth || 160}px;"></div>
+                <div class="netflix-skeleton-cards">${cardsHtml}</div>
+            `;
+            return rail;
+        },
+
+        createHomeSkeleton() {
+            const container = document.createElement('div');
+            container.className = 'netflix-skeleton-container netflix-skeleton-home';
+            container.id = 'netflix-skeleton-home-container';
+            container.appendChild(this.createHeroSkeleton());
+            container.appendChild(this.createRailSkeleton(220, 6, true));
+            container.appendChild(this.createRailSkeleton(180, 6, false));
+            return container;
+        },
+
+        createGridSkeleton(cardCount) {
+            const container = document.createElement('div');
+            container.className = 'netflix-skeleton-container netflix-skeleton-grid-view';
+            container.id = 'netflix-skeleton-grid-container';
+            const cardsHtml = Array(cardCount || 14).fill(0)
+                .map(() => '<div class="netflix-skeleton-card"></div>')
+                .join('');
+            container.innerHTML = `<div class="netflix-skeleton-cards">${cardsHtml}</div>`;
+            return container;
+        },
+
+        createDetailSkeleton() {
+            const container = document.createElement('div');
+            container.className = 'netflix-skeleton-container netflix-skeleton-detail';
+            container.id = 'netflix-skeleton-detail-container';
+            container.innerHTML = `
+                <div class="netflix-skeleton-detail-content">
+                    <div class="netflix-skeleton-detail-logo"></div>
+                    <div class="netflix-skeleton-detail-meta"></div>
+                    <div class="netflix-skeleton-detail-buttons">
+                        <div class="netflix-skeleton-hero-btn primary" style="width: 100px;"></div>
+                        <div class="netflix-skeleton-detail-circle"></div>
+                        <div class="netflix-skeleton-detail-circle"></div>
+                        <div class="netflix-skeleton-detail-circle"></div>
+                    </div>
+                    <div class="netflix-skeleton-detail-synopsis"></div>
+                </div>
+            `;
+            return container;
+        },
+
+        dismiss(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.add('fade-out');
+            setTimeout(() => {
+                if (el && el.parentNode) {
+                    el.parentNode.removeChild(el);
+                }
+                if (!document.querySelector('.netflix-skeleton-container, .netflix-skeleton-hero')) {
+                    document.body.classList.remove('has-skeleton');
+                }
+            }, 300);
+        },
+
+        dismissAll() {
+            document.querySelectorAll('.netflix-skeleton-container, .netflix-skeleton-hero').forEach(el => {
+                el.classList.add('fade-out');
+                setTimeout(() => {
+                    if (el && el.parentNode) el.parentNode.removeChild(el);
+                }, 300);
+            });
+            document.body.classList.remove('has-skeleton');
+        },
+
+        handleRoute() {
+            const hash = window.location.hash || '';
+            const cleanHash = hash.split('?')[0];
+
+            if (isHome()) {
+                const homeTab = document.getElementById('homeTab');
+                const hasMediaBarSlides = Boolean(document.querySelector('#slides-container .slide'));
+                const hasCards = Boolean(homeTab && homeTab.querySelector('.card'));
+
+                if (homeTab && !hasMediaBarSlides && !hasCards && !document.getElementById('netflix-skeleton-home-container')) {
+                    const skel = this.createHomeSkeleton();
+                    homeTab.prepend(skel);
+                    document.body.classList.add('has-skeleton');
+
+                    const obs = new MutationObserver(() => {
+                        const nowHasSlides = Boolean(document.querySelector('#slides-container .slide'));
+                        const nowHasCards = Boolean(homeTab.querySelector('.card'));
+                        if (nowHasSlides || nowHasCards) {
+                            obs.disconnect();
+                            SkeletonController.dismiss('netflix-skeleton-home-container');
+                        }
+                    });
+                    obs.observe(homeTab, { childList: true, subtree: true });
+                    setTimeout(() => {
+                        obs.disconnect();
+                        SkeletonController.dismiss('netflix-skeleton-home-container');
+                    }, 3500);
+                } else if (hasMediaBarSlides || hasCards) {
+                    SkeletonController.dismiss('netflix-skeleton-home-container');
+                }
+            } else if (cleanHash === '#/details') {
+                const detailPage = document.querySelector('#itemDetailPage, .itemDetailPage');
+                const hasContent = Boolean(detailPage && (detailPage.querySelector('.detailPagePrimaryContainer') || detailPage.querySelector('.itemBackdrop')));
+
+                if (detailPage && !hasContent && !document.getElementById('netflix-skeleton-detail-container')) {
+                    const skel = this.createDetailSkeleton();
+                    detailPage.prepend(skel);
+                    document.body.classList.add('has-skeleton');
+
+                    const obs = new MutationObserver(() => {
+                        if (detailPage.querySelector('.detailPagePrimaryContainer') || detailPage.querySelector('.itemBackdrop')) {
+                            obs.disconnect();
+                            SkeletonController.dismiss('netflix-skeleton-detail-container');
+                        }
+                    });
+                    obs.observe(detailPage, { childList: true, subtree: true });
+                    setTimeout(() => {
+                        obs.disconnect();
+                        SkeletonController.dismiss('netflix-skeleton-detail-container');
+                    }, 3500);
+                } else if (hasContent) {
+                    SkeletonController.dismiss('netflix-skeleton-detail-container');
+                }
+            } else if (['#/movies', '#/tv', '#/collections', '#/favorites'].some(r => cleanHash.startsWith(r))) {
+                const view = document.querySelector('.page:not(.hide), .view.is-active, [data-role="page"]:not(.hide)');
+                const hasCards = Boolean(view && view.querySelector('.card'));
+
+                if (view && !hasCards && !document.getElementById('netflix-skeleton-grid-container')) {
+                    const skel = this.createGridSkeleton(14);
+                    view.prepend(skel);
+                    document.body.classList.add('has-skeleton');
+
+                    const obs = new MutationObserver(() => {
+                        if (view.querySelector('.card')) {
+                            obs.disconnect();
+                            SkeletonController.dismiss('netflix-skeleton-grid-container');
+                        }
+                    });
+                    obs.observe(view, { childList: true, subtree: true });
+                    setTimeout(() => {
+                        obs.disconnect();
+                        SkeletonController.dismiss('netflix-skeleton-grid-container');
+                    }, 3500);
+                } else if (hasCards) {
+                    SkeletonController.dismiss('netflix-skeleton-grid-container');
+                }
+            } else {
+                SkeletonController.dismissAll();
+            }
+        }
+    };
+    window.SkeletonController = SkeletonController;
+
     // Lifecycle events
     window.addEventListener('hashchange', () => {
+        SkeletonController.handleRoute();
         setTimeout(initHero, 80);
         setTimeout(initNetflixSections, 150);
         setTimeout(initNetflixSections, 600);
+        setTimeout(updateHeaderStyle, 100);
     });
 
     window.addEventListener('pageshow', () => {
+        SkeletonController.handleRoute();
         setTimeout(initHero, 80);
         setTimeout(initNetflixSections, 150);
         setTimeout(initNetflixSections, 600);
+        setTimeout(updateHeaderStyle, 100);
     });
 
     document.addEventListener('viewshow', () => {
+        SkeletonController.handleRoute();
         setTimeout(initHero, 80);
         setTimeout(initNetflixSections, 150);
         setTimeout(initNetflixSections, 600);
+        setTimeout(updateHeaderStyle, 100);
     });
 
     window.addEventListener('resize', () => {
@@ -674,6 +845,7 @@
             alignHeroToTop();
             initNetflixSections();
         }
+        updateHeaderStyle();
     }, { passive: true });
 
     window.addEventListener('scroll', updateHeaderStyle, { passive: true });
@@ -681,13 +853,17 @@
     // Initial trigger
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
+            SkeletonController.handleRoute();
             setTimeout(initHero, 150);
             setTimeout(initNetflixSections, 300);
             setTimeout(observeSections, 500);
+            setTimeout(updateHeaderStyle, 200);
         });
     } else {
+        SkeletonController.handleRoute();
         setTimeout(initHero, 150);
         setTimeout(initNetflixSections, 300);
         setTimeout(observeSections, 500);
+        setTimeout(updateHeaderStyle, 200);
     }
 })();

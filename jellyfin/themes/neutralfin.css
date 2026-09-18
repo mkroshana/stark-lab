@@ -352,7 +352,7 @@ body {
 }
 
 .countIndicator {
-    background: #E50914 !important;
+    background: rgba(255, 255, 255, 0.22) !important;
     color: #ffffff !important;
     font-weight: 700 !important;
     border-radius: 3px !important;
@@ -4600,7 +4600,7 @@ svg[data-testid="FullscreenExitIcon"] {
     font-weight: 800 !important;
     letter-spacing: -0.3px !important;
     text-transform: none !important;
-    color: #E50914 !important;
+    color: #ffffff !important;
     margin-right: 1.75rem !important;
     padding: 0 !important;
     background: transparent !important;
@@ -5154,7 +5154,7 @@ body.has-netflix-hero .skinHeader-blurred.headroom--not-top:not(.osdHeader) {
 }
 
 .netflix-hero-star {
-    color: #e50914 !important; /* Netflix Red Star */
+    color: #e5b009 !important; /* Gold Rating Star */
     font-size: 14px !important;
 }
 
@@ -5513,7 +5513,7 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
 }
 
 #slides-container .spec-progress {
-    background: #e50914 !important;
+    background: #ffffff !important;
     height: 100% !important;
     display: block !important;
 }
@@ -5698,7 +5698,7 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
 }
 
 #slides-container .favorite-button.favorited::before {
-    background-color: #e50914 !important;
+    background-color: #ffffff !important;
     -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>') no-repeat center / contain !important;
     mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>') no-repeat center / contain !important;
 }
@@ -5858,20 +5858,27 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
 /* Navigation Arrows */
 #slides-container .arrow {
     position: absolute !important;
-    top: 0 !important;
-    bottom: 0 !important;
-    width: 4vw !important;
-    max-width: 54px !important;
-    height: 100% !important;
-    background: transparent !important;
+    top: 50% !important;
+    bottom: auto !important;
+    transform: translateY(-50%) !important;
+    width: 48px !important;
+    height: 48px !important;
+    max-width: 48px !important;
+    border-radius: 50% !important;
+    background: rgba(20, 20, 20, 0.5) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+    outline: none !important;
     opacity: 0 !important;
-    transition: opacity 0.25s ease, background 0.25s ease !important;
+    visibility: visible !important;
+    transition: opacity 0.25s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    z-index: 4 !important;
+    z-index: 10 !important;
     cursor: pointer !important;
-    transform: none !important;
 }
 
 #slides-container .arrow::before {
@@ -5879,36 +5886,51 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     display: none !important;
 }
 
-#slides-container:hover .arrow {
-    opacity: 0.75 !important;
+#slides-container:hover .arrow,
+#slides-container:focus-within .arrow {
+    opacity: 0.85 !important;
 }
 
 #slides-container .arrow:hover {
     opacity: 1 !important;
-    background: rgba(0, 0, 0, 0.45) !important;
+    background: rgba(35, 35, 35, 0.85) !important;
+    border-color: rgba(255, 255, 255, 0.55) !important;
+    transform: translateY(-50%) scale(1.08) !important;
+}
+
+#slides-container .arrow:focus-visible {
+    opacity: 1 !important;
+    outline: 2px solid #ffffff !important;
+    outline-offset: 2px !important;
 }
 
 #slides-container .left-arrow {
-    left: 0 !important;
+    left: 24px !important;
+    right: auto !important;
 }
 
 #slides-container .right-arrow {
-    right: 0 !important;
+    right: 24px !important;
+    left: auto !important;
 }
 
 #slides-container .arrow i {
     font-size: 0 !important;
     color: transparent !important;
-    display: block !important;
-    width: 28px !important;
-    height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 24px !important;
+    height: 24px !important;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 #slides-container .left-arrow i::before {
     content: "" !important;
     display: block !important;
-    width: 28px !important;
-    height: 28px !important;
+    width: 24px !important;
+    height: 24px !important;
     background-color: #ffffff !important;
     -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>') no-repeat center / contain !important;
     mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>') no-repeat center / contain !important;
@@ -5917,8 +5939,8 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
 #slides-container .right-arrow i::before {
     content: "" !important;
     display: block !important;
-    width: 28px !important;
-    height: 28px !important;
+    width: 24px !important;
+    height: 24px !important;
     background-color: #ffffff !important;
     -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>') no-repeat center / contain !important;
     mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>') no-repeat center / contain !important;
@@ -6169,10 +6191,10 @@ body.has-netflix-hero #homeTab.has-netflix-hero > .sections {
 
 .itemProgressBarForeground,
 .playbackProgress > div {
-    background-color: #E50914 !important; /* Netflix Red */
+    background-color: #ffffff !important;
     height: 100% !important;
     border-radius: 0 !important;
-    box-shadow: 0 0 4px rgba(229, 9, 20, 0.6) !important;
+    box-shadow: none !important;
 }
 
 /* 6. Netflix In-Card Title Overlay inside Thumbnail & Poster */
@@ -6396,7 +6418,31 @@ body.has-netflix-hero #homeTab.has-netflix-hero > .sections {
     height: auto !important;
 }
 
-/* Detail Logo: crisp, high contrast, top layer with drop shadow */
+/* Deep cinematic dark canvas */
+html,
+body,
+.videoPlayerContainer {
+    background-color: #101010 !important;
+}
+
+.backgroundContainer:not(.withBackdrop) {
+    background-color: #101010 !important;
+}
+
+.itemDetailPage,
+#itemDetailPage,
+body:has(#itemDetailPage) .backgroundContainer,
+body:has(.itemDetailPage) .backgroundContainer,
+.backgroundContainer.withBackdrop {
+    background-color: transparent !important;
+    background: transparent !important;
+}
+
+.backdropContainer {
+    z-index: 0 !important;
+}
+
+/* Detail Logo: crisp, high contrast, centered with zero offset */
 .detailLogo {
     display: block !important;
     position: relative !important;
@@ -6413,6 +6459,30 @@ body.has-netflix-hero #homeTab.has-netflix-hero > .sections {
     transform: none !important;
     top: auto !important;
     left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+}
+
+@media (max-width: 768px) {
+    .detailLogo {
+        width: 85% !important;
+        max-width: 300px !important;
+        height: 12vh !important;
+        max-height: 85px !important;
+        margin: 0 auto 1rem auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+    }
+
+    /* Mobile header bar safe-area breathing room */
+    .skinHeader,
+    header.MuiAppBar-root {
+        padding-top: max(env(safe-area-inset-top), 6px) !important;
+        padding-bottom: 6px !important;
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
 }
 
 /* Text title fallback when clear logo is absent */
@@ -6478,9 +6548,12 @@ body.has-netflix-hero #homeTab.has-netflix-hero > .sections {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    flex-wrap: wrap !important;
     gap: 0.75rem !important;
-    margin-top: 0.4rem !important;
+    margin-top: 0.6rem !important;
     z-index: 5 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 .btnPlay.detailButton {
@@ -6509,7 +6582,8 @@ body.has-netflix-hero #homeTab.has-netflix-hero > .sections {
     font-size: 1.6rem !important;
 }
 
-#itemDetailPage .mainDetailButtons .btnPlay:not(.play-button)::after {
+#itemDetailPage .mainDetailButtons .btnPlay:not(.play-button)::after,
+.itemDetailPage .mainDetailButtons .btnPlay:not(.play-button)::after {
     content: "Play" !important;
     font-family: inherit !important;
     font-weight: 700 !important;
@@ -6518,7 +6592,8 @@ body.has-netflix-hero #homeTab.has-netflix-hero > .sections {
     margin-left: 0.4rem !important;
 }
 
-.mainDetailButtons .detailButton:not(.btnPlay) {
+/* Secondary circular buttons - ONLY visible non-hidden items */
+.mainDetailButtons .detailButton:not(.btnPlay):not(.hide) {
     background: rgba(42, 42, 42, 0.6) !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
     border-radius: 50% !important;
@@ -6535,7 +6610,7 @@ body.has-netflix-hero #homeTab.has-netflix-hero > .sections {
     justify-content: center !important;
 }
 
-.mainDetailButtons .detailButton:not(.btnPlay):hover {
+.mainDetailButtons .detailButton:not(.btnPlay):not(.hide):hover {
     background: rgba(255, 255, 255, 0.2) !important;
     border-color: #ffffff !important;
     transform: scale(1.08) !important;
@@ -6544,6 +6619,105 @@ body.has-netflix-hero #homeTab.has-netflix-hero > .sections {
 .mainDetailButtons .detailButton:not(.btnPlay) .material-icons {
     font-size: 1.3rem !important;
     color: #ffffff !important;
+}
+
+/* Explicitly suppress hidden / redundant action buttons from leaking */
+.mainDetailButtons .detailButton.hide,
+.mainDetailButtons .detailButton[hidden],
+.detailButton.hide,
+.detailButton.btnReplay.hide,
+.detailButton.btnDownload.hide,
+.detailButton.btnInstantMix.hide,
+.detailButton.btnShuffle.hide,
+.detailButton.btnCancelSeriesTimer,
+.detailButton.btnCancelTimer,
+.detailButton.btnSplitVersions.hide {
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+}
+
+/* Mobile Detail Action Buttons: Strictly single-row, compact, no wrapping */
+@media (max-width: 768px) {
+    #itemDetailPage .mainDetailButtons,
+    .itemDetailPage .mainDetailButtons,
+    .mainDetailButtons {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 0.35rem !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 4px !important;
+        margin-top: 0.5rem !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+
+    #itemDetailPage .mainDetailButtons .btnPlay,
+    .itemDetailPage .mainDetailButtons .btnPlay,
+    .mainDetailButtons .btnPlay.detailButton {
+        padding: 0.35rem 0.75rem !important;
+        min-width: 70px !important;
+        max-width: 95px !important;
+        height: 35px !important;
+        font-size: 0.82rem !important;
+        flex-shrink: 0 !important;
+    }
+
+    #itemDetailPage .mainDetailButtons .btnPlay .material-icons,
+    .itemDetailPage .mainDetailButtons .btnPlay .material-icons,
+    .mainDetailButtons .btnPlay.detailButton .detailButton-icon {
+        font-size: 1.2rem !important;
+    }
+
+    #itemDetailPage .mainDetailButtons .btnPlay:not(.play-button)::after,
+    .itemDetailPage .mainDetailButtons .btnPlay:not(.play-button)::after {
+        font-size: 0.82rem !important;
+        margin-left: 0.25rem !important;
+    }
+
+    #itemDetailPage .mainDetailButtons .detailButton:not(.btnPlay),
+    .itemDetailPage .mainDetailButtons .detailButton:not(.btnPlay),
+    .mainDetailButtons .detailButton:not(.btnPlay):not(.hide) {
+        width: 35px !important;
+        height: 35px !important;
+        min-width: 35px !important;
+        max-width: 35px !important;
+        padding: 0 !important;
+        flex-shrink: 0 !important;
+    }
+
+    #itemDetailPage .mainDetailButtons .detailButton:not(.btnPlay) .material-icons,
+    .itemDetailPage .mainDetailButtons .detailButton:not(.btnPlay) .material-icons,
+    .mainDetailButtons .detailButton:not(.btnPlay) .material-icons {
+        font-size: 1.15rem !important;
+    }
+}
+
+/* Episode Detail Page: clean thumbnail & logo presentation */
+.detailRibbon:has(.detailImageContainer) .detailLogo,
+#itemDetailPage[data-type="Episode"] .detailLogo {
+    max-height: 48px !important;
+    margin-bottom: 0.6rem !important;
+}
+
+.detailImageContainer {
+    border-radius: 6px !important;
+    overflow: hidden !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.75) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    margin-bottom: 1rem !important;
+}
+
+/* Prevent horizontal overflow on detail pages */
+#itemDetailPage,
+.itemDetailPage,
+.detailPageWrapperContainer {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
 }
 
 /* Synopsis / Overview */
@@ -6652,7 +6826,8 @@ body.has-netflix-hero #homeTab.has-netflix-hero > .sections {
 
 /* Episode count badges on Season cards */
 #itemDetailPage .countIndicator {
-    background: #E50914 !important;
+    background: rgba(255, 255, 255, 0.22) !important;
+    color: #ffffff !important;
     border-radius: 3px !important;
     font-size: 0.75rem !important;
     font-weight: 700 !important;
@@ -6730,5 +6905,724 @@ body.has-netflix-hero #homeTab.has-netflix-hero > .sections {
     white-space: nowrap !important;
     display: block !important;
 }
+
+/* ==========================================================================
+   Netflix Aesthetic System Polish
+   ========================================================================== */
+
+
+/* 2. Library Page Primary Buttons (Play All, Shuffle, View Controls) */
+.MuiButton-containedPrimary,
+.MuiButton-contained.MuiButton-colorPrimary,
+.MuiButtonGroup-groupedContainedPrimary {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    font-weight: 700 !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+    transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease !important;
+    border: none !important;
+}
+
+.MuiButton-containedPrimary:hover,
+.MuiButton-contained.MuiButton-colorPrimary:hover,
+.MuiButtonGroup-groupedContainedPrimary:hover {
+    background-color: rgba(255, 255, 255, 0.88) !important;
+    color: #000000 !important;
+    transform: scale(1.02) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6) !important;
+}
+
+.MuiButton-containedPrimary .MuiSvgIcon-root,
+.MuiButtonGroup-groupedContainedPrimary .MuiSvgIcon-root {
+    color: #000000 !important;
+}
+
+/* Library Secondary Control Buttons (Sort, Filter, Grid View, Pagination) */
+.MuiButtonGroup-groupedText,
+.MuiButtonGroup-groupedTextHorizontal {
+    color: rgba(255, 255, 255, 0.8) !important;
+    transition: color 0.2s ease, background-color 0.2s ease !important;
+}
+
+.MuiButtonGroup-groupedText:hover,
+.MuiButtonGroup-groupedTextHorizontal:hover {
+    background-color: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+}
+
+/* Alpha Picker Navigation Bar */
+.alphaPicker {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.alphaPickerButton:hover,
+.alphaPickerRow:hover {
+    color: #ffffff !important;
+}
+
+.alphaPickerButton-selected {
+    color: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+/* 3. Card Progress Bars & Played Indicators */
+.MuiLinearProgress-barColorPrimary,
+.MuiLinearProgress-bar,
+.playbackProgress > div,
+.itemProgressBarForeground {
+    background-color: #ffffff !important;
+}
+
+.MuiLinearProgress-colorPrimary,
+.itemProgressBar {
+    background-color: rgba(255, 255, 255, 0.22) !important;
+    height: 4px !important;
+    border-radius: 0 0 4px 4px !important;
+}
+
+/* Card hover play button */
+.cardOverlayFab-primary {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+.cardOverlayFab-primary .material-icons,
+.cardOverlayFab-primary svg {
+    color: #000000 !important;
+}
+
+/* Played Indicator Badges */
+.playedIndicator,
+.indicator.playedIndicator,
+.cardIndicators .playedIndicator {
+    background: #22c55e !important;
+    background-color: #22c55e !important;
+    color: #ffffff !important;
+    border: none !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6) !important;
+    border-radius: 50% !important;
+}
+
+.playedIndicator .MuiSvgIcon-root,
+.playedIndicator .material-icons {
+    color: #ffffff !important;
+}
+
+/* 4. Search Page Suggestions & Input */
+.searchSuggestions {
+    text-align: center !important;
+    max-width: 900px !important;
+    margin: 2.5rem auto 1rem auto !important;
+}
+
+.searchSuggestions .sectionTitle {
+    text-align: center !important;
+    font-size: 1.4rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    margin-bottom: 1.2rem !important;
+    letter-spacing: -0.015em !important;
+}
+
+.searchSuggestionsList {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0.6rem !important;
+    max-width: 860px !important;
+    margin: 0 auto !important;
+    padding: 0 1rem !important;
+}
+
+.searchSuggestionsList > div {
+    display: inline-flex !important;
+    margin: 0 !important;
+}
+
+.searchSuggestionsList a.emby-button.button-link,
+.searchSuggestions a.emby-button.button-link,
+.searchSuggestions a {
+    display: inline-flex !important;
+    align-items: center !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 20px !important;
+    color: #e5e5e5 !important;
+    font-size: 0.9rem !important;
+    font-weight: 500 !important;
+    padding: 7px 18px !important;
+    text-decoration: none !important;
+    margin: 0 !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, color 0.2s ease !important;
+}
+
+.searchSuggestionsList a.emby-button.button-link:hover,
+.searchSuggestions a.emby-button.button-link:hover,
+.searchSuggestions a:hover {
+    background: rgba(255, 255, 255, 0.22) !important;
+    border-color: rgba(255, 255, 255, 0.45) !important;
+    color: #ffffff !important;
+    transform: translateY(-1px) scale(1.03) !important;
+}
+
+.searchfields-txtSearch,
+.emby-input.searchfields-txtSearch {
+    background: rgba(28, 28, 28, 0.88) !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
+    border-radius: 6px !important;
+    color: #ffffff !important;
+    font-size: 1.05rem !important;
+    padding: 12px 18px !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45) !important;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.searchfields-txtSearch:focus,
+.emby-input.searchfields-txtSearch:focus {
+    border-color: #ffffff !important;
+    box-shadow: 0 4px 22px rgba(0, 0, 0, 0.65), 0 0 0 2px rgba(255, 255, 255, 0.15) !important;
+    outline: none !important;
+}
+
+/* Search Results Layout Alignment & Spacing */
+.searchResults {
+    padding-left: 4% !important;
+    padding-right: 4% !important;
+    box-sizing: border-box !important;
+    margin-top: 1.5rem !important;
+}
+
+.searchResults .verticalSection {
+    margin-bottom: 2.25rem !important;
+}
+
+.searchResults h2.sectionTitle,
+.searchResults .sectionTitle {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    font-size: 1.35rem !important;
+    font-weight: 700 !important;
+    color: #e5e5e5 !important;
+    letter-spacing: -0.015em !important;
+    margin: 0 0 0.75rem 0 !important;
+    padding: 0 !important;
+}
+
+/* 5. Navigation Drawer (Desktop & Mobile) */
+.mainDrawer,
+.MuiDrawer-paper,
+.MuiDrawer-paperAnchorLeft {
+    background: rgba(16, 16, 16, 0.96) !important;
+    backdrop-filter: blur(24px) !important;
+    -webkit-backdrop-filter: blur(24px) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 6px 0 28px rgba(0, 0, 0, 0.7) !important;
+}
+
+.MuiDrawer-paper .MuiListItemButton-root,
+.mainDrawer .navMenuOption {
+    border-radius: 6px !important;
+    margin: 3px 12px !important;
+    padding: 8px 14px !important;
+    color: #e5e5e5 !important;
+    transition: background 0.15s ease, color 0.15s ease !important;
+}
+
+.MuiDrawer-paper .MuiListItemButton-root:hover,
+.mainDrawer .navMenuOption:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+.MuiDrawer-paper .MuiListItemButton-root.Mui-selected,
+.mainDrawer .navMenuOption-selected {
+    background: rgba(255, 255, 255, 0.12) !important;
+    color: #ffffff !important;
+    border-left: 3px solid #ffffff !important;
+    font-weight: 600 !important;
+}
+
+.MuiDrawer-paper .MuiListItemIcon-root,
+.mainDrawer .navMenuOptionIcon {
+    color: #b3b3b3 !important;
+    min-width: 38px !important;
+}
+
+.MuiDrawer-paper .MuiListItemButton-root.Mui-selected .MuiListItemIcon-root,
+.mainDrawer .navMenuOption-selected .navMenuOptionIcon {
+    color: #ffffff !important;
+}
+
+.MuiDrawer-paper .MuiListSubheader-root {
+    color: #888888 !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    font-size: 0.75rem !important;
+    background: transparent !important;
+    padding-left: 18px !important;
+}
+
+/* 6. User Profile Popover Menu */
+.MuiPopover-paper.MuiMenu-paper,
+.MuiPaper-root.MuiMenu-paper {
+    background: rgba(22, 22, 22, 0.96) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 8px !important;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.75) !important;
+    padding: 6px !important;
+}
+
+.MuiMenu-paper .MuiMenuItem-root {
+    border-radius: 4px !important;
+    font-size: 0.92rem !important;
+    font-weight: 500 !important;
+    color: #e5e5e5 !important;
+    padding: 8px 14px !important;
+    transition: background 0.15s ease, color 0.15s ease !important;
+}
+
+.MuiMenu-paper .MuiMenuItem-root:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+}
+
+/* 7. Video Player OSD Seekbar & Controls */
+.mdl-slider {
+    color: #ffffff !important;
+}
+
+.mdl-slider::-webkit-slider-thumb {
+    background: #ffffff !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+}
+
+.mdl-slider::-moz-range-thumb {
+    background: #ffffff !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6) !important;
+}
+
+.mdl-slider::-ms-thumb {
+    background: #ffffff !important;
+    border: 2px solid #ffffff !important;
+}
+
+.mdl-slider-background-lower {
+    background-color: #ffffff !important;
+}
+
+.sliderMarker.watched {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.iconOsdProgressInner {
+    background: #ffffff !important;
+}
+
+.videoOsdBottom,
+.osdBottomBox {
+    background: linear-gradient(0deg, rgba(12, 12, 12, 0.95) 0%, rgba(12, 12, 12, 0.6) 60%, transparent 100%) !important;
+    padding-bottom: max(env(safe-area-inset-bottom), 1rem) !important;
+}
+
+.videoOsdHeader {
+    background: linear-gradient(180deg, rgba(12, 12, 12, 0.85) 0%, transparent 100%) !important;
+    padding-top: max(env(safe-area-inset-top), 0.75rem) !important;
+}
+
+.videoOsdTitle {
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    letter-spacing: -0.015em !important;
+}
+
+.osdControls .button-flat:hover,
+.videoOsdBottom .button-flat:hover {
+    color: #ffffff !important;
+    transform: scale(1.08) !important;
+    transition: transform 0.15s ease, color 0.15s ease !important;
+}
+
+/* ==========================================================================
+   Netflix-Style Skeleton Loading System (Cards, Hero, Grids, Detail Pages)
+   ========================================================================== */
+
+@keyframes netflixSkeletonShimmer {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.netflix-shimmer {
+    background: linear-gradient(90deg, #141414 25%, #222222 50%, #141414 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+}
+
+/* 1. Native Card & Media Image Placeholder Shimmer */
+.cardScalable:not(:has(.coveredImage[style*="background-image"])),
+.cardImageContainer.lazy:not([style*="background-image"]),
+.cardImageContainer:empty:not([style*="background-image"]),
+.cardPadder:not(.lazy-hidden-children),
+.defaultCardBackground1,
+.defaultCardBackground2,
+.defaultCardBackground3,
+.defaultCardBackground4,
+.defaultCardBackground5 {
+    background: linear-gradient(90deg, #161616 25%, #242424 50%, #161616 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+    border-radius: 4px !important;
+}
+
+/* Native Card Titles while empty/fetching */
+.cardText:empty,
+.cardText-first:empty {
+    min-height: 14px !important;
+    width: 65% !important;
+    margin: 6px auto 0 auto !important;
+    border-radius: 3px !important;
+    background: linear-gradient(90deg, #181818 25%, #262626 50%, #181818 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+}
+
+/* 2. Skeleton Container & Transitions */
+.netflix-skeleton-container {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    opacity: 1;
+    transition: opacity 0.3s ease-out !important;
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+.netflix-skeleton-container.fade-out {
+    opacity: 0 !important;
+}
+
+/* 3. Hero Banner Skeleton */
+.netflix-skeleton-hero {
+    position: relative !important;
+    width: 100% !important;
+    height: 72vh !important;
+    min-height: 460px !important;
+    max-height: 760px !important;
+    margin-top: 0 !important;
+    background: #141414 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-end !important;
+    padding: 0 4% 5rem 4% !important;
+    box-sizing: border-box !important;
+    margin-bottom: 2rem !important;
+}
+
+.netflix-skeleton-hero::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(90deg, #121212 25%, #202020 50%, #121212 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+    z-index: 1 !important;
+}
+
+.netflix-skeleton-hero::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(0deg, #101010 0%, rgba(16, 16, 16, 0.6) 40%, rgba(16, 16, 16, 0.2) 80%, rgba(16, 16, 16, 0.8) 100%) !important;
+    z-index: 2 !important;
+}
+
+.netflix-skeleton-hero-content {
+    position: relative !important;
+    z-index: 3 !important;
+    max-width: 550px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 14px !important;
+}
+
+.netflix-skeleton-hero-title {
+    width: 280px !important;
+    max-width: 80% !important;
+    height: 52px !important;
+    border-radius: 6px !important;
+    background: linear-gradient(90deg, #222222 25%, #2e2e2e 50%, #222222 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+}
+
+.netflix-skeleton-hero-meta {
+    width: 220px !important;
+    max-width: 65% !important;
+    height: 18px !important;
+    border-radius: 4px !important;
+    background: linear-gradient(90deg, #1a1a1a 25%, #262626 50%, #1a1a1a 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+}
+
+.netflix-skeleton-hero-desc {
+    width: 440px !important;
+    max-width: 90% !important;
+    height: 38px !important;
+    border-radius: 4px !important;
+    background: linear-gradient(90deg, #181818 25%, #242424 50%, #181818 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+}
+
+.netflix-skeleton-hero-buttons {
+    display: flex !important;
+    gap: 10px !important;
+    margin-top: 6px !important;
+}
+
+.netflix-skeleton-hero-btn {
+    height: 40px !important;
+    border-radius: 20px !important;
+    background: linear-gradient(90deg, #242424 25%, #323232 50%, #242424 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+}
+
+.netflix-skeleton-hero-btn.primary {
+    width: 110px !important;
+}
+
+.netflix-skeleton-hero-btn.secondary {
+    width: 120px !important;
+}
+
+/* 4. Skeleton Rows for Home Page */
+.netflix-skeleton-home {
+    padding: 0 !important;
+}
+
+.netflix-skeleton-row {
+    margin-bottom: 2.75rem !important;
+    padding: 0 4% !important;
+}
+
+.netflix-skeleton-row-title {
+    width: 180px !important;
+    height: 24px !important;
+    border-radius: 4px !important;
+    margin-bottom: 0.9rem !important;
+    background: linear-gradient(90deg, #1c1c1c 25%, #2a2a2a 50%, #1c1c1c 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+}
+
+.netflix-skeleton-cards {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)) !important;
+    gap: 12px !important;
+    overflow: hidden !important;
+}
+
+@media (min-width: 1200px) {
+    .netflix-skeleton-cards {
+        grid-template-columns: repeat(6, 1fr) !important;
+    }
+}
+
+.netflix-skeleton-card {
+    aspect-ratio: 2 / 3 !important;
+    border-radius: 4px !important;
+    background: linear-gradient(90deg, #181818 25%, #262626 50%, #181818 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+}
+
+.netflix-skeleton-card.backdrop {
+    aspect-ratio: 16 / 9 !important;
+}
+
+/* 5. Grid for Library Views (Movies, TV Shows, Collections) */
+.netflix-skeleton-grid-view {
+    padding: 85px 4% 3rem 4% !important;
+}
+
+.netflix-skeleton-grid-view .netflix-skeleton-cards {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)) !important;
+    gap: 14px !important;
+}
+
+@media (min-width: 1400px) {
+    .netflix-skeleton-grid-view .netflix-skeleton-cards {
+        grid-template-columns: repeat(7, 1fr) !important;
+    }
+}
+
+/* 6. Detail Page Skeleton */
+.netflix-skeleton-detail {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    min-height: 85vh !important;
+    height: 100vh !important;
+    background: #101010 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding-top: 16vh !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    z-index: 100 !important;
+}
+
+.netflix-skeleton-detail::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: linear-gradient(90deg, #121212 25%, #1e1e1e 50%, #121212 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+    z-index: 1 !important;
+}
+
+.netflix-skeleton-detail::after {
+    content: "" !important;
+    position: absolute !important;
+    inset: 0 !important;
+    background: radial-gradient(circle at 50% 30%, transparent 20%, #101010 85%),
+                linear-gradient(0deg, #101010 0%, transparent 50%) !important;
+    z-index: 2 !important;
+}
+
+.netflix-skeleton-detail-content {
+    position: relative !important;
+    z-index: 3 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 16px !important;
+    max-width: 600px !important;
+    width: 90% !important;
+}
+
+.netflix-skeleton-detail-logo {
+    width: 260px !important;
+    height: 70px !important;
+    border-radius: 8px !important;
+    background: linear-gradient(90deg, #202020 25%, #2c2c2c 50%, #202020 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+}
+
+.netflix-skeleton-detail-meta {
+    width: 280px !important;
+    height: 20px !important;
+    border-radius: 4px !important;
+    background: linear-gradient(90deg, #1a1a1a 25%, #262626 50%, #1a1a1a 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+}
+
+.netflix-skeleton-detail-buttons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin-top: 10px !important;
+}
+
+.netflix-skeleton-detail-circle {
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(90deg, #1e1e1e 25%, #2a2a2a 50%, #1e1e1e 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+}
+
+.netflix-skeleton-detail-synopsis {
+    width: 500px !important;
+    max-width: 100% !important;
+    height: 60px !important;
+    border-radius: 4px !important;
+    margin-top: 16px !important;
+    background: linear-gradient(90deg, #181818 25%, #242424 50%, #181818 75%) !important;
+    background-size: 200% 100% !important;
+    animation: netflixSkeletonShimmer 1.8s ease-in-out infinite !important;
+}
+
+/* Responsive Mobile Skeletons */
+@media (max-width: 768px) {
+    .netflix-skeleton-hero {
+        height: 62vh !important;
+        min-height: 380px !important;
+        padding: 0 5% 3.5rem 5% !important;
+    }
+    .netflix-skeleton-hero-title {
+        width: 200px !important;
+        height: 42px !important;
+    }
+    .netflix-skeleton-hero-desc {
+        display: none !important;
+    }
+    .netflix-skeleton-cards {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+    }
+    .netflix-skeleton-grid-view {
+        padding: 70px 4% 2rem 4% !important;
+    }
+    .netflix-skeleton-grid-view .netflix-skeleton-cards {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 8px !important;
+    }
+    .netflix-skeleton-detail {
+        padding-top: 12vh !important;
+    }
+    .netflix-skeleton-detail-logo {
+        width: 180px !important;
+        height: 50px !important;
+    }
+    .netflix-skeleton-detail-meta {
+        width: 200px !important;
+    }
+    .netflix-skeleton-detail-synopsis {
+        width: 90% !important;
+    }
+}
+
+/* 7. Suppress large spinner when skeleton is in DOM, and modernize default spinner */
+body.has-skeleton .docspinner,
+body.has-skeleton .mdl-spinner,
+.netflix-skeleton-active .docspinner {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
+
+.mdl-spinner__layer-1,
+.mdl-spinner__layer-2,
+.mdl-spinner__layer-3,
+.mdl-spinner__layer-4,
+.progressring-spiner {
+    border-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+
+
 
 
