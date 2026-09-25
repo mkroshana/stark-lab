@@ -78,7 +78,6 @@ accessLog:
 
 # -- CrowdSec Bouncer Plugin --
 experimental:
-  plugins:
+  localPlugins:
     crowdsec:
       moduleName: "github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
-      version: "v1.3.5"

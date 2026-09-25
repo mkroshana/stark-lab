@@ -1,0 +1,10 @@
+[Unit]
+Description=CrowdSec Traefik Plugin Update Check
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/update-crowdsec-plugin.sh
+StandardOutput=journal
+StandardError=journal

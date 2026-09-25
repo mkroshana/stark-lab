@@ -107,10 +107,24 @@ for FILE in "${SCRIPT_DIR}"/conf.d/*.yaml; do
   fi
 done
 
-# --- Deploy DDNS Script ---
-log_info "Deploying cloudflare-ddns.sh..."
+# --- Deploy DDNS and Maintenance Scripts ---
+log_info "Deploying scripts..."
 sudo cp "${SCRIPT_DIR}/scripts/cloudflare-ddns.sh" /usr/local/bin/cloudflare-ddns.sh
 sudo chmod +x /usr/local/bin/cloudflare-ddns.sh
+
+if [ -f "${SCRIPT_DIR}/scripts/update-crowdsec-plugin.sh" ]; then
+  sudo cp "${SCRIPT_DIR}/scripts/update-crowdsec-plugin.sh" /usr/local/bin/update-crowdsec-plugin.sh
+  sudo chmod +x /usr/local/bin/update-crowdsec-plugin.sh
+  log_info "  → update-crowdsec-plugin.sh"
+fi
+
+# --- Deploy Systemd Units (Plugin Update Timer) ---
+if [ -d "${SCRIPT_DIR}/systemd" ]; then
+  log_info "Deploying systemd units..."
+  sudo cp "${SCRIPT_DIR}/systemd"/* /etc/systemd/system/ 2>/dev/null || true
+  sudo systemctl daemon-reload
+  sudo systemctl enable --now traefik-plugin-update.timer 2>/dev/null || true
+fi
 
 # --- Deploy CrowdSec Postoverflows (Whitelists) ---
 CROWDSEC_SRC="${SCRIPT_DIR}/crowdsec/postoverflows/s01-whitelist"
@@ -142,14 +156,22 @@ sudo chmod 644 "${DEPLOY_DIR}"/conf.d/*.yaml
 sudo chmod 600 "${DEPLOY_DIR}/ssl/acme.json" 2>/dev/null || true
 
 # --- Create/Update systemd Environment Override ---
-log_info "Setting up systemd EnvironmentFile for Traefik..."
+log_info "Setting up systemd EnvironmentFile and WorkingDirectory for Traefik..."
 sudo mkdir -p /etc/systemd/system/traefik.service.d
 sudo tee /etc/systemd/system/traefik.service.d/env.conf > /dev/null <<EOF
 [Service]
 EnvironmentFile=/etc/traefik/.env
+WorkingDirectory=/etc/traefik
 ExecStartPre=/bin/sleep 10
 EOF
 sudo systemctl daemon-reload
+
+# --- Ensure Local Plugin is Present ---
+PLUGIN_DEST="${DEPLOY_DIR}/plugins-local/src/github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+if [ ! -f "${PLUGIN_DEST}/.traefik.yml" ]; then
+  log_info "Local CrowdSec plugin not found in ${PLUGIN_DEST}. Fetching initial version..."
+  sudo /usr/local/bin/update-crowdsec-plugin.sh --force || log_warn "Plugin initial download failed. Check network."
+fi
 
 # --- Summary ---
 echo ""
