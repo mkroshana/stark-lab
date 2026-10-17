@@ -2695,25 +2695,38 @@ div[data-role="controlgroup"] a[data-role="button"] {
 
 .countIndicator,
 .playedIndicator {
-    background: rgba(245, 245, 247, 0.94) !important;
-    color: #0a0a0a !important;
+    background: rgba(16, 16, 16, 0.78) !important;
+    backdrop-filter: blur(10px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(140%) !important;
+    border: 1px solid rgba(245, 245, 247, 0.22) !important;
+    color: rgb(var(--abyss-accent)) !important;
     font-weight: 700 !important;
-    font-size: 0.78rem !important;
+    font-size: 0.72rem !important;
+    line-height: 1 !important;
     font-variant-numeric: tabular-nums !important;
+    width: auto !important;
     min-width: 24px !important;
     height: 24px !important;
     padding: 0 7px !important;
-    border-radius: 8px !important;
+    box-sizing: border-box !important;
+    border-radius: 999px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45) !important;
 }
 
+.playedIndicator {
+    width: 24px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+}
+
 .playedIndicator .material-icons {
-    color: #0a0a0a !important;
-    font-size: 16px !important;
+    color: rgb(var(--abyss-accent)) !important;
+    font-size: 14px !important;
     font-weight: 700 !important;
+    line-height: 1 !important;
 }
 
 /* Override Home Screen Sections green/blue/purple 999px biscuit pills */
@@ -3214,8 +3227,6 @@ input[type="checkbox"]:focus+.checkboxOutline {
 .cardImageContainer,
 .listItemIcon,
 .blurhash-canvas,
-.countIndicator,
-.playedIndicator,
 .listItem-border,
 .visualCardBox,
 .chapterThumbTextContainer,
@@ -4452,6 +4463,8 @@ a,
     .MuiMenu-paper,
     .MuiDialog-paper,
     .emby-tabs-slider,
+    .countIndicator,
+    .playedIndicator,
     .upcomingShowCard::before,
     .upcomingMovieCard::before,
     .discoverCard-movie::before,
