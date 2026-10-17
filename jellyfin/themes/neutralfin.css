@@ -50,6 +50,7 @@
 
     /* Corner rounding applied globally */
     --abyss-radius: 12px;
+    --radius-tag: 6px;
 
     /* Fixed defaults */
 
@@ -57,8 +58,11 @@
     --abyss-glass-tint: 42, 42, 42;
 
     /* Custom cubic-bezier */
-    --abyss-ease: cubic-bezier(0.16, 1, 0.3, 1);
-    --abyss-ease-snappy: cubic-bezier(0.4, 0.0, 0.2, 1);
+    --abyss-ease: cubic-bezier(0.23, 1, 0.32, 1);
+    --abyss-ease-snappy: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
     /* Rendering controls used by the optional Lite override */
     --abyss-backdrop-blur: 23px;
@@ -68,6 +72,8 @@
 /* Jellyfin 12 exposes the built-in theme palette as CSS variables. Keep the
    MUI and legacy surfaces on the same Abyss palette without relying on
    generated Emotion class names. */
+:root,
+html,
 html[data-theme="dark"] {
     --jf-palette-primary-main: rgb(var(--abyss-accent));
     --jf-palette-primary-mainChannel: var(--abyss-accent-channel);
@@ -81,6 +87,9 @@ html[data-theme="dark"] {
     --jf-palette-error-main: #f92672;
     --jf-palette-error-light: rgb(249, 38, 114);
     --jf-palette-error-dark: rgb(172, 26, 78);
+    -webkit-tap-highlight-color: transparent;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 
@@ -320,6 +329,19 @@ input[type="radio"]:checked {
     font-weight: 200;
     font-size: medium;
     opacity: 0.8;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
+.cardText .textActionButton,
+.cardText a,
+.cardText bdi {
+    display: block !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
 }
 
 .cardText-first {
@@ -330,7 +352,7 @@ input[type="radio"]:checked {
 }
 
 .cardTextCentered,
-.cardTextCentered>.textActionButton {
+.cardTextCentered .textActionButton {
     text-align: left !important;
 }
 
@@ -377,16 +399,33 @@ input[type="radio"]:checked {
    🎬 NETFLIX-STYLE HEADER
    ========================================================================== */
 
-/* 1. Header Bar & Gradient Background (Borderless) */
+/* 1. Header Bar & Feathered Dark Glass Background (Legible over both Hero and Scrolled Posters) */
 .MuiAppBar-root,
 .skinHeader:not(.osdHeader) {
-    background: linear-gradient(180deg, rgba(15, 15, 15, 0.85) 0%, rgba(15, 15, 15, 0.5) 60%, transparent 100%) !important;
+    background: transparent !important;
     background-color: transparent !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     border: none !important;
     border-bottom: none !important;
     box-shadow: none !important;
+}
+
+.MuiAppBar-root::before,
+.skinHeader:not(.osdHeader)::before {
+    content: "" !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: -16px !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+    background: linear-gradient(180deg, rgba(10, 10, 10, 0.92) 0%, rgba(10, 10, 10, 0.82) 68%, rgba(10, 10, 10, 0) 100%) !important;
+    backdrop-filter: blur(20px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+    mask-image: linear-gradient(180deg, #000000 0%, #000000 68%, transparent 100%) !important;
+    -webkit-mask-image: linear-gradient(180deg, #000000 0%, #000000 68%, transparent 100%) !important;
 }
 
 /* Header toolbar dimensions & horizontal breathing room */
@@ -565,6 +604,17 @@ body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display:
     padding: 10px 0 0 0 !important;
     margin-top: 10px !important;
     overflow: visible !important;
+    transform-origin: top right !important;
+    transition: opacity 180ms var(--ease-out), transform 180ms var(--ease-out) !important;
+}
+
+@starting-style {
+    #app-user-menu .MuiPaper-root,
+    .MuiPopover-paper:has(#app-user-menu),
+    #app-user-menu.MuiPopover-paper {
+        opacity: 0;
+        transform: scale(0.96);
+    }
 }
 
 /* Top pointer arrow pointing to caret */
@@ -689,6 +739,9 @@ body:has(#app-user-menu:not([style*="visibility: hidden"]):not([style*="display:
    ABYSS SURFACES & CONTAINERS
    ========================================================================== */
 
+.MuiDrawer-paper,
+.MuiMenu-paper,
+.MuiDialog-paper,
 html[data-theme="dark"] .MuiDrawer-paper,
 html[data-theme="dark"] .MuiMenu-paper,
 html[data-theme="dark"] .MuiDialog-paper {
@@ -701,7 +754,8 @@ html[data-theme="dark"] .MuiDialog-paper {
     backdrop-filter: blur(var(--abyss-glass-blur));
 }
 
-html[data-theme="dark"] .MuiDrawer-paper {
+.MuiDrawer-modal .MuiDrawer-paper,
+html[data-theme="dark"] .MuiDrawer-modal .MuiDrawer-paper {
     background-color: rgba(var(--abyss-glass-tint), 0.69);
     border-radius: 32px !important;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -715,10 +769,19 @@ html[data-theme="dark"] .MuiDrawer-paper {
     width: 42vw;
 }
 
+.MuiDrawer-docked .MuiDrawer-paper,
+html[data-theme="dark"] .MuiDrawer-docked .MuiDrawer-paper {
+    background-color: rgba(20, 20, 22, 0.92) !important;
+    border-right: 1px solid rgba(245, 245, 247, 0.12) !important;
+    border-radius: 0 !important;
+}
+
+.MuiDrawer-paper .MuiDivider-root,
 html[data-theme="dark"] .MuiDrawer-paper .MuiDivider-root {
     display: none;
 }
 
+.MuiDrawer-paper .MuiListItemIcon-root,
 html[data-theme="dark"] .MuiDrawer-paper .MuiListItemIcon-root {
     background: #cccccf69;
     border-radius: 50px;
@@ -727,6 +790,7 @@ html[data-theme="dark"] .MuiDrawer-paper .MuiListItemIcon-root {
     margin-right: 0.75em;
 }
 
+.MuiDrawer-paper .MuiListItemIcon-root img[src*="icon-transparent"],
 html[data-theme="dark"] .MuiDrawer-paper .MuiListItemIcon-root img[src*="icon-transparent"] {
     max-height: 24px !important;
     max-width: 24px !important;
@@ -734,22 +798,28 @@ html[data-theme="dark"] .MuiDrawer-paper .MuiListItemIcon-root img[src*="icon-tr
     filter: brightness(0) invert(1);
 }
 
+.MuiDrawer-paper .MuiListItemButton-root:hover .MuiListItemIcon-root img[src*="icon-transparent"],
+.MuiDrawer-paper .MuiListItemButton-root.Mui-selected .MuiListItemIcon-root img[src*="icon-transparent"],
 html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root:hover .MuiListItemIcon-root img[src*="icon-transparent"],
 html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root.Mui-selected .MuiListItemIcon-root img[src*="icon-transparent"] {
     filter: brightness(0) invert(0);
 }
 
+.MuiDrawer-paper .MuiListItemText-root .MuiTypography-root,
 html[data-theme="dark"] .MuiDrawer-paper .MuiListItemText-root .MuiTypography-root {
     font-weight: 500;
     font-size: large;
 }
 
-html[data-theme="dark"] .MuiListItemButton-root:hover .MuiListItemText-root .MuiTypography-root,
-html[data-theme="dark"] .MuiListItemButton-root.Mui-selected .MuiListItemText-root .MuiTypography-root {
+.MuiDrawer-paper .MuiListItemButton-root:hover .MuiListItemText-root .MuiTypography-root,
+.MuiDrawer-paper .MuiListItemButton-root.Mui-selected .MuiListItemText-root .MuiTypography-root,
+html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root:hover .MuiListItemText-root .MuiTypography-root,
+html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root.Mui-selected .MuiListItemText-root .MuiTypography-root {
     font-weight: 700;
-    color: #121212;
+    color: #121212 !important;
 }
 
+.MuiDrawer-paper .MuiListSubheader-root,
 html[data-theme="dark"] .MuiDrawer-paper .MuiListSubheader-root {
     margin: 0.9em 0 0.2em;
     letter-spacing: 0.02em;
@@ -758,52 +828,136 @@ html[data-theme="dark"] .MuiDrawer-paper .MuiListSubheader-root {
     font-size: medium;
 }
 
+.MuiMenu-paper,
 html[data-theme="dark"] .MuiMenu-paper {
     border-radius: 24px;
     padding: 0 8px;
+    transform-origin: top right;
 }
 
+.MuiMenu-paper .MuiButtonBase-root,
 html[data-theme="dark"] .MuiMenu-paper .MuiButtonBase-root {
     border-radius: 16px;
     padding: 12px 16px;
 }
 
+.MuiDialog-paper,
 html[data-theme="dark"] .MuiDialog-paper {
     border-radius: var(--abyss-radius);
 }
 
+.MuiListItemButton-root,
 html[data-theme="dark"] .MuiListItemButton-root {
     margin: 2px 8px;
     padding: 0.5em 0.9em !important;
     margin-bottom: 2px !important;
     border-radius: 12px !important;
-    transition: background-color 0.25s var(--abyss-ease),
-        color 0.25s var(--abyss-ease);
+    transition: background-color 180ms var(--ease-out),
+        color 180ms var(--ease-out);
 }
 
-html[data-theme="dark"] .MuiListItemButton-root:hover,
+.MuiListItemButton-root:hover,
+html[data-theme="dark"] .MuiListItemButton-root:hover {
+    background: rgba(var(--abyss-accent), 0.08) !important;
+}
+
+.MuiDrawer-paper .MuiListItemButton-root:hover,
+.MuiMenu-paper .MuiButtonBase-root:hover,
+html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root:hover,
 html[data-theme="dark"] .MuiMenu-paper .MuiButtonBase-root:hover {
     background: rgb(var(--abyss-accent)) !important;
-    color: #121212;
+    color: #121212 !important;
 }
 
-html[data-theme="dark"] .MuiListItemButton-root:hover .MuiSvgIcon-root,
-html[data-theme="dark"] .MuiListItemButton-root.Mui-selected .MuiSvgIcon-root,
-html[data-theme="dark"] .MuiMenu-paper .MuiButtonBase-root:hover .MuiSvgIcon-root,
+.MuiDrawer-paper .MuiListItemButton-root:hover .MuiSvgIcon-root,
+.MuiDrawer-paper .MuiListItemButton-root.Mui-selected .MuiSvgIcon-root,
+.MuiMenu-paper .MuiButtonBase-root:hover .MuiSvgIcon-root,
+html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root:hover .MuiSvgIcon-root,
+html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root.Mui-selected .MuiSvgIcon-root,
 html[data-theme="dark"] .MuiMenu-paper .MuiButtonBase-root:hover .MuiSvgIcon-root {
     color: #121212 !important;
 }
 
-html[data-theme="dark"] .MuiListItemButton-root.Mui-selected,
-html[data-theme="dark"] .MuiListItemButton-root.Mui-selected:hover {
-    color: #121212;
-    background-color: rgb(var(--abyss-accent));
+.MuiDrawer-paper .MuiListItemButton-root.Mui-selected,
+.MuiDrawer-paper .MuiListItemButton-root.Mui-selected:hover,
+html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root.Mui-selected,
+html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root.Mui-selected:hover {
+    color: #121212 !important;
+    background-color: rgb(var(--abyss-accent)) !important;
 }
 
+.MuiAvatar-colorDefault,
+html[data-theme="dark"] .MuiAvatar-colorDefault {
+    background-color: rgba(var(--abyss-accent), 0.14) !important;
+    color: rgb(var(--abyss-accent)) !important;
+    border: 1px solid rgba(var(--abyss-accent), 0.18) !important;
+}
+
+.MuiAvatar-colorDefault .MuiSvgIcon-root,
+html[data-theme="dark"] .MuiAvatar-colorDefault .MuiSvgIcon-root {
+    color: rgb(var(--abyss-accent)) !important;
+}
+
+.MuiFilledInput-root,
+.MuiOutlinedInput-root,
 html[data-theme="dark"] .MuiFilledInput-root,
 html[data-theme="dark"] .MuiOutlinedInput-root {
     border-radius: var(--abyss-radius);
     background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Dashboard Filter Chips, Primary Buttons, Progress Bars & Plugin Cards (Monochrome) */
+.MuiChip-colorPrimary,
+.MuiChip-filled.MuiChip-colorPrimary,
+.MuiButton-containedPrimary,
+.MuiButton-containedSecondary {
+    background-color: rgb(var(--abyss-accent)) !important;
+    color: #121212 !important;
+    font-weight: 600 !important;
+}
+
+.MuiButton-containedPrimary:hover,
+.MuiButton-containedSecondary:hover {
+    background-color: rgba(var(--abyss-accent), 0.85) !important;
+    color: #121212 !important;
+}
+
+.MuiChip-colorPrimary .MuiChip-icon,
+.MuiChip-colorPrimary .MuiSvgIcon-root,
+.MuiButton-containedPrimary .MuiSvgIcon-root {
+    color: #121212 !important;
+}
+
+.MuiButton-outlinedPrimary,
+.MuiButton-textPrimary:not(.MuiToolbar-root .MuiButton-root) {
+    color: rgb(var(--abyss-accent)) !important;
+    border-color: rgba(var(--abyss-accent), 0.35) !important;
+}
+
+.MuiLinearProgress-root {
+    background-color: rgba(255, 255, 255, 0.14) !important;
+    border-radius: 6px !important;
+}
+
+.MuiLinearProgress-bar,
+.MuiLinearProgress-barColorPrimary,
+.MuiLinearProgress-barColorSecondary {
+    background-color: rgb(var(--abyss-accent)) !important;
+    border-radius: 6px !important;
+}
+
+#pluginsPage .cardImageContainer,
+#pluginsPage .cardBox .cardScalable .cardImageContainer {
+    background-color: #161616 !important;
+    background-size: contain !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+#pluginsPage .cardImageContainer img {
+    object-fit: contain !important;
+    padding: 12px !important;
+    box-sizing: border-box !important;
 }
 
 
@@ -815,7 +969,20 @@ html[data-theme="dark"] .MuiOutlinedInput-root {
    NETFLIX HERO BANNER (Home Screen)
    ========================================================================== */
 
-/* Full-bleed layout: Reset top padding when Hero is mounted on Home */
+/* Full-bleed layout: Reset top padding when Hero (#slides-container or .netflix-hero) is active on Home */
+body:has(#slides-container:not([style*="display: none"])) #indexPage.homePage.libraryPage,
+body:has(#slides-container:not([style*="display: none"])) #indexPage.pageWithAbsoluteTabs,
+body:has(#slides-container:not([style*="display: none"])) #indexPage.libraryPage:not(.noSecondaryNavPage),
+body:has(#slides-container:not([style*="display: none"])) .layout-desktop #indexPage.libraryPage:not(.noSecondaryNavPage),
+body:has(#slides-container:not([style*="display: none"])) #indexPage,
+body:has(#slides-container:not([style*="display: none"])) #indexPage.libraryPage,
+body:has(#slides-container:not([style*="display: none"])) .pageWithAbsoluteTabs,
+body:has(#slides-container:not([style*="display: none"])) .pageTabContent,
+body:has(#slides-container:not([style*="display: none"])) #homeTab,
+#indexPage:has(#slides-container:not([style*="display: none"])),
+#indexPage:has(#slides-container:not([style*="display: none"])).libraryPage,
+#indexPage:has(#slides-container:not([style*="display: none"])) .pageTabContent,
+#indexPage:has(#slides-container:not([style*="display: none"])) #homeTab,
 body.has-netflix-hero #indexPage.homePage.libraryPage,
 body.has-netflix-hero #indexPage.pageWithAbsoluteTabs,
 body.has-netflix-hero #indexPage.libraryPage:not(.noSecondaryNavPage),
@@ -834,6 +1001,8 @@ body.has-netflix-hero #homeTab,
 }
 
 /* Collapse MUI fixed AppBar spacer div on Home when hero is active */
+body:has(#slides-container:not([style*="display: none"])) header.MuiAppBar-root + div[aria-hidden="true"],
+body:has(#slides-container:not([style*="display: none"])) .MuiAppBar-root + div[aria-hidden="true"],
 body.has-netflix-hero header.MuiAppBar-root + div[aria-hidden="true"],
 body.has-netflix-hero .MuiAppBar-root + div[aria-hidden="true"] {
     display: none !important;
@@ -842,38 +1011,22 @@ body.has-netflix-hero .MuiAppBar-root + div[aria-hidden="true"] {
 }
 
 header.MuiAppBar-root {
-    transition: background 0.35s ease, backdrop-filter 0.35s ease, -webkit-backdrop-filter 0.35s ease !important;
+    transition: background 250ms var(--ease-out) !important;
 }
 
-/* Seamless Transparent Top Header with Netflix Gradient Overlay */
-body.has-netflix-hero .skinHeader:not(.osdHeader):not(.headroom--not-top),
-body.has-netflix-hero .skinHeader-blurred:not(.osdHeader):not(.headroom--not-top),
-body.has-netflix-hero .MuiAppBar-root:not(.osdHeader):not(.headroom--not-top) {
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%) !important;
+/* Feathered Top Header over Home Hero & Scrolled Content Rows */
+body:has(#slides-container:not([style*="display: none"])) .skinHeader:not(.osdHeader),
+body:has(#slides-container:not([style*="display: none"])) .skinHeader-blurred:not(.osdHeader),
+body:has(#slides-container:not([style*="display: none"])) .MuiAppBar-root:not(.osdHeader),
+body.has-netflix-hero .skinHeader:not(.osdHeader),
+body.has-netflix-hero .skinHeader-blurred:not(.osdHeader),
+body.has-netflix-hero .MuiAppBar-root:not(.osdHeader) {
+    background: linear-gradient(180deg, rgba(10, 10, 10, 0.94) 0%, rgba(10, 10, 10, 0.72) 64%, rgba(10, 10, 10, 0) 100%) !important;
     background-color: transparent !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     box-shadow: none !important;
     border: none !important;
-}
-
-/* Kill the NeutralFin blur layer pseudo-element on the header at top */
-body.has-netflix-hero .skinHeader:not(.headroom--not-top)::after,
-body.has-netflix-hero .skinHeader-blurred:not(.headroom--not-top)::after,
-body.has-netflix-hero .MuiAppBar-root:not(.headroom--not-top)::after {
-    display: none !important;
-    content: none !important;
-    background: transparent !important;
-    backdrop-filter: none !important;
-    -webkit-backdrop-filter: none !important;
-}
-
-/* Scrolled Header past hero */
-body.has-netflix-hero .skinHeader.headroom--not-top:not(.osdHeader),
-body.has-netflix-hero .skinHeader-blurred.headroom--not-top:not(.osdHeader) {
-    background: rgba(16, 16, 16, 0.92) !important;
-    backdrop-filter: blur(16px) !important;
-    -webkit-backdrop-filter: blur(16px) !important;
 }
 
 /* Hero Container: 82vh cinematic aspect ratio, starting at y=0 */
@@ -1172,7 +1325,7 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
    Media Bar Plugin - Netflix Theme Integration
    ========================================================================== */
 :root {
-    --netflix-hero-height: clamp(580px, 80vh, 860px);
+    --netflix-hero-height: clamp(560px, 78svh, 850px);
     --slideshow-content-top: calc(var(--netflix-hero-height) + 0.25rem) !important;
     --slideshow-page-offset: 4.25rem !important;
 }
@@ -1191,7 +1344,11 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     background: #101010 !important;
 }
 
-/* Backdrop */
+#slides-container .slide {
+    transition: opacity 350ms var(--ease-out) !important;
+}
+
+/* Backdrop (Locked at 100% width with no trailer blackout or Ken Burns zoom) */
 #slides-container .backdrop-container {
     position: absolute !important;
     inset: 0 !important;
@@ -1200,39 +1357,27 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     z-index: 0 !important;
 }
 
-#slides-container .backdrop {
+#slides-container .backdrop,
+#slides-container .backdrop.with-video,
+#slides-container .backdrop.animate {
     width: 100% !important;
     height: 100% !important;
     object-fit: cover !important;
     object-position: center 20% !important;
+    opacity: 1 !important;
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
+    animation: none !important;
+    transform: none !important;
+    transition: opacity 350ms var(--ease-out) !important;
 }
 
-/* Hide Media Bar default overlays */
+/* Hide Media Bar default overlays & trailer video container */
 #slides-container .backdrop-overlay,
-#slides-container .gradient-overlay {
-    display: none !important;
-}
-
-/* Video Trailer Container */
-#slides-container .video-container {
-    position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    z-index: 1 !important;
-    pointer-events: none !important;
-    overflow: hidden !important;
-}
-
+#slides-container .gradient-overlay,
+#slides-container .video-container,
 #slides-container .video-player {
-    position: absolute !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
-    width: 100% !important;
-    height: 100% !important;
-    min-width: 177.78vh !important;
-    min-height: 100vh !important;
+    display: none !important;
 }
 
 /* Netflix 3-Way Vignette */
@@ -1251,8 +1396,8 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
 /* Content Area */
 #slides-container .slide-content {
     position: absolute !important;
-    left: 4% !important;
-    bottom: clamp(4.2rem, 7.5vh, 6rem) !important;
+    left: calc(3.3% + 16px) !important;
+    bottom: clamp(4.75rem, 8.2vh, 6.25rem) !important;
     width: min(50%, 620px) !important;
     max-width: 620px !important;
     display: flex !important;
@@ -1265,20 +1410,23 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     overflow: visible !important;
 }
 
-/* Logo / Brand */
-#slides-container .logo-container {
+/* Logo / Brand (Fixed height box so late-loading PNGs never shift metadata or buttons) */
+#slides-container .logo-container,
+#slides-container.layout-marquee .logo-container {
     display: flex !important;
     align-items: flex-end !important;
+    justify-content: flex-start !important;
     width: 100% !important;
     max-width: 460px !important;
-    height: auto !important;
-    min-height: 50px !important;
-    max-height: 145px !important;
+    height: clamp(4.5rem, 14vh, 9.25rem) !important;
+    min-height: clamp(4.5rem, 14vh, 9.25rem) !important;
+    max-height: clamp(4.5rem, 14vh, 9.25rem) !important;
     margin-bottom: 2px !important;
 }
 
-#slides-container .logo {
-    max-height: 140px !important;
+#slides-container .logo,
+#slides-container .logo.animate {
+    max-height: 100% !important;
     max-width: 100% !important;
     width: auto !important;
     height: auto !important;
@@ -1289,6 +1437,8 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     font-weight: 800 !important;
     color: #ffffff !important;
     text-transform: uppercase !important;
+    animation: none !important;
+    transition: opacity 280ms var(--ease-out) !important;
 }
 
 #slides-container .logo.logo-text-fallback {
@@ -1308,18 +1458,28 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     overflow: hidden !important;
 }
 
-/* Spec Line / Metadata Row */
+/* Spec Line / Metadata Row (Remove Media Bar double padding so PG-13 stays inline) */
 #slides-container .spec-line {
     display: flex !important;
     flex-wrap: wrap !important;
     align-items: center !important;
-    gap: 12px !important;
+    gap: 10px !important;
     font-family: 'Inter', -apple-system, sans-serif !important;
     font-size: 14.5px !important;
     font-weight: 600 !important;
     color: rgba(255, 255, 255, 0.92) !important;
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8) !important;
     line-height: 1.3 !important;
+}
+
+#slides-container .spec-item,
+#slides-container.layout-marquee .spec-item {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+#slides-container.layout-marquee .spec-cert {
+    margin-left: 0 !important;
 }
 
 #slides-container .spec-item.spec-year {
@@ -1608,14 +1768,14 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
 /* Pagination Dots: Netflix Dashes */
 #slides-container .dots-container {
     position: absolute !important;
-    left: 4% !important;
-    bottom: clamp(1.8rem, 3.2vh, 2.8rem) !important;
+    left: calc(3.3% + 16px) !important;
+    bottom: clamp(2.15rem, 3.8vh, 2.85rem) !important;
     top: auto !important;
     right: auto !important;
     display: flex !important;
     align-items: center !important;
     gap: 6px !important;
-    z-index: 5 !important;
+    z-index: 7 !important;
 }
 
 #slides-container .dot {
@@ -1625,7 +1785,7 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     background: rgba(255, 255, 255, 0.35) !important;
     margin: 0 !important;
     cursor: pointer !important;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transition: width 220ms var(--ease-out), background-color 220ms ease !important;
     transform: none !important;
     border: none !important;
 }
@@ -1640,98 +1800,14 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     transform: none !important;
 }
 
-/* Media Bar Chrome Controls (Volume / Mute, Pause, Settings) */
-#slides-container .ss-chrome {
-    position: absolute !important;
-    z-index: 10 !important;
-    width: 40px !important;
-    height: 40px !important;
-    border-radius: 50% !important;
-    background: rgba(16, 16, 16, 0.65) !important;
-    border: 1px solid rgba(255, 255, 255, 0.22) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    cursor: pointer !important;
-    opacity: 0.8 !important;
-    visibility: visible !important;
-    transition: opacity 0.2s ease, transform 0.15s ease, background 0.2s ease !important;
-    bottom: clamp(4.2rem, 7.5vh, 6rem) !important;
-    top: auto !important;
-}
-
-#slides-container .ss-chrome:hover {
-    opacity: 1 !important;
-    background: rgba(24, 24, 24, 0.9) !important;
-    transform: scale(1.08) !important;
-    border-color: rgba(255, 255, 255, 0.45) !important;
-}
-
-#slides-container .volume-toggle {
-    right: 4% !important;
-}
-
-#slides-container .pause-button {
-    right: calc(4% + 50px) !important;
-}
-
+/* Clean Editorial Hero: Hide right-side Media Bar Chrome Controls (Volume, Pause, Settings) */
+#slides-container .ss-chrome,
+#slides-container .volume-toggle,
+#slides-container .pause-button,
 #slides-container .ss-settings-toggle {
-    right: calc(4% + 100px) !important;
-}
-
-#slides-container .ss-chrome i {
-    font-size: 0 !important;
-    color: transparent !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 20px !important;
-    height: 20px !important;
-}
-
-/* Volume Toggle Icons (Muted default vs Unmuted) */
-#slides-container .volume-toggle i::before {
-    content: "" !important;
-    display: block !important;
-    width: 18px !important;
-    height: 18px !important;
-    background-color: #ffffff !important;
-    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>') no-repeat center / contain !important;
-    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>') no-repeat center / contain !important;
-}
-
-#slides-container .volume-toggle.is-unmuted i::before {
-    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>') no-repeat center / contain !important;
-    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>') no-repeat center / contain !important;
-}
-
-/* Pause Button (Pause bars vs Play triangle when is-paused) */
-#slides-container .pause-button i::before {
-    content: "" !important;
-    display: block !important;
-    width: 16px !important;
-    height: 16px !important;
-    background-color: #ffffff !important;
-    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>') no-repeat center / contain !important;
-    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>') no-repeat center / contain !important;
-}
-
-#slides-container.is-paused .pause-button i::before {
-    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>') no-repeat center / contain !important;
-    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>') no-repeat center / contain !important;
-}
-
-/* Settings Toggle */
-#slides-container .ss-settings-toggle i::before {
-    content: "" !important;
-    display: block !important;
-    width: 18px !important;
-    height: 18px !important;
-    background-color: #ffffff !important;
-    -webkit-mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>') no-repeat center / contain !important;
-    mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>') no-repeat center / contain !important;
+    display: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
 }
 
 /* Settings Dialog Close Button Icon */
@@ -1854,7 +1930,7 @@ body.has-netflix-hero #homeTab .homeSectionsContainer,
 body.has-netflix-hero #homeTab > .sections,
 body:has(.netflix-hero) #homeTab .homeSectionsContainer {
     position: relative !important;
-    margin-top: calc(var(--netflix-hero-height) - 4rem) !important;
+    margin-top: calc(var(--netflix-hero-height) - 0.5rem) !important;
     z-index: 6 !important;
     padding-top: 0 !important;
 }
@@ -1862,8 +1938,8 @@ body:has(.netflix-hero) #homeTab .homeSectionsContainer {
 /* Responsive adjustments */
 @media (max-width: 768px) {
     :root {
-        --netflix-hero-height: clamp(480px, 70vh, 600px);
-        --slideshow-content-top: calc(var(--netflix-hero-height) + 0.25rem) !important;
+        --netflix-hero-height: clamp(500px, 72vh, 620px);
+        --slideshow-content-top: calc(var(--netflix-hero-height) + 0.5rem) !important;
         --slideshow-page-offset: 4.25rem !important;
     }
     #slides-container .slide-content {
@@ -1871,7 +1947,7 @@ body:has(.netflix-hero) #homeTab .homeSectionsContainer {
         right: 5% !important;
         width: 90% !important;
         max-width: 90% !important;
-        bottom: clamp(3.2rem, 5vh, 4.5rem) !important;
+        bottom: 3.25rem !important;
         background: transparent !important;
         border: none !important;
         backdrop-filter: none !important;
@@ -1879,8 +1955,17 @@ body:has(.netflix-hero) #homeTab .homeSectionsContainer {
         box-shadow: none !important;
         padding: 0 !important;
     }
+    #slides-container .dots-container {
+        left: 5% !important;
+        bottom: 1.15rem !important;
+    }
+    #slides-container .logo-container {
+        height: 84px !important;
+        min-height: 84px !important;
+        max-height: 84px !important;
+    }
     #slides-container .logo {
-        max-height: 85px !important;
+        max-height: 80px !important;
     }
     #slides-container .plot {
         -webkit-line-clamp: 2 !important;
@@ -1893,38 +1978,34 @@ body:has(.netflix-hero) #homeTab .homeSectionsContainer {
         gap: 10px !important;
         width: 100% !important;
     }
-    #slides-container .play-button {
-        flex: 1 1 auto !important;
-        height: 40px !important;
-        padding: 0 16px !important;
-    }
+    #slides-container .play-button,
     #slides-container .detail-button {
-        flex: 1 1 auto !important;
-        height: 40px !important;
-        padding: 0 16px !important;
+        flex: 0 1 auto !important;
+        width: auto !important;
+        min-width: 114px !important;
+        max-width: none !important;
+        height: 42px !important;
+        padding: 0 20px !important;
     }
     #slides-container .favorite-button {
-        flex: 0 0 40px !important;
-        width: 40px !important;
-        height: 40px !important;
-    }
-    #slides-container .ss-chrome {
-        top: 68px !important;
-        bottom: auto !important;
-        width: 36px !important;
-        height: 36px !important;
-    }
-    #slides-container .volume-toggle {
-        right: 14px !important;
-    }
-    #slides-container .pause-button {
-        right: 58px !important;
-    }
-    #slides-container .ss-settings-toggle {
-        right: 102px !important;
+        flex: 0 0 42px !important;
+        width: 42px !important;
+        min-width: 42px !important;
+        max-width: 42px !important;
+        height: 42px !important;
     }
     #slides-container .arrow {
         display: none !important;
+    }
+    #homeTab .homeSectionsContainer,
+    #homeTab > .sections,
+    .homeSectionsContainer,
+    body:has(#slides-container) #homeTab .homeSectionsContainer,
+    body:has(#slides-container) #homeTab > .sections,
+    body.has-netflix-hero #homeTab .homeSectionsContainer,
+    body.has-netflix-hero #homeTab > .sections,
+    body:has(.netflix-hero) #homeTab .homeSectionsContainer {
+        margin-top: calc(var(--netflix-hero-height) - 0.25rem) !important;
     }
 }
 
@@ -2094,13 +2175,12 @@ body:has(.itemDetailPage) .backgroundContainer {
     height: 100vh !important;
     background: linear-gradient(180deg, rgba(16, 16, 16, 0.2) 0%, rgba(16, 16, 16, 0.5) 50%, rgba(16, 16, 16, 0.7) 100%) !important;
     pointer-events: none !important;
-    z-index: 0 !important;
+    z-index: -1 !important;
 }
 
-#itemDetailPage > *,
-.itemDetailPage > * {
-    position: relative;
-    z-index: 1;
+#itemDetailPage,
+.itemDetailPage {
+    isolation: isolate;
 }
 
 #itemDetailPage .detailLogo {
@@ -2417,11 +2497,21 @@ div[data-role="controlgroup"] a[data-role="button"] {
     padding-left: 1em;
 }
 
-/* Cards */
+/* Cards (Apple TV Minimalist Hover: Contained Artwork Zoom + Centered Frosted Play Button) */
 
 .visualCardBox,
-.cardImageContainer {
-    box-shadow: none;
+.cardImageContainer,
+.cardContent.cardImageContainer {
+    box-shadow: none !important;
+}
+
+.cardScalable {
+    overflow: hidden !important;
+    border-radius: var(--abyss-radius) !important;
+}
+
+.card .cardImageContainer {
+    transition: transform 220ms var(--ease-out) !important;
 }
 
 .cardBox-bottompadded {
@@ -2429,14 +2519,90 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .cardOverlayContainer {
+    background-color: rgba(0, 0, 0, 0.22) !important;
     border-radius: var(--abyss-radius) !important;
     border: solid 1px rgba(var(--abyss-accent), 0.0) !important;
-    transition: border-color 0.15s var(--abyss-ease) !important;
+    transition: opacity 180ms var(--ease-out), border-color 180ms var(--ease-out), background-color 180ms var(--ease-out) !important;
 }
 
+/* Hide bottom-right micro-icons on poster cards so artwork stays uncluttered */
+.cardOverlayButton-br,
+.cardOverlayContainer > .cardOverlayButton:not(.cardOverlayFab-primary) {
+    display: none !important;
+}
+
+/* Centered Frosted Glass Play Button on Card Hover (inset: 0 + margin: auto overrides Jellyfin's top: 50%; left: 50%) */
+.cardOverlayContainer > .cardOverlayFab-primary,
+.cardOverlayFab-primary.paper-icon-button-light {
+    position: absolute !important;
+    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    margin: auto !important;
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+    min-height: 50px !important;
+    border-radius: 50% !important;
+    background-color: rgba(18, 18, 20, 0.72) !important;
+    backdrop-filter: blur(12px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(140%) !important;
+    border: 1.5px solid rgba(245, 245, 247, 0.38) !important;
+    color: #ffffff !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    transition: transform 150ms var(--ease-out), background-color 150ms ease, border-color 150ms ease, color 150ms ease !important;
+}
+
+.cardOverlayContainer > .cardOverlayFab-primary .material-icons,
+.cardOverlayContainer > .cardOverlayFab-primary .cardOverlayButtonIcon {
+    color: inherit !important;
+    background: transparent !important;
+    background-color: transparent !important;
+    font-size: 28px !important;
+    width: 28px !important;
+    height: 28px !important;
+    line-height: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .card:hover .cardBox {
+        transform: none !important;
+    }
+
+    .card:hover .cardImageContainer {
+        transform: scale(1.035);
+    }
+
+    .cardOverlayContainer:hover {
+        border: solid 1px rgba(245, 245, 247, 0.32) !important;
+    }
+
+    .cardOverlayContainer > .cardOverlayFab-primary:hover,
+    .cardOverlayFab-primary.paper-icon-button-light:hover:not(:disabled) {
+        background-color: rgba(245, 245, 247, 0.96) !important;
+        color: #0a0a0a !important;
+        border-color: #ffffff !important;
+        transform: scale(1.08) !important;
+    }
+}
+
+.cardOverlayContainer > .cardOverlayFab-primary:active,
+.cardOverlayFab-primary.paper-icon-button-light:active:not(:disabled) {
+    transform: scale(0.95) !important;
+}
 
 .button-submit,
-.cardOverlayContainer:hover,
 .dialog,
 .toast,
 .upNextContainer,
@@ -2452,23 +2618,65 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .card.show-animation:focus>.cardBox {
-    -webkit-transform: scale(1.1);
-    transform: scale(1.1);
-    transition: transform 0.37s var(--abyss-ease) !important;
+    -webkit-transform: scale(1.04);
+    transform: scale(1.04);
+    transition: transform 200ms var(--ease-out) !important;
+}
+
+/* Horizontal Carousel Scroll Buttons */
+.emby-scrollbuttons {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+}
+
+.emby-scrollbuttons button,
+.emby-scrollbuttons .emby-scrollbuttons-button,
+.emby-scrollbuttons .paper-icon-button-light {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    min-height: 34px !important;
+    border-radius: 50% !important;
+    background: rgba(28, 28, 30, 0.72) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(245, 245, 247, 0.16) !important;
+    color: rgb(var(--abyss-accent)) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    transition: transform 140ms var(--ease-out), background-color 160ms ease, border-color 160ms ease !important;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .emby-scrollbuttons button:hover:not(:disabled),
+    .emby-scrollbuttons .emby-scrollbuttons-button:hover:not(:disabled) {
+        background: rgb(var(--abyss-accent)) !important;
+        color: #121212 !important;
+        border-color: rgb(var(--abyss-accent)) !important;
+    }
+}
+
+.emby-scrollbuttons button:active:not(:disabled),
+.emby-scrollbuttons .emby-scrollbuttons-button:active:not(:disabled) {
+    transform: scale(0.94) !important;
 }
 
 
-
-/* Card Indicators */
+/* Card Indicators & Home Screen Sections Monochrome Frosted Tags */
 .indicator {
-    border: 0.5px solid rgba(0,0,0,0.1)
+    border: 0.5px solid rgba(0, 0, 0, 0.1);
 }
 
 .cardIndicators,
 .listItemIndicators {
-    right: .225em;
-    top: .225em;
-    padding: 2px;
+    right: 0.45em !important;
+    top: 0.45em !important;
+    padding: 0 !important;
+    z-index: 3 !important;
 }
 
 .mediaSourceIndicator {
@@ -2485,31 +2693,50 @@ div[data-role="controlgroup"] a[data-role="button"] {
     box-shadow: none;
 }
 
-.countIndicator {
-    background: rgba(var(--abyss-accent), 0.8);
-    box-shadow: none;
-    border-radius: 10px !important;
-    padding: 4px;
-    font-weight: bolder;
-}
-
+.countIndicator,
 .playedIndicator {
-    background: rgb(var(--abyss-accent));
-    box-shadow: none;
-    border-radius: 10px !important;
-    padding: 4px;
-    font-weight: bolder;
+    background: rgba(245, 245, 247, 0.94) !important;
+    color: #0a0a0a !important;
+    font-weight: 700 !important;
+    font-size: 0.78rem !important;
+    font-variant-numeric: tabular-nums !important;
+    min-width: 24px !important;
+    height: 24px !important;
+    padding: 0 7px !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45) !important;
 }
 
-.cardOverlayButton-br button[title="Watched"] .MuiSvgIcon-root[data-testid="CheckIcon"] {
-    border-radius: 8px;
-    background: rgb(var(--abyss-accent));
-    color: black;
+.playedIndicator .material-icons {
+    color: #0a0a0a !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
 }
 
-.cardOverlayButton-br.cardIndicators {
-    bottom: 0;
-    position: absolute;
+/* Override Home Screen Sections green/blue/purple 999px biscuit pills */
+.upcomingShowCard::before,
+.upcomingMovieCard::before,
+.upcomingMusicCard::before,
+.upcomingBookCard::before,
+.discoverCard-movie::before,
+.discoverCard-tv::before {
+    z-index: 2 !important;
+    background: rgba(16, 16, 16, 0.78) !important;
+    backdrop-filter: blur(10px) saturate(140%) !important;
+    -webkit-backdrop-filter: blur(10px) saturate(140%) !important;
+    border: 1px solid rgba(245, 245, 247, 0.22) !important;
+    color: rgb(var(--abyss-accent)) !important;
+    border-radius: var(--radius-tag) !important;
+    padding: 3px 8px !important;
+    margin-top: 8px !important;
+    margin-left: 8px !important;
+    font-size: 0.68rem !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.06em !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
 }
 
 /* Indicators & Progress */
@@ -3498,7 +3725,7 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
 .card:focus .cardBox:not(.visualCardBox) .cardScalable {
     border-radius: 24px !important;
     border: 0.3em solid rgb(var(--abyss-accent)) !important;
-    transition: all 0.5s !important;
+    transition: transform 200ms var(--ease-out), border-color 200ms ease !important;
 }
 
 .layout-tv .pageTitle,
@@ -3564,7 +3791,7 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
 .emby-tab-button.show-focus:focus .emby-button-foreground {
     transform: scale(1.1) !important;
     font-weight: 500;
-    transition: 0.3s;
+    transition: transform 200ms var(--ease-out);
 }
 
 .emby-tab-button.show-focus:focus.emby-tab-button-active {
@@ -3588,7 +3815,7 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
     padding: 4px !important;
 }
 
-/* Desktop layout & TV*/
+/* Desktop layout & TV (Natural-scrolling top poster + Full-width lower sections) */
 .layout-desktop #itemDetailPage .btnPlay,
 .layout-tv #itemDetailPage .btnPlay {
     margin-right: 12px !important;
@@ -3608,15 +3835,59 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
     content: "Resume";
 }
 
+.layout-tv #itemDetailPage .detailPageWrapperContainer,
+.layout-desktop #itemDetailPage .detailPageWrapperContainer,
+.layout-tv #itemDetailPage .detailPagePrimaryContainer,
+.layout-desktop #itemDetailPage .detailPagePrimaryContainer,
+.layout-tv #itemDetailPage .detailImageContainer,
+.layout-desktop #itemDetailPage .detailImageContainer {
+    position: static !important;
+}
+
 .layout-tv .detailImageContainer .card,
 .layout-desktop .detailImageContainer .card {
-    position: fixed !important;
-    top: 15% !important;
+    position: absolute !important;
+    top: 12vh !important;
+    width: 20vw !important;
+}
+
+.layout-tv #itemDetailPage .detailLogo,
+.layout-desktop #itemDetailPage .detailLogo {
+    margin-left: 27vw !important;
+}
+
+.layout-tv #itemDetailPage .detailRibbon,
+.layout-desktop #itemDetailPage .detailRibbon,
+.layout-tv #itemDetailPage .detailPagePrimaryContent,
+.layout-desktop #itemDetailPage .detailPagePrimaryContent {
+    padding-left: 27vw !important;
+}
+
+.layout-tv #itemDetailPage .detailPagePrimaryContainer,
+.layout-desktop #itemDetailPage .detailPagePrimaryContainer {
+    min-height: calc(30vw - 10vh) !important;
+}
+
+.layout-tv #itemDetailPage #listChildrenCollapsible,
+.layout-desktop #itemDetailPage #listChildrenCollapsible,
+.layout-tv #itemDetailPage #childrenCollapsible,
+.layout-desktop #itemDetailPage #childrenCollapsible {
+    margin-top: 2.25rem !important;
+    margin-left: calc(3.3vw - 27vw) !important;
+    width: calc(100% + 27vw - 3.3vw) !important;
 }
 
 .layout-tv .detailPageSecondaryContainer.padded-left,
-.layout-desktop .detailPageSecondaryContainer.padded-left {
-    padding-left: max(env(safe-area-inset-left), 32.9%);
+.layout-desktop .detailPageSecondaryContainer.padded-left,
+.layout-tv #itemDetailPage .detailPageSecondaryContainer,
+.layout-desktop #itemDetailPage .detailPageSecondaryContainer {
+    padding-left: max(env(safe-area-inset-left), 3.3%) !important;
+    padding-right: max(env(safe-area-inset-right), 3.3%) !important;
+}
+
+.layout-tv #itemDetailPage .detailPageContent,
+.layout-desktop #itemDetailPage .detailPageContent {
+    padding-left: 0 !important;
 }
 
 
@@ -3633,16 +3904,8 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
 }
 
 @media all and (min-width: 75em) {
-    .cardOverlayFab-primary {
-        background-color: #00000000;
-    }
-
     .cardOverlayButtonIcon {
         background-color: #00000000 !important;
-    }
-
-    .cardOverlayContainer {
-        background-color: rgba(0, 0, 0, 0.7);
     }
 
     .headerTabs.sectionTabs {
@@ -3651,16 +3914,8 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
 }
 
 @media all and (max-width: 75em) {
-    .cardOverlayFab-primary {
-        background-color: #00000000;
-    }
-
     .cardOverlayButtonIcon {
         background-color: #00000000 !important;
-    }
-
-    .cardOverlayContainer {
-        background-color: rgba(0, 0, 0, 0.7);
     }
 
     .cardOverlayButton {
@@ -3788,37 +4043,71 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
 
 @media (min-aspect-ratio: 1.98/1) {
     .detailImageContainer .card {
-        width: 21vw !important;
+        width: 18vw !important;
     }
 
-    .detailRibbon {
-        padding-left: 28.45vw !important;
+    .layout-tv #itemDetailPage .detailLogo,
+    .layout-desktop #itemDetailPage .detailLogo {
+        margin-left: 25vw !important;
     }
 
-    .detailPagePrimaryContent {
-        padding-left: 28.45vw !important;
+    .detailRibbon,
+    .layout-tv #itemDetailPage .detailRibbon,
+    .layout-desktop #itemDetailPage .detailRibbon {
+        padding-left: 25vw !important;
+    }
+
+    .detailPagePrimaryContent,
+    .layout-tv #itemDetailPage .detailPagePrimaryContent,
+    .layout-desktop #itemDetailPage .detailPagePrimaryContent {
+        padding-left: 25vw !important;
     }
 
     .detailPageContent {
-        padding-left: 28.45vw !important;
+        padding-left: 0 !important;
+    }
+
+    .layout-tv #itemDetailPage #listChildrenCollapsible,
+    .layout-desktop #itemDetailPage #listChildrenCollapsible,
+    .layout-tv #itemDetailPage #childrenCollapsible,
+    .layout-desktop #itemDetailPage #childrenCollapsible {
+        margin-left: calc(3.3vw - 25vw) !important;
+        width: calc(100% + 25vw - 3.3vw) !important;
     }
 }
 
 @media (min-aspect-ratio: 2.7/1) {
     .detailImageContainer .card {
-        width: 16vw !important;
+        width: 15vw !important;
     }
 
-    .detailRibbon {
-        padding-left: 23.45vw !important;
+    .layout-tv #itemDetailPage .detailLogo,
+    .layout-desktop #itemDetailPage .detailLogo {
+        margin-left: 22vw !important;
     }
 
-    .detailPagePrimaryContent {
-        padding-left: 23.45vw !important;
+    .detailRibbon,
+    .layout-tv #itemDetailPage .detailRibbon,
+    .layout-desktop #itemDetailPage .detailRibbon {
+        padding-left: 22vw !important;
+    }
+
+    .detailPagePrimaryContent,
+    .layout-tv #itemDetailPage .detailPagePrimaryContent,
+    .layout-desktop #itemDetailPage .detailPagePrimaryContent {
+        padding-left: 22vw !important;
     }
 
     .detailPageContent {
-        padding-left: 23.45vw !important;
+        padding-left: 0 !important;
+    }
+
+    .layout-tv #itemDetailPage #listChildrenCollapsible,
+    .layout-desktop #itemDetailPage #listChildrenCollapsible,
+    .layout-tv #itemDetailPage #childrenCollapsible,
+    .layout-desktop #itemDetailPage #childrenCollapsible {
+        margin-left: calc(3.3vw - 22vw) !important;
+        width: calc(100% + 22vw - 3.3vw) !important;
     }
 }
 
@@ -3875,7 +4164,8 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
     .libraryPage .itemProgressBar,
     #itemDetailPage .itemProgressBar {
         backdrop-filter: blur(4px);
-        background: rgba(0, 0, 0, 0.35) !important;
+        -webkit-backdrop-filter: blur(4px);
+        background: rgba(255, 255, 255, 0.24) !important;
     }
 
     body:has(.nowPlayingBar:not(.hide)) .backgroundContainer.withBackdrop {
@@ -3978,11 +4268,9 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
     }
 }
 
-/* 15. ANIMATIONS & KEYFRAMES */
+/* 15. ANIMATIONS, MOTION & MOBILE-NATIVE ERGONOMICS */
 
-html[data-theme="dark"] .MuiDrawer-root *,
 .playstatebutton-icon-played::before,
-.cardOverlayContainer,
 .cardOverlayButtonIcon,
 .cardOverlayButton,
 .paper-icon-button-light,
@@ -3992,15 +4280,67 @@ html[data-theme="dark"] .MuiDrawer-root *,
 .navMenuOption,
 .listItem,
 .actionSheetMenuItem {
-    transition: background 0.37s var(--abyss-ease),
-        color 0.37s var(--abyss-ease),
-        border-color 0.37s var(--abyss-ease),
-        opacity 0.37s var(--abyss-ease),
-        transform 0.37s var(--abyss-ease) !important;
+    transition: background-color 180ms var(--ease-out),
+        color 180ms var(--ease-out),
+        border-color 180ms var(--ease-out),
+        opacity 180ms var(--ease-out),
+        transform 150ms var(--ease-out) !important;
 }
 
-.mainDrawer {
-    transition: transform 0.18s var(--abyss-ease-snappy) !important;
+.mainDrawer,
+.MuiDrawer-paper {
+    transition: transform 240ms var(--ease-drawer) !important;
+}
+
+/* Universal tactile press feedback (:active) */
+.raised:active:not(:disabled),
+.fab:active:not(:disabled),
+.detailButton:active:not(:disabled),
+.emby-tab-button:active:not(:disabled),
+.MuiButton-root:active:not(:disabled),
+.MuiChip-clickable:active:not(:disabled),
+.paper-icon-button-light:active:not(:disabled),
+#itemDetailPage .btnPlay:active:not(:disabled),
+#itemDetailPage .btnReplay:active:not(:disabled) {
+    transform: scale(0.97) !important;
+    transition: transform 120ms var(--ease-out) !important;
+}
+
+/* Mobile-Native Touch & Gesture Ergonomics (/mobile-native) */
+button,
+[role="button"],
+a,
+.card,
+.emby-tab-button,
+.navMenuOption,
+.listItem,
+.MuiButtonBase-root,
+#slides-container .dot,
+#slides-container .arrow {
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* Horizontal carousels yield vertical scroll & pinch-zoom to browser */
+.itemsContainer.scrollX,
+.emby-scroller {
+    touch-action: pan-y pinch-zoom;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Prevent iOS Safari auto-zoom on input focus */
+@media (pointer: coarse) {
+    input,
+    textarea,
+    select,
+    .emby-input,
+    .emby-textarea,
+    .emby-select,
+    .MuiInputBase-input {
+        font-size: max(16px, 1rem) !important;
+    }
 }
 
 /* Favourite button heart animation — all contexts */
@@ -4010,11 +4350,11 @@ html[data-theme="dark"] .MuiDrawer-root *,
     }
 
     40% {
-        transform: scale(1.3);
+        transform: scale(1.22);
     }
 
-    70% {
-        transform: scale(0.95);
+    75% {
+        transform: scale(0.96);
     }
 
     100% {
@@ -4028,7 +4368,7 @@ html[data-theme="dark"] .MuiDrawer-root *,
     }
 
     40% {
-        filter: drop-shadow(0 0 10px rgba(249, 38, 114, 0.9));
+        filter: drop-shadow(0 0 10px rgba(249, 38, 114, 0.85));
     }
 
     100% {
@@ -4037,15 +4377,15 @@ html[data-theme="dark"] .MuiDrawer-root *,
 }
 
 .ratingbutton-withrating .material-icons.favorite {
-    animation: abyss-heart-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) normal none,
-        abyss-heart-glow 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) normal none;
+    animation: abyss-heart-pop 380ms var(--ease-out) normal none,
+        abyss-heart-glow 450ms var(--ease-out) normal none;
 }
 
-/* Section entrance animations, all pages */
+/* Section entrance animations (tight 280ms duration, 8px offset, 35ms stagger) */
 @keyframes abyss-section-fade-up {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(8px);
     }
 
     to {
@@ -4056,49 +4396,68 @@ html[data-theme="dark"] .MuiDrawer-root *,
 
 .settingsContainer .MuiStack-root .MuiStack-root,
 .verticalSection:nth-child(1) {
-    animation: abyss-section-fade-up 0.7s var(--abyss-ease) both 0.05s;
+    animation: abyss-section-fade-up 280ms var(--ease-out) both 0ms;
 }
 
 .verticalSection:nth-child(2) {
-    animation: abyss-section-fade-up 0.7s var(--abyss-ease) both 0.1s;
+    animation: abyss-section-fade-up 280ms var(--ease-out) both 35ms;
 }
 
 .verticalSection:nth-child(3) {
-    animation: abyss-section-fade-up 0.7s var(--abyss-ease) both 0.15s;
+    animation: abyss-section-fade-up 280ms var(--ease-out) both 70ms;
 }
 
 .verticalSection:nth-child(4) {
-    animation: abyss-section-fade-up 0.7s var(--abyss-ease) both 0.2s;
+    animation: abyss-section-fade-up 280ms var(--ease-out) both 105ms;
 }
 
 .verticalSection:nth-child(5) {
-    animation: abyss-section-fade-up 0.7s var(--abyss-ease) both 0.25s;
+    animation: abyss-section-fade-up 280ms var(--ease-out) both 140ms;
 }
 
-.verticalSection:nth-child(6) {
-    animation: abyss-section-fade-up 0.7s var(--abyss-ease) both 0.3s;
+.verticalSection:nth-child(n+6) {
+    animation: abyss-section-fade-up 280ms var(--ease-out) both 175ms;
 }
 
-.verticalSection:nth-child(7) {
-    animation: abyss-section-fade-up 0.7s var(--abyss-ease) both 0.35s;
-}
-
-.verticalSection:nth-child(8) {
-    animation: abyss-section-fade-up 0.7s var(--abyss-ease) both 0.4s;
-}
-
-.verticalSection:nth-child(n+9) {
-    animation: abyss-section-fade-up 0.7s var(--abyss-ease) both 0.45s;
-}
-
+/* Reduced Motion: disable spatial movement while preserving gentle opacity comprehension */
 @media (prefers-reduced-motion: reduce) {
-
     *,
     *::before,
     *::after {
         scroll-behavior: auto !important;
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+    }
+
+    .verticalSection,
+    .settingsContainer .MuiStack-root .MuiStack-root,
+    .ratingbutton-withrating .material-icons.favorite,
+    #slides-container .backdrop,
+    #slides-container .logo {
+        animation: none !important;
+    }
+
+    .card:hover .cardBox,
+    .card.show-animation:focus > .cardBox,
+    #slides-container .play-button:hover,
+    #slides-container .detail-button:hover,
+    #slides-container .favorite-button:hover,
+    #itemDetailPage .btnPlay:hover,
+    #itemDetailPage .btnReplay:hover {
+        transform: none !important;
+    }
+}
+
+/* Reduced Transparency fallback (/apple-design) */
+@media (prefers-reduced-transparency: reduce) {
+    .MuiDrawer-paper,
+    .MuiMenu-paper,
+    .MuiDialog-paper,
+    .emby-tabs-slider,
+    .upcomingShowCard::before,
+    .upcomingMovieCard::before,
+    .discoverCard-movie::before,
+    .discoverCard-tv::before {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background-color: rgba(24, 24, 26, 0.96) !important;
     }
 }
