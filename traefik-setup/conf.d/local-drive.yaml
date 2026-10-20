@@ -1,0 +1,16 @@
+# ==============================================
+# Local Drive Dynamic Configuration
+# Location: /etc/traefik/conf.d/local-drive.yaml
+# ==============================================
+
+http:
+  routers:
+    local-drive:
+      rule: "Host(`drive.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: drive-svc
+      middlewares:
+        - local-iframe-only
+      tls:
+        certResolver: cloudflare

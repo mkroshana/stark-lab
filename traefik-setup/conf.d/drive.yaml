@@ -1,0 +1,43 @@
+# ==============================================
+# Drive (Cloudreve) Dynamic Configuration
+# Location: /etc/traefik/conf.d/drive.yaml
+#
+# Shared middlewares are in _shared.yaml
+# Default port: 5212
+# ==============================================
+
+http:
+  routers:
+    # -- Main Drive Router --
+    drive:
+      rule: "Host(`drive.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: drive-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers-iframe
+        - general-rate-limit
+      tls:
+        certResolver: cloudflare
+
+    # -- Strict rate limit on Cloudreve auth endpoint --
+    drive-auth:
+      rule: "Host(`drive.starklab.mkroshana.com`) && (PathPrefix(`/api/v4/session`) || PathPrefix(`/api/v3/user/session`))"
+      entryPoints:
+        - websecure
+      service: drive-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers-iframe
+        - auth-rate-limit
+      tls:
+        certResolver: cloudflare
+      priority: 50
+
+  services:
+    drive-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.110:5212"
+        passHostHeader: true
