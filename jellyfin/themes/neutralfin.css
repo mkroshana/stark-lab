@@ -4334,11 +4334,20 @@ a,
     -webkit-touch-callout: none;
 }
 
-/* Horizontal carousels yield vertical scroll & pinch-zoom to browser */
+/* Native horizontal carousels allow both horizontal & vertical touch panning + momentum scroll */
 .itemsContainer.scrollX,
-.emby-scroller {
-    touch-action: pan-y pinch-zoom;
+.emby-scroller,
+.scrollX,
+.scrollSlider,
+.emby-tabs-slider {
+    touch-action: pan-x pan-y pinch-zoom !important;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
+}
+
+/* Hero slideshow uses JS touchstart/touchend horizontal swipe + native vertical page scroll */
+#slides-container {
+    touch-action: pan-y pinch-zoom;
 }
 
 /* Prevent iOS Safari auto-zoom on input focus */
