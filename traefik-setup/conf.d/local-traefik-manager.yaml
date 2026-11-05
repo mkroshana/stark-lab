@@ -1,0 +1,23 @@
+# ==============================================
+# Local Traefik Manager Dynamic Configuration
+# Location: /etc/traefik/conf.d/local-traefik-manager.yaml
+# ==============================================
+
+http:
+  routers:
+    local-traefik-manager:
+      rule: "Host(`traefik-manager.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: traefik-manager-svc
+      middlewares:
+        - local-only
+      tls:
+        certResolver: cloudflare
+
+  services:
+    traefik-manager-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.130:5000"
+        passHostHeader: true
