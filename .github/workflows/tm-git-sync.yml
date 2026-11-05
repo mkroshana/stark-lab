@@ -26,6 +26,7 @@ jobs:
           mkdir -p traefik-setup/conf.d
           # Extract dynamic/*.yaml from traefik-manager branch
           git checkout traefik-manager -- dynamic/ || true
+          git reset HEAD dynamic/ 2>/dev/null || true
           
           if [ -d "dynamic" ]; then
             for file in dynamic/*.yaml; do

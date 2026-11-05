@@ -1,7 +1,7 @@
-# ==============================================
-# Local Traefik Manager Dynamic Configuration
+# ============================================
+# Local Traefik Manager Dunamic Configuration
 # Location: /etc/traefik/conf.d/local-traefik-manager.yaml
-# ==============================================
+# ============================================
 
 http:
   routers:
