@@ -56,6 +56,17 @@ api:
   dashboard: true
   insecure: false
 
+# -- Ping --
+ping:
+  entryPoint: traefik
+
+# -- Metrics --
+metrics:
+  prometheus:
+    addRoutersLabels: true
+    addServicesLabels: true
+    entryPoint: traefik
+
 # -- Logging --
 log:
   filePath: /var/log/traefik/traefik.log
