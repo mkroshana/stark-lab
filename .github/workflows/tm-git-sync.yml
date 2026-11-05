@@ -1,0 +1,57 @@
+name: Sync Traefik Manager Routes to Main
+
+on:
+  push:
+    branches:
+      - traefik-manager
+
+jobs:
+  sync-to-main:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Fetch traefik-manager branch
+        run: |
+          git fetch origin traefik-manager:traefik-manager
+
+      - name: Sync dynamic routes into traefik-setup/conf.d
+        run: |
+          mkdir -p traefik-setup/conf.d
+          # Extract dynamic/*.yaml from traefik-manager branch
+          git checkout traefik-manager -- dynamic/ || true
+          
+          if [ -d "dynamic" ]; then
+            for file in dynamic/*.yaml; do
+              [ -f "$file" ] || continue
+              fname=$(basename "$file")
+              
+              # Never overwrite credential-bearing templates
+              if [ "$fname" = "_shared.yaml" ] || [ "$fname" = "dashboard.yaml" ]; then
+                echo "Skipping protected credential template: $fname"
+                continue
+              fi
+              
+              echo "Syncing $fname into traefik-setup/conf.d/"
+              cp "$file" "traefik-setup/conf.d/$fname"
+            done
+            rm -rf dynamic/
+          fi
+
+      - name: Commit and push changes to main
+        run: |
+          git config user.name "Traefik Manager Sync"
+          git config user.email "traefik-manager@starklab.mkroshana.com"
+          git add traefik-setup/conf.d/
+          if ! git diff --cached --quiet; then
+            git commit -m "feat(routes): sync updates from traefik-manager [skip ci]"
+            git push origin main
+          else
+            echo "No changes to sync."
+          fi
