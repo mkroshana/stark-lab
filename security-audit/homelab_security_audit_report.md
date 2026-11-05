@@ -757,7 +757,7 @@ Select-String -Path "d:\Development\stark-lab\traefik-setup\.env" -Pattern "(CF_
 
 # Output:
 # CF_API_TOKEN=cfut_[REDACTED_CLOUDFLARE_API_TOKEN]
-# CROWDSEC_BOUNCER_API_KEY=z9PHXhNZlffSJQdGE6kf/UlPE8mHy03PWBx7RIbrfY4
+# CROWDSEC_BOUNCER_API_KEY=<redacted>
 # DASHBOARD_AUTH_HASH=admin:$apr1$ucbHoBML$CV813UcrFxSm3PRSJT/gL0
 
 # 2. Inspect git commit history for leaked credentials
