@@ -81,7 +81,7 @@ Verify rather than assert:
 ## Active LXC Containers
 | CT ID | Hostname | OS | Baseline Application Version | Local Port / Check | ZFS Snapshot |
 |---|---|---|---|---|---|
-| `100` | `traefik` | Debian 13 | Traefik `3.7.17`, CrowdSec `1.8.2` | `80`/`443`, Metrics `127.0.0.1:6060` | `subvol-100-disk-0@pre-traefik-update` |
+| `100` | `traefik` | Debian 13 | Traefik `3.7.17`, CrowdSec `1.8.2` | `80`/`443`, Prometheus `8080`, CrowdSec `6060` | `subvol-100-disk-0@pre-traefik-update` |
 | `101` | `duplicati` | Debian 13 | Duplicati `2.4.1.0` | `8200` (`200 OK`) | `subvol-101-disk-0@pre-duplicati-update` |
 | `102` | `homelable` | Debian 13 | Homelable `3.6.0` (FastAPI / Uvicorn) | `8000/docs` (`200 OK`) | `subvol-102-disk-0@pre-homelable-update` |
 | `103` | `tailscale` | Debian 13 | Tailscale `1.104.4` | `tailscaled` active | `subvol-103-disk-0@pre-tailscale-update` |
