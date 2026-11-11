@@ -112,3 +112,20 @@ Verify rather than assert:
 |---|---|---|---|---|
 | `150` | `haos` | QEMU VM (`6144 MB`, `32 GB`) | Managed via Home Assistant Web UI | Running |
 
+## Media Pipeline Settings (Changed 2026-11-11)
+Deliberate non-default settings. Keep them through updates. Changed after Intro Skipper's CPU-only scan of a 4K episode pegged all four `pve1` cores, and a new episode failed to play while Sonarr was still copying it into the library. The original files are saved next to each edited file as `*.bak-2026-11-11`.
+
+| Guest | Setting | Value | Reason |
+|---|---|---|---|
+| `121` `jellyfin` | Intro Skipper `ProcessThreads` | `2` (was `0` = all cores) | The plugin has no GPU decoding, so this caps its CPU use |
+| `121` `jellyfin` | Intro Skipper `MaxParallelism` | `1` (was `4`) | Scans one episode at a time instead of four |
+| `121` `jellyfin` | Intro Skipper `ScanTimeoutSeconds` | `900` (was `300`) | 4K credits scans were being killed at 300 s with nothing saved |
+| `121` `jellyfin` | Intro Skipper `AutoDetectIntros` | `false` (was `true`) | No scan the moment a file arrives; the nightly *Detect and Analyze Media Segments* task (about 00:00) does it instead |
+| `121` `jellyfin` | `EnableRealtimeMonitor` on TV Shows and Movies | `false` (was `true`) | Jellyfin was listing files Sonarr was still copying |
+| `118` `sonarr`, `117` `radarr` | Connect → Emby / Jellyfin | `10.10.10.121:8096`, Update Library on, notifications off | Tells Jellyfin to scan only after an import has finished |
+
+- **Files:** `/var/lib/jellyfin/plugins/configurations/IntroSkipper.xml` and `/var/lib/jellyfin/root/default/{TV Shows,Movies}/options.xml` in `CT 121`.
+- **Why imports copy:** `Downloads`, `TV-Shows` and `Movies` are separate Unraid NFS exports (`10.10.10.30`). A hardlink can't cross between them, so every import is a full network copy, about 2 minutes for a 4 GB file.
+- **Side effect:** Files added outside Sonarr and Radarr appear only after Jellyfin's scheduled library scan, or a manual scan.
+- **Not yet verified:** The first new episode or movie to appear through the Sonarr/Radarr connection.
+
