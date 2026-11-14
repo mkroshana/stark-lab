@@ -2296,7 +2296,6 @@ a[data-role="button"]:hover {
 }
 
 .listItem:hover {
-    background: rgba(255, 255, 255, 0.05) !important;
     border-radius: 12px !important;
 }
 
@@ -2860,11 +2859,6 @@ div[data-role="controlgroup"] a[data-role="button"] {
 
 /* Lists */
 
-.listItem {
-    padding-left: 1em;
-    margin-bottom: 2px !important;
-}
-
 .listItem bdi:first-of-type {
     font-size: 0.9rem !important;
     font-weight: 500;
@@ -2879,7 +2873,6 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .listItem:hover bdi:first-of-type {
-    font-weight: 600;
     font-variation-settings: "wght" 600;
 }
 
@@ -3278,11 +3271,6 @@ input[type="checkbox"]:focus+.checkboxOutline {
 .cardOverlayButtonIcon,
 .innerCardFooter {
     border-radius: var(--abyss-radius) !important;
-}
-
-.osdPoster img {
-    border-radius: var(--abyss-radius);
-    border: none;
 }
 
 div[data-role="controlgroup"] a[data-role="button"]:first-child {
