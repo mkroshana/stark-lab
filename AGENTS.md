@@ -54,6 +54,7 @@ ssh root@10.10.10.31 "pct exec <id> -- /bin/update"
   ssh root@10.10.10.31 "pct exec 200 -- runuser -l hermes -c 'set -a; source /etc/default/hermes; set +a; /home/hermes/.local/bin/hermes update --yes' && pct exec 200 -- systemctl restart hermes-dashboard"
   ```
 - **Jellyfin (`CT 121`) Caution:** Major Jellyfin upgrades (e.g., `10.11.x` to `12.0+`) perform irreversible SQLite migrations and can break `File Transformation`, `Media Bar`, `Home Screen Sections`, and custom CSS themes. Always verify plugin/theme compatibility before upgrading Jellyfin, or hold/pin the package version via `apt`.
+  - **Theme after any Jellyfin update:** the NeutralFin theme lives in `jellyfin-web`'s own `themes/dark/theme.css`, which a package update resets to stock. After updating `CT 121`, run `jellyfin/themes/deploy.sh --live` from this repo and check that `dpkg -V jellyfin-web` lists only that file. See `jellyfin/themes/README.md`.
 - **Built-in Updaters:** Some containers (`CT 117` `radarr`, `CT 118` `sonarr`) use built-in `.NET` updaters; `/bin/update` will either delegate to them or report that the built-in updater should be used.
 - **Home Assistant OS (`VM 150`):** `haos` is a QEMU virtual machine appliance. Its OS, Supervisor, and Core updates are managed exclusively via the Home Assistant Web UI, never via host shell scripts.
 
