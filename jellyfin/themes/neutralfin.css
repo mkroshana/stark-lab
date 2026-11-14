@@ -3527,6 +3527,33 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
     border-radius: 2px;
 }
 
+/* Subtitles: while the floating control bar is showing (always when paused),
+   lift native subtitles above it so no line hides behind the bar. Jellyfin adds
+   videoOsdBottom-hidden / hide to the bar when the controls fade out. */
+.htmlvideoplayer::-webkit-media-text-track-container {
+    transition: transform 200ms var(--ease-out) !important;
+}
+
+body:has(.videoOsdBottom:not(.videoOsdBottom-hidden):not(.hide)) .htmlvideoplayer::-webkit-media-text-track-container {
+    transform: translateY(-96px) !important;
+}
+
+/* Phone portrait: the video element fills the tall screen, so Jellyfin's
+   height-based subtitle size comes out around 40px. Size from the width instead;
+   the subtitle appearance setting (Settings > Subtitles) still scales it. */
+@media (max-width: 768px) and (orientation: portrait) {
+    html.layout-mobile .htmlvideoplayer::-webkit-media-text-track-container {
+        font-size: 3.4vw !important;
+    }
+}
+
+/* Phone: control-bar buttons at the 44px touch-target minimum (were 36px) */
+.layout-mobile .videoOsdBottom .paper-icon-button-light {
+    box-sizing: border-box !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+}
+
 
 /* ==========================================================================
    13. DASHBOARD & ADMIN
