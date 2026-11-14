@@ -1508,6 +1508,12 @@ body:has(#slides-container:not([style*="display: none"])) .MuiAppBar-root:not(.o
     gap: 4px !important;
 }
 
+/* Critic icon in the same white as its score; Media Bar draws it green or red */
+#slides-container .spec-item.spec-critics svg,
+#slides-container .spec-item.spec-critics svg * {
+    fill: currentColor !important;
+}
+
 #slides-container .spec-item.spec-runtime {
     color: rgba(255, 255, 255, 0.85) !important;
     font-weight: 500 !important;
@@ -1527,6 +1533,11 @@ body:has(#slides-container:not([style*="display: none"])) .MuiAppBar-root:not(.o
     font-weight: 700 !important;
     color: rgba(255, 255, 255, 0.95) !important;
     line-height: 1.2 !important;
+}
+
+/* No divider before the rating badge: the other metadata items have none either */
+#slides-container .spec-item + .spec-cert::before {
+    display: none !important;
 }
 
 /* Spec Rail (Slide Progress Line) */
@@ -1777,6 +1788,8 @@ body:has(#slides-container:not([style*="display: none"])) .MuiAppBar-root:not(.o
     align-items: center !important;
     gap: 6px !important;
     z-index: 7 !important;
+    /* Media Bar centres the dots with translateX(-50%) scale() on narrow screens */
+    transform: none !important;
 }
 
 #slides-container .dot {
@@ -1940,11 +1953,12 @@ body:has(#slides-container) #homeTab > .sections {
         --slideshow-content-top: calc(var(--netflix-hero-height) + 0.5rem) !important;
         --slideshow-page-offset: 4.25rem !important;
     }
+    /* Same inset as desktop, so the hero lines up with the card rows below */
     #slides-container .slide-content {
-        left: 5% !important;
-        right: 5% !important;
-        width: 90% !important;
-        max-width: 90% !important;
+        left: calc(3.3% + 16px) !important;
+        right: calc(3.3% + 16px) !important;
+        width: calc(93.4% - 32px) !important;
+        max-width: calc(93.4% - 32px) !important;
         bottom: 3.25rem !important;
         background: transparent !important;
         border: none !important;
@@ -1954,7 +1968,7 @@ body:has(#slides-container) #homeTab > .sections {
         padding: 0 !important;
     }
     #slides-container .dots-container {
-        left: 5% !important;
+        left: calc(3.3% + 16px) !important;
         bottom: 1.15rem !important;
     }
     #slides-container .logo-container {
