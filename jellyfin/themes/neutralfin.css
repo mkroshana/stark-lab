@@ -2786,11 +2786,13 @@ div[data-role="controlgroup"] a[data-role="button"] {
 
 /* Indicators & Progress */
 
+/* Missing / unaired episode badges: outlined and neutral, no red */
 .missingIndicator,
 .unairedIndicator {
-    background: #ae3030eb;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.45);
     padding: .3em .6em;
-    color: #fff;
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .transcodingProgress>div,
@@ -3660,6 +3662,54 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
     color: rgb(249, 38, 114) !important;
 }
 
+/* Official rating (G, PG, TV-14): the same outlined badge as the home hero */
+.mediaInfoOfficialRating {
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+    background: rgba(0, 0, 0, 0.25) !important;
+    border-radius: 3px !important;
+    padding: 1px 7px !important;
+    font-size: 11.5px !important;
+    font-weight: 700 !important;
+    line-height: 1.2 !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    align-self: center !important;
+    vertical-align: middle !important;
+}
+
+/* Critic score icon: Jellyfin's fresh/rotten images drawn white, like the hero */
+.mediaInfoCriticRating {
+    filter: brightness(0) invert(1);
+}
+
+/* Movies and series: the logo already shows the name, so hide the text copy
+   visually (screen readers still get it). Seasons and episodes show two lines
+   (parent + own name) and keep both. */
+#itemDetailPage:has(.detailLogo:not(.hide)) .nameContainer > .itemName.parentNameLast:only-child {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    clip: rect(0 0 0 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+}
+
+/* Long stream names in the Video / Audio / Subtitles pickers end in an ellipsis
+   (Jellyfin's white-space: pre stops the ellipsis from drawing) */
+#itemDetailPage .trackSelections select {
+    white-space: nowrap !important;
+    text-overflow: ellipsis !important;
+}
+
+/* Episode list: drop Jellyfin's extra right padding so rows end where the
+   overview and buttons above them end */
+.layout-desktop #itemDetailPage #childrenContent > .itemsContainer.padded-right,
+.layout-tv #itemDetailPage #childrenContent > .itemsContainer.padded-right {
+    padding-right: 0 !important;
+}
+
 /* ==========================================================================
    15. LOGIN PAGE
    ========================================================================== */
@@ -3943,6 +3993,9 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
 .layout-tv #itemDetailPage .btnPlay {
     margin-right: 12px !important;
     padding: .4em 1.4em .4em 1em !important;
+    /* Same height as the 42px round buttons beside it */
+    box-sizing: border-box !important;
+    height: 42px !important;
 }
 
 .layout-desktop #itemDetailPage .btnPlay .detailButton-content::after,
