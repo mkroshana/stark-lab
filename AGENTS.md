@@ -130,3 +130,19 @@ Deliberate non-default settings. Keep them through updates. Changed after Intro 
 - **Side effect:** Files added outside Sonarr and Radarr appear only after Jellyfin's scheduled library scan, or a manual scan.
 - **Not yet verified:** The first new episode or movie to appear through the Sonarr/Radarr connection.
 
+## NFS and Power Safety (Changed 2026-11-14)
+Two NFS-related outages led to these changes. On 2026-11-11 the host wedged: a lazy unmount of Drive and Vault on 2026-11-05 had left a kernel flush worker stuck for six days, and an 18 GB download then could not be written out; soft reboots hung and it needed the power button. On 2026-11-13 a power cut put the UPS on battery at 13:00; Unraid shut itself down at 13:07, but `pve1` kept running against its now-dead NFS mounts until the battery ran out at about 13:47.
+
+- **Never lazy-unmount (`umount -l`) an NFS share on `pve1`.** To recover a stale or hung share, stop the containers that bind-mount it first, then unmount normally and run `pvesm activate-storage <name>`, or reboot. If writes are stuck, a reboot may still need the power button.
+
+| Where | Change | Reason | Undo |
+|---|---|---|---|
+| `pve1` | `pve-nfs-watchdog` timer disabled; script removed | It could only lazy-unmount shares, and its variables had been stripped so it never worked | Copies in `/root/disabled-2026-11-14/` |
+| `pve1` | `vm.dirty_background_bytes=64 MB`, `vm.dirty_bytes=256 MB` in `/etc/sysctl.d/90-nfs-writeback.conf` (was 10% / 20% of RAM, about 2.3 / 4.6 GB) | Stops GBs of unwritten NFS data piling up in RAM | Delete the file and reboot |
+| `111` `qbittorrent` | Disk IO type **POSIX-compliant** (`Session\DiskIOType=Posix`, API value `2`; was Default, memory-mapped) | Memory-mapped writes are not recommended on network storage | `qBittorrent.conf.bak-2026-11-14` |
+| `pve1` | NUT client **active** (`MODE=netclient`): `slaveups` secondary of `apc-ups@10.10.10.30`; `upssched` runs `upsmon -c fsd` 60 s after the UPS goes on battery, cancelled if mains returns first. Touch `/etc/nut/upssched-dryrun` to test without shutting down | So `pve1` is off before Unraid stops NFS | `nut.conf.bak-2026-11-14`, `upsmon.conf.bak-2026-11-14`, `upssched.conf.bak-2026-11-14` in `/etc/nut/` |
+
+- **NUT verified 2026-11-14 (dry run):** Unraid lists `10.10.10.31` as a logged-in client; a simulated on-battery event fired the trigger after 61 s; on-battery followed by mains-back after 5 s fired nothing. Not tested: a real shutdown or a real power cut.
+- **Short outages:** if mains returns after `pve1` has shut down but before the UPS battery runs out, the UPS never drops power, so `pve1` stays off until powered on by hand. Unraid's "Turn off UPS after shutdown" (currently off) would make both machines boot themselves when mains returns.
+- **Unraid pool:** `spinning-disks` (2-disk raidz1) is 94% full, 889 GB free of 14.5 TB. Downloads and Movies live on it, and ZFS writes slow down sharply above about 90%. qBittorrent removes a torrent and its files at ratio 1, with no seeding-time limit.
+
