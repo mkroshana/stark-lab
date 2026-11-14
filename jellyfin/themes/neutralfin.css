@@ -9,6 +9,7 @@
    - Override this to customise font of abyss for your setup. */
 
 @import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 @font-face {
     font-family: 'Material Icons Round';
@@ -54,19 +55,20 @@
 
     /* Fixed defaults */
 
-    /* Backgorund for drawers and dialogs */
-    --abyss-glass-tint: 42, 42, 42;
+    /* Background for drawers, menus and floating glass controls */
+    --abyss-glass-tint: 24, 24, 28;
 
-    /* Custom cubic-bezier */
+    /* Custom cubic-bezier (Apple WWDC Designing Fluid Interfaces spring curves) */
     --abyss-ease: cubic-bezier(0.23, 1, 0.32, 1);
     --abyss-ease-snappy: cubic-bezier(0.23, 1, 0.32, 1);
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
     --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 
-    /* Rendering controls used by the optional Lite override */
-    --abyss-backdrop-blur: 23px;
-    --abyss-glass-blur: 15px;
+    /* Apple Translucent Glass Materials */
+    --abyss-backdrop-blur: 24px;
+    --abyss-glass-blur: 16px;
+    --apple-system-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "SF Pro", "Inter", "Google Sans", system-ui, sans-serif;
 }
 
 /* Jellyfin 12 exposes the built-in theme palette as CSS variables. Keep the
@@ -84,9 +86,9 @@ html[data-theme="dark"] {
     --jf-palette-AppBar-defaultBg: rgba(var(--abyss-glass-tint), 0.92);
     --jf-palette-AppBar-transparentBg: rgba(var(--abyss-glass-tint), 0.72);
     --jf-card-borderRadius: var(--abyss-radius);
-    --jf-palette-error-main: #f92672;
-    --jf-palette-error-light: rgb(249, 38, 114);
-    --jf-palette-error-dark: rgb(172, 26, 78);
+    --jf-palette-error-main: #ff453a;
+    --jf-palette-error-light: #ff6961;
+    --jf-palette-error-dark: #d70015;
     -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
@@ -99,12 +101,18 @@ html[data-theme="dark"] {
     scrollbar-gutter: stable;
 }
 
-body {
-    font-family: "Google Sans", sans-serif;
+body,
+#reactRoot,
+.MuiTypography-root,
+.MuiInputBase-root,
+.MuiButtonBase-root {
+    font-family: var(--apple-system-font) !important;
     font-optical-sizing: auto;
     font-style: normal;
     font-variation-settings: "GRAD" 0;
     overscroll-behavior: none;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
 }
 
 .material-icons {
@@ -124,20 +132,30 @@ body {
 }
 
 :root {
-    scrollbar-color: rgba(var(--abyss-accent), 0.8) #0000 !important;
+    scrollbar-color: rgba(255, 255, 255, 0.18) transparent !important;
+    scrollbar-width: thin;
 }
 
-::-webkit-scrollbar-track-piece {
-    background-color: #0000;
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    background: transparent;
 }
 
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-track-piece,
 ::-webkit-scrollbar-corner {
-    background-color: #0000;
+    background: transparent !important;
+    background-color: transparent !important;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(var(--abyss-accent), 0.8) !important;
-    border-radius: var(--abyss-radius);
+    background: rgba(255, 255, 255, 0.18) !important;
+    border-radius: 999px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.32) !important;
 }
 
 fieldset {
@@ -250,9 +268,10 @@ input[type="radio"]:checked {
 .pageTitle {
     margin-top: auto;
     margin-bottom: auto;
-    font-size: x-large;
-    opacity: 0.8;
-    font-weight: 500;
+    font-size: 1.25rem !important;
+    opacity: 0.85;
+    font-weight: 600;
+    letter-spacing: -0.02em;
     border-radius: 12px;
 }
 
@@ -285,7 +304,9 @@ input[type="radio"]:checked {
 .homeScreenSettingsContainer .sectionTitle,
 #quickConnectPreferencesPage .sectionTitle,
 .settingsContainer .sectionTitle {
-    font-size: xx-large;
+    font-size: 1.15rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.015em !important;
 }
 
 .settingsContainer .MuiTypography-h2 {
@@ -299,6 +320,10 @@ input[type="radio"]:checked {
 
 #favoritesTab .sectionTitle,
 .homeSectionsContainer .sectionTitle {
+    font-size: 1.15rem !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.015em !important;
     margin-left: .4em !important;
     margin-top: .2em !important;
     margin-bottom: .2em !important;
@@ -309,13 +334,20 @@ input[type="radio"]:checked {
 }
 
 .sectionTitleTextButton:not(.padded-left) {
+    font-size: 1.15rem !important;
+    font-weight: 600 !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.015em !important;
     padding: 4px 12px 6px 6px !important;
     margin-left: -6px !important;
     border-radius: var(--abyss-radius);
 }
 
 .sectionTitleTextButton>.sectionTitle {
-    margin-right: 16px;
+    font-size: 1.15rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.015em !important;
+    margin-right: 8px !important;
 }
 
 .inputLabel,
@@ -325,10 +357,12 @@ input[type="radio"]:checked {
 }
 
 .cardText {
-    padding: .06em .5em 0 .06em;
-    font-weight: 200;
-    font-size: medium;
-    opacity: 0.8;
+    padding: 2px 4px 0 2px !important;
+    font-weight: 400 !important;
+    font-size: 0.78rem !important;
+    line-height: 1.3 !important;
+    letter-spacing: 0 !important;
+    opacity: 0.68 !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
@@ -345,10 +379,19 @@ input[type="radio"]:checked {
 }
 
 .cardText-first {
-    margin-top: 4px !important;
-    font-weight: 600;
-    font-size: larger !important;
+    margin-top: 5px !important;
+    font-weight: 600 !important;
+    font-size: 0.88rem !important;
+    line-height: 1.25 !important;
+    letter-spacing: -0.01em !important;
     opacity: 1 !important;
+}
+
+.cardText-secondary {
+    font-size: 0.78rem !important;
+    font-weight: 400 !important;
+    opacity: 0.68 !important;
+    letter-spacing: 0 !important;
 }
 
 .cardTextCentered,
@@ -361,7 +404,9 @@ input[type="radio"]:checked {
 }
 
 .starIcon {
-    color: rgba(var(--abyss-accent), .8);
+    color: #ffd60a !important;
+    font-size: 1.05em !important;
+    vertical-align: middle !important;
 }
 
 .dialog {
@@ -770,9 +815,13 @@ html[data-theme="dark"] .MuiDrawer-modal .MuiDrawer-paper {
 }
 
 .MuiDrawer-docked .MuiDrawer-paper,
-html[data-theme="dark"] .MuiDrawer-docked .MuiDrawer-paper {
-    background-color: rgba(20, 20, 22, 0.92) !important;
-    border-right: 1px solid rgba(245, 245, 247, 0.12) !important;
+.MuiDrawer-paper,
+html[data-theme="dark"] .MuiDrawer-docked .MuiDrawer-paper,
+html[data-theme="dark"] .MuiDrawer-paper {
+    background-color: rgba(20, 20, 24, 0.78) !important;
+    backdrop-filter: blur(28px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
     border-radius: 0 !important;
 }
 
@@ -783,17 +832,17 @@ html[data-theme="dark"] .MuiDrawer-paper .MuiDivider-root {
 
 .MuiDrawer-paper .MuiListItemIcon-root,
 html[data-theme="dark"] .MuiDrawer-paper .MuiListItemIcon-root {
-    background: #cccccf69;
-    border-radius: 50px;
-    padding: 10px;
-    min-width: auto;
-    margin-right: 0.75em;
+    background: transparent !important;
+    border-radius: 8px;
+    padding: 0 !important;
+    min-width: 28px !important;
+    margin-right: 0.6em;
 }
 
 .MuiDrawer-paper .MuiListItemIcon-root img[src*="icon-transparent"],
 html[data-theme="dark"] .MuiDrawer-paper .MuiListItemIcon-root img[src*="icon-transparent"] {
-    max-height: 24px !important;
-    max-width: 24px !important;
+    max-height: 20px !important;
+    max-width: 20px !important;
     opacity: 0.85;
     filter: brightness(0) invert(1);
 }
@@ -807,74 +856,100 @@ html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root.Mui-selected .M
 
 .MuiDrawer-paper .MuiListItemText-root .MuiTypography-root,
 html[data-theme="dark"] .MuiDrawer-paper .MuiListItemText-root .MuiTypography-root {
-    font-weight: 500;
-    font-size: large;
+    font-weight: 400 !important;
+    font-size: 0.82rem !important;
+    letter-spacing: -0.005em !important;
+    line-height: 1.35 !important;
+    color: rgba(255, 255, 255, 0.85) !important;
 }
 
-.MuiDrawer-paper .MuiListItemButton-root:hover .MuiListItemText-root .MuiTypography-root,
 .MuiDrawer-paper .MuiListItemButton-root.Mui-selected .MuiListItemText-root .MuiTypography-root,
-html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root:hover .MuiListItemText-root .MuiTypography-root,
 html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root.Mui-selected .MuiListItemText-root .MuiTypography-root {
-    font-weight: 700;
+    font-weight: 500 !important;
     color: #121212 !important;
 }
 
 .MuiDrawer-paper .MuiListSubheader-root,
 html[data-theme="dark"] .MuiDrawer-paper .MuiListSubheader-root {
-    margin: 0.9em 0 0.2em;
-    letter-spacing: 0.02em;
-    opacity: 0.5;
-    font-weight: 600;
-    font-size: medium;
+    margin: 14px 12px 4px 12px !important;
+    letter-spacing: 0.06em !important;
+    opacity: 0.45 !important;
+    font-weight: 500 !important;
+    font-size: 0.68rem !important;
+    text-transform: uppercase !important;
+    line-height: 1.8 !important;
+    background: transparent !important;
 }
 
 .MuiMenu-paper,
 html[data-theme="dark"] .MuiMenu-paper {
-    border-radius: 24px;
-    padding: 0 8px;
+    border-radius: 14px !important;
+    padding: 4px !important;
+    background: rgba(28, 28, 32, 0.85) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5) !important;
     transform-origin: top right;
 }
 
 .MuiMenu-paper .MuiButtonBase-root,
 html[data-theme="dark"] .MuiMenu-paper .MuiButtonBase-root {
-    border-radius: 16px;
-    padding: 12px 16px;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    font-size: 0.82rem !important;
 }
 
 .MuiDialog-paper,
 html[data-theme="dark"] .MuiDialog-paper {
-    border-radius: var(--abyss-radius);
+    border-radius: 16px !important;
+    background: rgba(28, 28, 32, 0.88) !important;
+    backdrop-filter: blur(28px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6) !important;
 }
 
 .MuiListItemButton-root,
 html[data-theme="dark"] .MuiListItemButton-root {
-    margin: 2px 8px;
-    padding: 0.5em 0.9em !important;
+    margin: 2px 10px !important;
+    padding: 6px 12px !important;
     margin-bottom: 2px !important;
-    border-radius: 12px !important;
-    transition: background-color 180ms var(--ease-out),
-        color 180ms var(--ease-out);
+    border-radius: 8px !important;
+    transition: background-color 140ms ease, color 140ms ease, transform 100ms cubic-bezier(0.23, 1, 0.32, 1) !important;
 }
 
 .MuiListItemButton-root:hover,
 html[data-theme="dark"] .MuiListItemButton-root:hover {
-    background: rgba(var(--abyss-accent), 0.08) !important;
+    background: rgba(255, 255, 255, 0.08) !important;
 }
 
-.MuiDrawer-paper .MuiListItemButton-root:hover,
+.MuiDrawer-paper .MuiListItemButton-root:hover:not(.Mui-selected),
+html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root:hover:not(.Mui-selected) {
+    background: rgba(255, 255, 255, 0.08) !important;
+    color: #ffffff !important;
+}
+
+.MuiDrawer-paper .MuiListItemButton-root:hover:not(.Mui-selected) .MuiListItemText-root .MuiTypography-root,
+html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root:hover:not(.Mui-selected) .MuiListItemText-root .MuiTypography-root {
+    color: #ffffff !important;
+}
+
+.MuiDrawer-paper .MuiListItemButton-root:hover:not(.Mui-selected) .MuiSvgIcon-root,
+html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root:hover:not(.Mui-selected) .MuiSvgIcon-root {
+    color: #ffffff !important;
+}
+
 .MuiMenu-paper .MuiButtonBase-root:hover,
-html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root:hover,
 html[data-theme="dark"] .MuiMenu-paper .MuiButtonBase-root:hover {
-    background: rgb(var(--abyss-accent)) !important;
-    color: #121212 !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
 }
 
-.MuiDrawer-paper .MuiListItemButton-root:hover .MuiSvgIcon-root,
 .MuiDrawer-paper .MuiListItemButton-root.Mui-selected .MuiSvgIcon-root,
-.MuiMenu-paper .MuiButtonBase-root:hover .MuiSvgIcon-root,
-html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root:hover .MuiSvgIcon-root,
-html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root.Mui-selected .MuiSvgIcon-root,
-html[data-theme="dark"] .MuiMenu-paper .MuiButtonBase-root:hover .MuiSvgIcon-root {
+html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root.Mui-selected .MuiSvgIcon-root {
     color: #121212 !important;
 }
 
@@ -883,7 +958,8 @@ html[data-theme="dark"] .MuiMenu-paper .MuiButtonBase-root:hover .MuiSvgIcon-roo
 html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root.Mui-selected,
 html[data-theme="dark"] .MuiDrawer-paper .MuiListItemButton-root.Mui-selected:hover {
     color: #121212 !important;
-    background-color: rgb(var(--abyss-accent)) !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
 }
 
 .MuiAvatar-colorDefault,
@@ -958,6 +1034,267 @@ html[data-theme="dark"] .MuiOutlinedInput-root {
     object-fit: contain !important;
     padding: 12px !important;
     box-sizing: border-box !important;
+}
+
+/* Dashboard Apple Typography & Layout Refinements */
+.MuiDrawer-paper .MuiListItem-root:first-of-type .MuiTypography-h6 {
+    font-size: 0.92rem !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.015em !important;
+}
+
+.MuiDrawer-paper .MuiListItem-root:first-of-type .MuiTypography-body2 {
+    font-size: 0.72rem !important;
+    opacity: 0.55 !important;
+}
+
+/* Dashboard & Interior Admin Pages Apple macOS System Settings Typography */
+#dashboardPage .MuiTypography-h3,
+body.dashboardDocument .MuiTypography-h3,
+.page.type-interior .MuiTypography-h3,
+.settingsContainer .MuiTypography-h3,
+.dashboardSectionTitle {
+    font-size: 0.92rem !important;
+    font-weight: 500 !important;
+    letter-spacing: -0.01em !important;
+    color: rgba(255, 255, 255, 0.88) !important;
+    margin-bottom: 8px !important;
+}
+
+#dashboardPage .MuiTypography-h5,
+body.dashboardDocument .MuiTypography-h5,
+.page.type-interior .MuiTypography-h5,
+.settingsContainer .MuiTypography-h5 {
+    font-size: 1.32rem !important;
+    font-weight: 500 !important;
+    font-variant-numeric: tabular-nums !important;
+    letter-spacing: -0.02em !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+}
+
+#dashboardPage .MuiTypography-body1,
+body.dashboardDocument .MuiTypography-body1,
+.page.type-interior .MuiTypography-body1,
+.settingsContainer .MuiTypography-body1,
+#dashboardPage .MuiListItemText-primary {
+    font-size: 0.8rem !important;
+    font-weight: 400 !important;
+    line-height: 1.45 !important;
+    letter-spacing: 0 !important;
+}
+
+#dashboardPage .MuiTypography-body2,
+body.dashboardDocument .MuiTypography-body2,
+.page.type-interior .MuiTypography-body2,
+.settingsContainer .MuiTypography-body2,
+#dashboardPage .MuiListItemText-secondary {
+    font-size: 0.74rem !important;
+    font-weight: 400 !important;
+    line-height: 1.38 !important;
+    color: rgba(255, 255, 255, 0.52) !important;
+}
+
+/* Server Information Table Data Alignment (Scoped outside .MuiListItemText-root) */
+#dashboardPage .MuiStack-root > .MuiStack-root:first-of-type > p.MuiTypography-body1 {
+    font-size: 0.78rem !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    color: rgba(255, 255, 255, 0.52) !important;
+}
+
+#dashboardPage .MuiPaper-root > .MuiStack-root:last-of-type > p.MuiTypography-body1 {
+    font-size: 0.78rem !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+}
+
+#dashboardPage .MuiCard-root .MuiCardHeader-subheader,
+#dashboardPage .MuiCard-root .MuiCardContent-root p.MuiTypography-body2,
+#dashboardPage .MuiCard-root .MuiCardContent-root p.MuiTypography-body1 {
+    font-size: 0.73rem !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.52) !important;
+}
+
+/* Activity, Alerts & Paths Muted Secondary Text Hierarchy */
+#dashboardPage .MuiListItemText-root > p.MuiTypography-body1 {
+    font-size: 0.78rem !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.82) !important;
+}
+
+#dashboardPage .MuiListItemText-root:has(> p) > .MuiStack-root > p.MuiTypography-body1 {
+    font-size: 0.72rem !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.46) !important;
+}
+
+#dashboardPage .MuiListItemText-root > span.MuiTypography-body1 {
+    font-size: 0.72rem !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.48) !important;
+}
+
+#dashboardPage .MuiListItemText-root:has(> span) > .MuiStack-root > p.MuiTypography-body1 {
+    font-size: 0.78rem !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.82) !important;
+}
+
+#dashboardPage .MuiListItemText-root > .MuiStack-root > .MuiStack-root p.MuiTypography-body1 {
+    font-size: 0.72rem !important;
+    font-weight: 400 !important;
+    color: rgba(255, 255, 255, 0.46) !important;
+}
+
+#dashboardPage .MuiPaper-root .MuiTypography-body2,
+body.dashboardDocument .MuiPaper-root .MuiTypography-body2,
+.page.type-interior .MuiPaper-root .MuiTypography-body2,
+.settingsContainer .MuiPaper-root .MuiTypography-body2 {
+    font-size: 0.75rem !important;
+    font-weight: 400 !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    color: rgba(255, 255, 255, 0.58) !important;
+}
+
+/* Dashboard Action Buttons (Apple Controls) */
+#dashboardPage .MuiButton-root,
+body.dashboardDocument .MuiButton-root,
+.page.type-interior .MuiButton-root,
+.settingsContainer .MuiButton-root {
+    font-size: 0.78rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0 !important;
+    padding: 6px 14px !important;
+    border-radius: 8px !important;
+    text-transform: none !important;
+    transition: transform 100ms cubic-bezier(0.23, 1, 0.32, 1), background-color 140ms ease, border-color 140ms ease !important;
+}
+
+/* Dashboard Device & Activity Cards */
+#dashboardPage .cardText,
+#dashboardPage .cardText-first,
+#dashboardPage .cardText-secondary,
+#dashboardPage .sessionNowPlayingInfo,
+#dashboardPage .sessionAppInfo,
+#dashboardPage .sessionNowPlayingContent,
+#dashboardPage .cardFooter,
+#dashboardPage .cardBox .cardText {
+    font-weight: 400 !important;
+}
+
+#dashboardPage .MuiButton-containedPrimary,
+body.dashboardDocument .MuiButton-containedPrimary {
+    background: rgba(245, 245, 247, 0.92) !important;
+    color: #121212 !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+}
+
+#dashboardPage .MuiButton-containedPrimary:hover,
+body.dashboardDocument .MuiButton-containedPrimary:hover {
+    background: #ffffff !important;
+    color: #000000 !important;
+}
+
+.MuiButton-containedError,
+#dashboardPage .MuiButton-containedError,
+body.dashboardDocument .MuiButton-containedError {
+    background: rgba(255, 69, 58, 0.14) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    color: #ff6961 !important;
+    border: 1px solid rgba(255, 69, 58, 0.32) !important;
+    border-top: 1px solid rgba(255, 105, 97, 0.42) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+.MuiButton-containedError:hover,
+#dashboardPage .MuiButton-containedError:hover,
+body.dashboardDocument .MuiButton-containedError:hover {
+    background: rgba(255, 69, 58, 0.24) !important;
+    border-color: rgba(255, 69, 58, 0.5) !important;
+    color: #ffffff !important;
+}
+
+.MuiButton-containedError .MuiSvgIcon-root,
+#dashboardPage .MuiButton-containedError .MuiSvgIcon-root {
+    color: currentColor !important;
+}
+
+#dashboardPage .MuiButton-root:active,
+body.dashboardDocument .MuiButton-root:active,
+.page.type-interior .MuiButton-root:active,
+.settingsContainer .MuiButton-root:active {
+    transform: scale(0.97) !important;
+}
+
+/* Dashboard Cards (macOS Glass Cards) */
+#dashboardPage .MuiCard-root,
+#dashboardPage .MuiPaper-root,
+#dashboardPage .MuiList-root,
+body.dashboardDocument .MuiCard-root,
+body.dashboardDocument .MuiPaper-root {
+    background: rgba(255, 255, 255, 0.035) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Library Toolbar Segmented Controls & Alpha Picker (Movies / TV Shows Grids) */
+.MuiToolbar-root .MuiButtonGroup-root {
+    background: rgba(255, 255, 255, 0.06) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+    border-radius: 999px !important;
+    padding: 2px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+    gap: 2px !important;
+}
+
+.MuiToolbar-root .MuiButtonGroup-root .MuiButton-root {
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    border: none !important;
+    border-radius: 999px !important;
+    font-size: 0.78rem !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.005em !important;
+    padding: 5px 14px !important;
+    min-width: 34px !important;
+    text-transform: none !important;
+    box-shadow: none !important;
+}
+
+.MuiToolbar-root .MuiButtonGroup-root .MuiButton-root .MuiSvgIcon-root {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 1.1rem !important;
+}
+
+.MuiToolbar-root .MuiButtonGroup-root .MuiButton-root:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.14) !important;
+    color: #ffffff !important;
+}
+
+.MuiToolbar-root .MuiButtonGroup-root .MuiButton-root.Mui-disabled {
+    opacity: 0.3 !important;
+}
+
+.alphaPicker {
+    background: rgba(20, 20, 24, 0.65) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 999px !important;
+    padding: 6px 2px !important;
+    right: 8px !important;
 }
 
 
@@ -1168,11 +1505,11 @@ body.has-netflix-hero .MuiAppBar-root:not(.osdHeader) {
     align-items: center !important;
     gap: 5px !important;
     font-weight: 800 !important;
-    color: #46d369 !important; /* Netflix Match Green */
+    color: #f5f5f7 !important;
 }
 
 .netflix-hero-star {
-    color: #e5b009 !important; /* Gold Rating Star */
+    color: #ffd60a !important;
     font-size: 14px !important;
 }
 
@@ -1476,6 +1813,9 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
 #slides-container.layout-marquee .spec-item {
     padding: 0 !important;
     margin: 0 !important;
+    border: none !important;
+    border-left: none !important;
+    border-right: none !important;
 }
 
 #slides-container.layout-marquee .spec-cert {
@@ -1491,12 +1831,12 @@ body.has-netflix-hero .sections > .verticalSection:first-child > .sectionTitleCo
     display: inline-flex !important;
     align-items: center !important;
     gap: 4px !important;
-    color: #46d369 !important;
+    color: #f5f5f7 !important;
     font-weight: 800 !important;
 }
 
 #slides-container .spec-item.spec-rating .community-rating-star {
-    color: #f5c518 !important;
+    color: #ffd60a !important;
     font-size: 14px !important;
     margin-right: 2px !important;
 }
@@ -2088,20 +2428,18 @@ body:has(.netflix-hero) #homeTab .homeSectionsContainer {
 }
 
 .navMenuOptionIcon,
-.listItemIcon {
-    background: #cccccf69;
-    border-radius: 50px;
-    padding: 10px;
+.listItemIcon,
+[dir=ltr] .listItemIcon {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #f5f5f7 !important;
+    border-radius: 12px !important;
+    padding: 10px !important;
 }
 
 [dir=ltr] .navMenuOptionIcon {
     margin-right: 0.75em;
-}
-
-[dir=ltr] .listItemIcon {
-    background: #cccccf69 !important;
-    border-radius: 50px !important;
-    padding: 10px !important;
 }
 
 [dir=ltr] .navMenuOption {
@@ -2303,15 +2641,19 @@ a[data-role="button"]:hover {
 .raised:hover,
 .fab:hover,
 .navMenuOption:hover,
-.listItem:hover,
 .actionSheetMenuItem:hover {
     background: rgb(var(--abyss-accent)) !important;
     color: #121212;
     font-weight: 700;
 }
 
+.listItem:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 12px !important;
+}
+
 .listItem-content:hover {
-    color: #121212;
+    color: #ffffff;
 }
 
 .actionSheetMenuItem {
@@ -2582,6 +2924,12 @@ div[data-role="controlgroup"] a[data-role="button"] {
 
     .card:hover .cardImageContainer {
         transform: scale(1.035);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    .card:active .cardImageContainer {
+        transform: scale(0.97) !important;
+        transition: transform 100ms var(--ease-out) !important;
     }
 
     .cardOverlayContainer:hover {
@@ -2634,35 +2982,44 @@ div[data-role="controlgroup"] a[data-role="button"] {
 .emby-scrollbuttons .emby-scrollbuttons-button,
 .emby-scrollbuttons .paper-icon-button-light {
     width: 34px !important;
-    height: 34px !important;
-    min-width: 34px !important;
-    min-height: 34px !important;
+    height: 32px !important;
+    min-width: 32px !important;
+    min-height: 32px !important;
     border-radius: 50% !important;
-    background: rgba(28, 28, 30, 0.72) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border: 1px solid rgba(245, 245, 247, 0.16) !important;
-    color: rgb(var(--abyss-accent)) !important;
+    background: rgba(36, 36, 40, 0.65) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+    color: rgba(255, 255, 255, 0.9) !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
     padding: 0 !important;
     margin: 0 !important;
-    transition: transform 140ms var(--ease-out), background-color 160ms ease, border-color 160ms ease !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1), background-color 150ms ease, opacity 150ms ease !important;
 }
 
 @media (hover: hover) and (pointer: fine) {
     .emby-scrollbuttons button:hover:not(:disabled),
     .emby-scrollbuttons .emby-scrollbuttons-button:hover:not(:disabled) {
-        background: rgb(var(--abyss-accent)) !important;
-        color: #121212 !important;
-        border-color: rgb(var(--abyss-accent)) !important;
+        background: rgba(60, 60, 66, 0.85) !important;
+        color: #ffffff !important;
+        transform: scale(1.08) !important;
+        border-color: rgba(255, 255, 255, 0.22) !important;
     }
 }
 
 .emby-scrollbuttons button:active:not(:disabled),
 .emby-scrollbuttons .emby-scrollbuttons-button:active:not(:disabled) {
-    transform: scale(0.94) !important;
+    transform: scale(0.92) !important;
+}
+
+.emby-scrollbuttons button:disabled,
+.emby-scrollbuttons .emby-scrollbuttons-button:disabled {
+    opacity: 0.25 !important;
+    cursor: default !important;
 }
 
 
@@ -2688,43 +3045,48 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .innerCardFooter {
-    margin: .5em;
-    background: rgba(0, 0, 0, 0.4);
-    box-shadow: none;
+    margin: 0 !important;
+    padding: 0 10px 8px 10px !important;
+    background: transparent !important;
+    box-shadow: none !important;
 }
 
 .countIndicator,
 .playedIndicator {
-    background: rgba(16, 16, 16, 0.78) !important;
-    backdrop-filter: blur(10px) saturate(140%) !important;
-    -webkit-backdrop-filter: blur(10px) saturate(140%) !important;
-    border: 1px solid rgba(245, 245, 247, 0.22) !important;
-    color: rgb(var(--abyss-accent)) !important;
-    font-weight: 700 !important;
+    background: rgba(18, 18, 22, 0.72) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.26) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
     font-size: 0.72rem !important;
     line-height: 1 !important;
     font-variant-numeric: tabular-nums !important;
+    letter-spacing: -0.01em !important;
     width: auto !important;
-    min-width: 24px !important;
-    height: 24px !important;
-    padding: 0 7px !important;
+    min-width: 22px !important;
+    height: 22px !important;
+    padding: 0 6px !important;
     box-sizing: border-box !important;
     border-radius: 999px !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45) !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
 }
 
 .playedIndicator {
-    width: 24px !important;
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
     padding: 0 !important;
     border-radius: 50% !important;
 }
 
 .playedIndicator .material-icons {
-    color: rgb(var(--abyss-accent)) !important;
-    font-size: 14px !important;
+    color: #ffffff !important;
+    font-size: 13px !important;
     font-weight: 700 !important;
     line-height: 1 !important;
 }
@@ -2856,7 +3218,9 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .listItem bdi:first-of-type {
+    font-size: 0.9rem !important;
     font-weight: 500;
+    letter-spacing: -0.01em !important;
     font-variation-settings: "wght" 500;
     transition: color 0.3s ease;
 }
@@ -2891,59 +3255,86 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .listItemImageButton {
-    margin: auto;
-    font-size: 1.6em !important;
-    border-radius: var(--abyss-radius) !important;
+    margin: auto !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    font-size: 1.4em !important;
+    border-radius: 50% !important;
+    background: rgba(18, 18, 22, 0.72) !important;
+    backdrop-filter: blur(12px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.32) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    opacity: 0 !important;
+    transform: scale(0.92) !important;
+    transition: opacity 160ms cubic-bezier(0.23, 1, 0.32, 1), transform 160ms cubic-bezier(0.23, 1, 0.32, 1), background-color 150ms ease !important;
 }
 
 .listItemImageButton-icon {
     padding: 0;
 }
 
+.listItem:hover .listItemImageButton,
+.listItemImage:hover .listItemImageButton {
+    opacity: 1 !important;
+    transform: scale(1) !important;
+}
+
 .listItemImageButton:hover {
-    color: rgb(var(--abyss-accent));
+    background: #ffffff !important;
+    color: #121212 !important;
+    border-color: #ffffff !important;
+    transform: scale(1.08) !important;
+}
+
+.listItemImageButton:hover .listItemImageButton-icon,
+.listItem:hover .listItemImageButton:hover .material-icons {
+    color: #121212 !important;
 }
 
 .secondary.listItem-overview.listItemBodyText {
     height: unset !important;
     margin: 0;
+    font-size: 0.82rem !important;
+    line-height: 1.4 !important;
 }
 
-.listItem:hover,
+.listItem {
+    border-radius: 12px !important;
+    padding: 8px 12px !important;
+    margin-bottom: 4px !important;
+    transition: background-color 150ms ease, transform 120ms cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+
+.listItem:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+}
+
 .listItem:hover .secondary,
 .listItem:hover .listItem-secondaryText,
-.listItem:hover p,
-.listItem:hover span,
-.listItem:hover div,
-.listItem:hover .runtime,
-.listItem:hover .starIcon::before,
-.listItem:hover .starRatingContainer,
+.listItem:hover .runtime {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
 .listItem:hover .listItem-overview {
-    color: #121212b7 !important;
+    color: rgba(255, 255, 255, 0.8) !important;
 }
 
-.listItem:hover,
-.listItem:hover .listItemBodyText {
-    color: #121212 !important;
+.listItem:hover bdi:first-of-type {
+    color: #ffffff !important;
+    font-weight: 600 !important;
 }
 
-.listItem:hover .material-icons,
-.listItem:hover .listItemImageButton {
-    color: #121212 !important;
-}
-
-.listItem:hover .countIndicator,
-.listItem:hover .playedIndicator {
-    background: rgba(0, 0, 0, 0.15) !important;
-    color: #121212 !important;
-}
-
-.listItem:hover .itemProgressBarForeground {
-    background-color: rgba(18, 18, 18, 0.6) !important;
-}
-
-.listItem:hover .itemProgressBar {
-    background: rgba(18, 18, 18, 0.2) !important;
+.listItem:hover .material-icons {
+    color: rgba(255, 255, 255, 0.85) !important;
 }
 
 .listItem:hover .ratingbutton-icon-withrating {
@@ -2951,7 +3342,7 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .listItem:hover .listItemImageButton-icon {
-    color: rgba(255, 255, 255, 0.9) !important;
+    color: rgba(255, 255, 255, 0.95) !important;
 }
 
 /* Form Inputs */
@@ -2974,8 +3365,18 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .emby-input,
-.emby-textarea {
-    padding: .4em .55em;
+.emby-textarea,
+.emby-select,
+.emby-select-withcolor {
+    background: rgba(28, 28, 32, 0.78) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    color: #f5f5f7 !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+    border-radius: 10px !important;
+    padding: 0.5em 0.75em !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
 }
 
 .emby-textarea {
@@ -2984,7 +3385,7 @@ div[data-role="controlgroup"] a[data-role="button"] {
 }
 
 .emby-select {
-    padding: .35em 1.9em .35em .35em;
+    padding-right: 1.9em !important;
 }
 
 .selectArrow {
@@ -2993,13 +3394,7 @@ div[data-role="controlgroup"] a[data-role="button"] {
 
 .itemSelectionPanel,
 .checkboxOutline,
-.emby-input,
-.emby-textarea,
-.emby-select-withcolor,
-.checkboxOutline:focus,
-.emby-input:focus,
-.emby-textarea:focus,
-.emby-select-withcolor:focus {
+.checkboxOutline:focus {
     border: 1px solid rgba(40, 40, 40, 0.8);
 }
 
@@ -3473,12 +3868,18 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
     color: transparent;
 }
 
-/* Progress bars on item pages */
+/* Progress bars on item pages & Continue Watching cards */
+#indexPage .innerCardFooter,
+.libraryPage .innerCardFooter,
+#itemDetailPage .innerCardFooter,
 #indexPage .innerCardFooterClear,
 .libraryPage .innerCardFooterClear,
 #itemDetailPage .innerCardFooterClear {
+    background: transparent !important;
     background-color: transparent !important;
-    box-shadow: none;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0 10px 8px 10px !important;
 }
 
 #indexPage .itemProgressBarForeground,
@@ -3487,71 +3888,113 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
 #indexPage .itemProgressBar,
 .libraryPage .itemProgressBar,
 #itemDetailPage .itemProgressBar {
-    border-radius: var(--abyss-radius);
+    border-radius: 999px !important;
 }
 
 #indexPage .itemProgressBarForeground,
 .libraryPage .itemProgressBarForeground,
 #itemDetailPage .itemProgressBarForeground {
-    background-color: rgba(var(--abyss-accent), 0.95) !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.45) !important;
 }
 
 #indexPage .itemProgressBar,
 .libraryPage .itemProgressBar,
 #itemDetailPage .itemProgressBar {
-    height: 7px;
-    background: rgba(0, 0, 0, 0.4);
-    margin: .5em .8em;
+    height: 3.5px !important;
+    background: rgba(255, 255, 255, 0.26) !important;
+    margin: 0 !important;
+    overflow: hidden !important;
 }
 
 #itemDetailPage .detailButton {
-    padding: 8px !important;
-    margin-right: 8px !important;
+    padding: 0 !important;
+    margin-right: 6px !important;
+}
+
+#itemDetailPage .detailButton.hide,
+#itemDetailPage .mainDetailButtons .hide {
+    display: none !important;
 }
 
 #itemDetailPage .btnPlay {
-    background: rgba(255, 255, 255, 0.95);
-    color: #111;
+    background: #ffffff !important;
+    color: #121212 !important;
+    border-radius: 999px !important;
+    padding: 10px 24px !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+    letter-spacing: -0.01em !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
     max-width: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1), background-color 150ms ease !important;
 }
 
 #itemDetailPage .btnPlay:hover {
-    background: #fff;
-    color: #111 !important;
-    transform: scale(1.03);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.25);
+    background: #f5f5f7 !important;
+    color: #121212 !important;
+    transform: scale(1.03) !important;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.25) !important;
+}
+
+#itemDetailPage .btnPlay:active {
+    transform: scale(0.97) !important;
 }
 
 #itemDetailPage .btnPlay .detailButton-content {
     flex-direction: row !important;
+    align-items: center !important;
 }
 
-#itemDetailPage .btnReplay {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: rgba(255, 255, 255, 0.9);
+#itemDetailPage .btnPlay .material-icons {
+    color: #121212 !important;
+    font-size: 22px !important;
+    margin-right: 6px !important;
 }
 
-#itemDetailPage .btnReplay:hover {
-    background: rgba(255, 255, 255, 1);
-    color: rgba(0, 0, 0, 0.9) !important;
-    transform: scale(1.05);
+/* Apple TV Floating Glass Circular Action Buttons */
+#itemDetailPage .mainDetailButtons .detailButton:not(.btnPlay):not(.hide) {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.22) !important;
+    border-radius: 50% !important;
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    padding: 0 !important;
+    margin: 0 5px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+    transition: transform 120ms cubic-bezier(0.23, 1, 0.32, 1), background-color 150ms ease, border-color 150ms ease !important;
 }
 
-#itemDetailPage:has(.btnReplay.hide) .btnPlayTrailer {
-    background: rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    color: rgba(255, 255, 255, 0.9);
+#itemDetailPage .mainDetailButtons .detailButton:not(.btnPlay):not(.hide):hover {
+    background: rgba(255, 255, 255, 0.18) !important;
+    color: #ffffff !important;
+    transform: scale(1.06) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
 }
 
-#itemDetailPage:has(.btnReplay.hide) #itemDetailPage .btnPlayTrailer:hover {
-    background: rgba(255, 255, 255, 1);
-    color: rgba(0, 0, 0, 0.9) !important;
-    transform: scale(1.05);
+#itemDetailPage .mainDetailButtons .detailButton:not(.btnPlay):not(.hide):active {
+    transform: scale(0.94) !important;
+}
+
+#itemDetailPage .mainDetailButtons .detailButton:not(.btnPlay):not(.hide) .material-icons {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 20px !important;
+}
+
+#itemDetailPage .ratingbutton-withrating .material-icons.favorite {
+    color: rgb(249, 38, 114) !important;
 }
 
 /* 11. LOGIN PAGE */
@@ -3876,14 +4319,29 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
 
 .layout-tv #itemDetailPage .detailPagePrimaryContainer,
 .layout-desktop #itemDetailPage .detailPagePrimaryContainer {
-    min-height: calc(30vw - 10vh) !important;
+    min-height: max(0px, calc(30vw - 150px)) !important;
+}
+
+.layout-tv #itemDetailPage:has(.detailLogo.hide) .detailPagePrimaryContainer,
+.layout-desktop #itemDetailPage:has(.detailLogo.hide) .detailPagePrimaryContainer {
+    min-height: max(0px, calc(30vw + 36px)) !important;
+}
+
+.layout-tv #itemDetailPage .detailSectionContent,
+.layout-desktop #itemDetailPage .detailSectionContent {
+    min-height: max(0px, calc(30vw - 300px)) !important;
+}
+
+.layout-tv #itemDetailPage:has(.detailLogo.hide) .detailSectionContent,
+.layout-desktop #itemDetailPage:has(.detailLogo.hide) .detailSectionContent {
+    min-height: max(0px, calc(30vw - 105px)) !important;
 }
 
 .layout-tv #itemDetailPage #listChildrenCollapsible,
 .layout-desktop #itemDetailPage #listChildrenCollapsible,
 .layout-tv #itemDetailPage #childrenCollapsible,
 .layout-desktop #itemDetailPage #childrenCollapsible {
-    margin-top: 2.25rem !important;
+    margin-top: 1.5rem !important;
     margin-left: calc(3.3vw - 27vw) !important;
     width: calc(100% + 27vw - 3.3vw) !important;
 }
@@ -3899,6 +4357,115 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
 .layout-tv #itemDetailPage .detailPageContent,
 .layout-desktop #itemDetailPage .detailPageContent {
     padding-left: 0 !important;
+}
+
+@media (max-width: 768px) {
+    .layout-desktop .detailImageContainer,
+    .layout-tv .detailImageContainer,
+    #itemDetailPage .detailImageContainer.hide-mobile {
+        display: none !important;
+    }
+
+    .layout-desktop #itemDetailPage .detailLogo,
+    .layout-tv #itemDetailPage .detailLogo,
+    .layout-mobile #itemDetailPage .detailLogo,
+    #itemDetailPage .detailLogo {
+        margin: 0 auto 12px auto !important;
+        width: 65vw !important;
+        max-width: 240px !important;
+        height: 84px !important;
+        background-position: center bottom !important;
+        background-size: contain !important;
+    }
+
+    .layout-desktop #itemDetailPage .detailRibbon,
+    .layout-tv #itemDetailPage .detailRibbon,
+    .layout-mobile #itemDetailPage .detailRibbon,
+    #itemDetailPage .detailRibbon {
+        padding-left: 5% !important;
+        padding-right: 5% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        height: auto !important;
+        gap: 12px !important;
+        margin-bottom: 8px !important;
+    }
+
+    #itemDetailPage .detailRibbon .infoWrapper,
+    #itemDetailPage .detailRibbon .nameContainer {
+        width: 100% !important;
+        text-align: left !important;
+    }
+
+    #itemDetailPage .mainDetailButtons {
+        width: 100% !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        gap: 8px !important;
+        margin: 4px 0 8px 0 !important;
+        font-size: 100% !important;
+    }
+
+    .layout-desktop #itemDetailPage .detailPagePrimaryContent,
+    .layout-tv #itemDetailPage .detailPagePrimaryContent,
+    .layout-mobile #itemDetailPage .detailPagePrimaryContent,
+    #itemDetailPage .detailPagePrimaryContent {
+        padding-left: 5% !important;
+        padding-right: 5% !important;
+    }
+
+    .layout-desktop #itemDetailPage .detailPagePrimaryContainer,
+    .layout-tv #itemDetailPage .detailPagePrimaryContainer,
+    .layout-desktop #itemDetailPage .detailSectionContent,
+    .layout-tv #itemDetailPage .detailSectionContent,
+    #itemDetailPage .detailPagePrimaryContainer,
+    #itemDetailPage .detailSectionContent {
+        min-height: 0 !important;
+    }
+
+    .layout-desktop #itemDetailPage #listChildrenCollapsible,
+    .layout-tv #itemDetailPage #listChildrenCollapsible,
+    .layout-desktop #itemDetailPage #childrenCollapsible,
+    .layout-tv #itemDetailPage #childrenCollapsible,
+    #itemDetailPage #listChildrenCollapsible,
+    #itemDetailPage #childrenCollapsible {
+        margin-left: 0 !important;
+        width: 100% !important;
+        margin-top: 1.25rem !important;
+    }
+
+    #itemDetailPage #listChildrenCollapsible .listItem {
+        padding: 8px 4px !important;
+    }
+
+    #itemDetailPage #listChildrenCollapsible .listItemImage.listItemImage-large {
+        width: 100px !important;
+        height: 58px !important;
+        margin-right: 10px !important;
+        flex-shrink: 0 !important;
+    }
+
+    #itemDetailPage #listChildrenCollapsible .listItemBody {
+        padding: 0 6px 0 0 !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+    }
+
+    #itemDetailPage #listChildrenCollapsible .listItemButton:not(.btnPlaystate):not(.btnMoreCommands) {
+        display: none !important;
+    }
+
+    #itemDetailPage #listChildrenCollapsible .listItemButton {
+        padding: 4px !important;
+        margin: 0 !important;
+        width: 32px !important;
+        height: 32px !important;
+        min-width: 32px !important;
+    }
 }
 
 
@@ -4048,7 +4615,7 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
     #indexPage .itemProgressBar,
     .libraryPage .itemProgressBar,
     #itemDetailPage .itemProgressBar {
-        margin-right: .8em;
+        margin: 0 !important;
     }
 }
 
@@ -4078,10 +4645,31 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
         padding-left: 0 !important;
     }
 
+    .layout-tv #itemDetailPage .detailPagePrimaryContainer,
+    .layout-desktop #itemDetailPage .detailPagePrimaryContainer {
+        min-height: max(0px, calc(27vw - 150px)) !important;
+    }
+
+    .layout-tv #itemDetailPage:has(.detailLogo.hide) .detailPagePrimaryContainer,
+    .layout-desktop #itemDetailPage:has(.detailLogo.hide) .detailPagePrimaryContainer {
+        min-height: max(0px, calc(27vw + 36px)) !important;
+    }
+
+    .layout-tv #itemDetailPage .detailSectionContent,
+    .layout-desktop #itemDetailPage .detailSectionContent {
+        min-height: max(0px, calc(27vw - 300px)) !important;
+    }
+
+    .layout-tv #itemDetailPage:has(.detailLogo.hide) .detailSectionContent,
+    .layout-desktop #itemDetailPage:has(.detailLogo.hide) .detailSectionContent {
+        min-height: max(0px, calc(27vw - 105px)) !important;
+    }
+
     .layout-tv #itemDetailPage #listChildrenCollapsible,
     .layout-desktop #itemDetailPage #listChildrenCollapsible,
     .layout-tv #itemDetailPage #childrenCollapsible,
     .layout-desktop #itemDetailPage #childrenCollapsible {
+        margin-top: 1.5rem !important;
         margin-left: calc(3.3vw - 25vw) !important;
         width: calc(100% + 25vw - 3.3vw) !important;
     }
@@ -4113,10 +4701,31 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
         padding-left: 0 !important;
     }
 
+    .layout-tv #itemDetailPage .detailPagePrimaryContainer,
+    .layout-desktop #itemDetailPage .detailPagePrimaryContainer {
+        min-height: max(0px, calc(22.5vw - 150px)) !important;
+    }
+
+    .layout-tv #itemDetailPage:has(.detailLogo.hide) .detailPagePrimaryContainer,
+    .layout-desktop #itemDetailPage:has(.detailLogo.hide) .detailPagePrimaryContainer {
+        min-height: max(0px, calc(22.5vw + 36px)) !important;
+    }
+
+    .layout-tv #itemDetailPage .detailSectionContent,
+    .layout-desktop #itemDetailPage .detailSectionContent {
+        min-height: max(0px, calc(22.5vw - 300px)) !important;
+    }
+
+    .layout-tv #itemDetailPage:has(.detailLogo.hide) .detailSectionContent,
+    .layout-desktop #itemDetailPage:has(.detailLogo.hide) .detailSectionContent {
+        min-height: max(0px, calc(22.5vw - 105px)) !important;
+    }
+
     .layout-tv #itemDetailPage #listChildrenCollapsible,
     .layout-desktop #itemDetailPage #listChildrenCollapsible,
     .layout-tv #itemDetailPage #childrenCollapsible,
     .layout-desktop #itemDetailPage #childrenCollapsible {
+        margin-top: 1.5rem !important;
         margin-left: calc(3.3vw - 22vw) !important;
         width: calc(100% + 22vw - 3.3vw) !important;
     }
@@ -4198,38 +4807,60 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
     margin-bottom: 3px;
 }
 
-/* 14. SEARCH PAGE */
+/* 14. SEARCH PAGE (Apple Spotlight Frosted Glass) */
 
-.searchSuggestionsList .emby-button {
-    color: rgba(var(--abyss-accent), 0.6);
-    font-weight: 100;
-    font-size: 18px;
-    letter-spacing: 1px;
-    text-align: left;
-}
-
-#searchTextInput {
-    font-weight: bold;
-    font-size: 24px;
-    padding: 12px 18px;
-    letter-spacing: 1.1px;
+.searchFieldsInner {
+    max-width: 640px !important;
+    margin: 1.5rem auto 1rem auto !important;
+    padding: 0 16px !important;
+    position: relative !important;
 }
 
 .searchFieldsInner .inputLabel {
-    display: none;
+    display: none !important;
 }
 
 .searchfields-icon {
     align-self: center !important;
+    color: rgba(255, 255, 255, 0.55) !important;
+    margin-right: 10px !important;
+    font-size: 1.35rem !important;
+}
+
+#searchTextInput,
+.searchFieldsInner .emby-input,
+.searchfields-txtSearch {
+    background: rgba(28, 28, 32, 0.78) !important;
+    backdrop-filter: blur(24px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.24) !important;
+    border-radius: 14px !important;
+    color: #f5f5f7 !important;
+    font-weight: 500 !important;
+    font-size: 1.05rem !important;
+    padding: 12px 18px !important;
+    letter-spacing: -0.01em !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+    transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease !important;
+}
+
+#searchTextInput:focus,
+.searchFieldsInner .emby-input:focus,
+.searchfields-txtSearch:focus {
+    background: rgba(36, 36, 42, 0.88) !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45), 0 0 0 3px rgba(255, 255, 255, 0.1) !important;
+    outline: none !important;
 }
 
 .verticalSection.searchSuggestions .sectionTitle {
-    display: none;
+    display: none !important;
 }
 
 .verticalSection.searchSuggestions {
     text-align: left !important;
-    padding: 12px 0 0 0 !important;
+    padding: 8px 0 0 0 !important;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -4238,27 +4869,36 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
 }
 
 .searchSuggestionsList {
-    width: fit-content;
-    min-width: min(908px, calc(100vw - 70px));
-    padding-left: 50px;
+    width: 100%;
+    max-width: 640px;
+    padding: 4px 16px 24px 44px;
     box-sizing: border-box;
     overflow-y: auto;
     max-height: 100%;
     scrollbar-width: thin;
-    scrollbar-color: rgba(var(--abyss-accent), 0.5) transparent;
+    scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
 }
 
-.searchSuggestionsList::-webkit-scrollbar {
-    width: 4px;
+.searchSuggestionsList > div {
+    margin-bottom: 2px;
 }
 
-.searchSuggestionsList::-webkit-scrollbar-thumb {
-    background: rgba(var(--abyss-accent), 0.5);
-    border-radius: var(--abyss-radius);
+.searchSuggestionsList .emby-button {
+    color: rgba(255, 255, 255, 0.72) !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    letter-spacing: -0.005em !important;
+    text-align: left !important;
+    padding: 7px 14px !important;
+    border-radius: 8px !important;
+    display: inline-block !important;
+    transition: background-color 140ms ease, color 140ms ease, transform 120ms cubic-bezier(0.23, 1, 0.32, 1) !important;
 }
 
-.searchSuggestionsList::-webkit-scrollbar-track {
-    background: transparent;
+.searchSuggestionsList .emby-button:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    text-decoration: none !important;
 }
 
 .noItemsMessage.centerMessage {
@@ -4270,13 +4910,6 @@ body:has(#videoOsdPage) .skinHeader .MuiTypography-root.MuiTypography-body1 {
 
 .centerMessage {
     padding: 2em 0 !important;
-}
-
-@media all and (max-width: 50em) {
-    .searchSuggestionsList {
-        min-width: calc(100vw - 80px);
-        padding-left: 44px;
-    }
 }
 
 /* 15. ANIMATIONS, MOTION & MOBILE-NATIVE ERGONOMICS */
