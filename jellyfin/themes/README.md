@@ -10,7 +10,6 @@ The theme for Jellyfin on `CT 121`. It started as NeutralFin 1.3.0 with Jellyfin
 | `neutralfin.min.css` | Build output from `build.py`. This is the file that gets deployed. Commit it with the source. |
 | `build.py` | Minifies `neutralfin.css` into `neutralfin.min.css`. |
 | `deploy.sh` | Builds the theme, copies it into `CT 121` and checks the md5 there. |
-| `jellyfin-lucide.css`, `netflix-hero.js` | Leftovers from earlier versions. Nothing loads them. |
 
 ## How the Theme Reaches Viewers
 
