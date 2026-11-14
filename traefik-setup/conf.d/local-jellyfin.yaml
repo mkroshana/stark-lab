@@ -9,3 +9,15 @@ http:
         - local-only
       tls:
         certResolver: cloudflare
+
+    # Theme stylesheet: revalidate on every load (middleware in jellyfin.yaml)
+    local-jellyfin-theme:
+      rule: "Host(`jellyfin.local.starklab.mkroshana.com`) && PathPrefix(`/web/themes/`)"
+      entryPoints:
+        - websecure
+      service: jellyfin-svc
+      middlewares:
+        - local-only
+        - jellyfin-theme-revalidate
+      tls:
+        certResolver: cloudflare

@@ -46,6 +46,30 @@ http:
         certResolver: cloudflare
       priority: 50
 
+    # -- Theme stylesheet: browsers must revalidate (ETag) on every load --
+    # The NeutralFin theme ships as /web/themes/dark/theme.css with no version
+    # string, so without this browsers keep a stale copy after a deploy.
+    # Longer rule than the main router, so it wins by default priority.
+    jellyfin-theme:
+      rule: "Host(`jellyfin.starklab.mkroshana.com`) && PathPrefix(`/web/themes/`)"
+      entryPoints:
+        - websecure
+      service: jellyfin-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - jellyfin-rate-limit
+        - jellyfin-theme-revalidate
+      tls:
+        certResolver: cloudflare
+
+  middlewares:
+    # Also used by local-jellyfin.yaml. Defined here, not in _shared.yaml,
+    # because this file holds no secrets and can be copied to CT 100 as is.
+    jellyfin-theme-revalidate:
+      headers:
+        customResponseHeaders:
+          Cache-Control: "no-cache"
 
   services:
     jellyfin-svc:
