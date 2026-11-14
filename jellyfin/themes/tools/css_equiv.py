@@ -101,13 +101,37 @@ def flatten(css, ctx=(), out=None):
 
 
 def winners(entries):
+    """(ctx, sel, prop) -> (value, important, source index of the winning declaration)."""
     win = {}
-    for ctx, sel, prop, val, imp in entries:
+    for n, (ctx, sel, prop, val, imp) in enumerate(entries):
         key = (ctx, sel, prop)
         if key in win and win[key][1] and not imp:
             continue  # an earlier !important beats a later normal declaration
-        win[key] = (val, imp)
+        win[key] = (val, imp, n)
     return win
+
+
+def covers(q, p):
+    """Does declaring shorthand q reset longhand p?"""
+    if q == p or p.startswith("--") or q.startswith("--"):
+        return False
+    if q in ("border", "border-top", "border-right", "border-bottom", "border-left") and "radius" in p:
+        return False  # border shorthands do not reset border-radius
+    if q == "inset" and p in ("top", "right", "bottom", "left"):
+        return True
+    if q == "font" and (p.startswith("font-") or p == "line-height"):
+        return True
+    return p.startswith(q + "-")
+
+
+def shadowed(win, key):
+    """Was this declaration already overridden by a shorthand on the same selector?"""
+    ctx, sel, p = key
+    val, imp, n = win[key]
+    for (c2, s2, q), (_, imp2, n2) in win.items():
+        if c2 == ctx and s2 == sel and covers(q, p) and ((imp2 and not imp) or (imp2 == imp and n2 > n)):
+            return q
+    return None
 
 
 def has_dead(sel, dead):
@@ -126,13 +150,18 @@ def main():
 
     removed = [k for k in old if k not in new]
     expected = [k for k in removed if has_dead(k[1], args.dead)]
-    unexpected = [k for k in removed if not has_dead(k[1], args.dead)]
+    covered = [k for k in removed if k not in expected and shadowed(old, k)
+               and (k[0], k[1], shadowed(old, k)) in new]
+    unexpected = [k for k in removed if k not in expected and k not in covered]
     added = [k for k in new if k not in old]
-    changed = [k for k in old if k in new and old[k] != new[k]]
+    changed = [k for k in old if k in new and old[k][:2] != new[k][:2]]
 
     print(f"keys: old {len(old)}, new {len(new)}")
     print(f"removed with a --dead token: {len(expected)} "
           f"({len({k[1] for k in expected})} selectors)")
+    print(f"removed but already overridden by a shorthand on the same selector: {len(covered)}")
+    for k in covered:
+        print(f"   {k[1]} {{ {k[2]} }} <- {shadowed(old, k)}")
     for title, keys, src in (("REMOVED (unexpected)", unexpected, old), ("ADDED", added, new),
                              ("CHANGED", changed, None)):
         print(f"{title}: {len(keys)}")
