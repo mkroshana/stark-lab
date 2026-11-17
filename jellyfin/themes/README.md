@@ -10,6 +10,10 @@ The theme for Jellyfin on `CT 121`. It started as NeutralFin 1.3.0 with Jellyfin
 | `neutralfin.min.css` | Build output from `build.py`. This is the file that gets deployed. Commit it with the source. |
 | `build.py` | Minifies `neutralfin.css` into `neutralfin.min.css`. |
 | `deploy.sh` | Builds the theme, copies it into `CT 121` and checks the md5 there. |
+| `ship.sh` | One-command release: checks everything, asks once, deploys and verifies. See below. |
+| `Ship Jellyfin Theme.cmd` | Double-click wrapper that runs `ship.sh` in Git Bash. |
+| `.env.example` | Template for `.env` (git ignores it), which holds the Jellyfin API key `ship.sh` uses. |
+| `tools/css_equiv.py` | Compares two versions of the theme declaration by declaration. |
 
 ## How the Theme Reaches Viewers
 
@@ -18,6 +22,20 @@ The minified theme replaces Jellyfin's own `/usr/share/jellyfin/web/themes/dark/
 - Dashboard → Branding → Custom CSS is **empty**. Jellyfin skips Branding CSS on the dashboard, and the theme would load twice everywhere else.
 - `index.html` and `main.jellyfin.bundle.js` are **stock**. `dpkg -V jellyfin-web` should list only `theme.css`.
 - Traefik sends `Cache-Control: no-cache` for `/web/themes/` on both Jellyfin hosts (`traefik-setup/conf.d/jellyfin.yaml`), so browsers pick up a new deploy on their next page load. Opening `10.10.10.121:8096` directly skips Traefik, so a browser there may keep the old copy for a while.
+
+## One Command
+
+Double-click `Ship Jellyfin Theme.cmd`, or run `./ship.sh` in Git Bash. It:
+
+1. builds `neutralfin.min.css`;
+2. checks `dpkg -V jellyfin-web` on `CT 121` (only `theme.css` should differ; if `theme.css` itself is stock, a Jellyfin update has reset it);
+3. compares the build with the live `theme.css` and lists what changes (`tools/css_equiv.py`), or stops if they are identical;
+4. lists who is playing something, using the API key in `.env`;
+5. asks once, then runs `deploy.sh --live` and checks that both Traefik hosts serve the new file with `Cache-Control: no-cache`.
+
+`./ship.sh --check` runs steps 1 to 4 and changes nothing. The script never commits; it prints the `git` commands when there is something to commit.
+
+**Setup, once:** in Jellyfin, Dashboard → API Keys → +, then copy `.env.example` to `.env` and paste the key after `JELLYFIN_API_KEY=`. Without it the "who is playing" check is skipped with a warning.
 
 ## Making a Change
 
@@ -34,12 +52,12 @@ Run these from this directory in Git Bash. They need ssh access to `root@10.10.1
    ```
 
    A reload brings back the live theme.
-4. `./deploy.sh --live` replaces `theme.css`. Other people use this server, and they get the change on their next page load.
+4. `./ship.sh` (or `./deploy.sh --live` on its own) replaces `theme.css`. Other people use this server, and they get the change on their next page load.
 5. Commit `neutralfin.css` and `neutralfin.min.css` together.
 
 ## After a Jellyfin Update
 
-A `jellyfin-web` package update puts back the stock `theme.css`, so the stock look returns. Run `./deploy.sh --live` again. It finishes by printing `dpkg -V jellyfin-web`, which should list only `theme.css`.
+A `jellyfin-web` package update puts back the stock `theme.css`, so the stock look returns. Run `./ship.sh` again (it detects the stock file), or `./deploy.sh --live`. Either finishes with `dpkg -V jellyfin-web`, which should list only `theme.css`.
 
 ## Going Back to the Stock Look
 

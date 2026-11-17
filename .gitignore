@@ -1,3 +1,6 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+
+# Jellyfin theme: local API key for ship.sh
+jellyfin/themes/.env
