@@ -203,6 +203,7 @@ Non-personal work workloads migrated to `pve1`. Numbering convention: **`210+`**
 | CT ID | Hostname | OS | Application / Role | Verification / Access | ZFS Rollback Snapshot |
 |---|---|---|---|---|---|
 | **210** | `jpm-n8n` | Debian 13 | JobProMax n8n `2.45.7` (Node 24, migrated from Azure VM; `n8n.jobpromax.it.com`) | Port `5678/healthz` (`200 OK`), Traefik `letsencrypt-http` | `subvol-210-disk-0@pre-jpm-n8n-migrate` |
+| **211** | `arcreach` | Debian 13 | ArcReach (`Next.js 15.5.26`, Node `22.23.5`, PG `16.16`; migrated from Azure; `arcreach.thejobshelpers.com`, `mail.jobpromax.com`) | Port `3000/login` (`200 OK`), Traefik `letsencrypt-http`, nightly `pg_dump` to Unraid | `subvol-211-disk-0@pre-arcreach-migrate` |
 | **310** | `jpm-jobextraction` | Debian 13 | Isolated work tenant (`Tailscale`, `cloudflared`, `vmbr1` `10.99.0.2/24`) | Tailscale SSH / Cloudflare Tunnel (LAN blocked) | `subvol-310-disk-0@initial-clean-state` |
 
 #### Stopped (On-Demand) LXC Containers

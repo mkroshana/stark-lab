@@ -1,0 +1,125 @@
+# ==============================================
+# ArcReach Dynamic Configuration (CT 211)
+# Location: /etc/traefik/conf.d/arcreach.yaml
+#
+# Shared middlewares are in _shared.yaml
+# Default port: 3000
+#
+# Routers are split per hostname so Let's Encrypt HTTP-01 issues and renews
+# independent certificates for arcreach.thejobshelpers.com and mail.jobpromax.com
+# without sharing SANs across brands.
+# ==============================================
+
+http:
+  routers:
+    # -- Main UI & API: arcreach.thejobshelpers.com --
+    arcreach:
+      rule: "Host(`arcreach.thejobshelpers.com`)"
+      entryPoints:
+        - websecure
+      service: arcreach-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - general-rate-limit
+      tls:
+        certResolver: letsencrypt-http
+
+    # -- Strict rate limit on login: arcreach.thejobshelpers.com --
+    arcreach-auth:
+      rule: "Host(`arcreach.thejobshelpers.com`) && PathPrefix(`/api/auth/login`)"
+      entryPoints:
+        - websecure
+      service: arcreach-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - auth-rate-limit
+      tls:
+        certResolver: letsencrypt-http
+      priority: 60
+
+    # -- Email tracking & unsubscribe: arcreach.thejobshelpers.com --
+    # No crowdsec-bouncer and higher burst limit so Gmail proxy, Apple MPP,
+    # and Microsoft SafeLinks bursts are not falsely blocked or throttled.
+    arcreach-public:
+      rule: "Host(`arcreach.thejobshelpers.com`) && (PathPrefix(`/api/track/`) || PathPrefix(`/api/unsubscribe`))"
+      entryPoints:
+        - websecure
+      service: arcreach-svc
+      middlewares:
+        - security-headers
+        - arcreach-public-rate-limit
+      tls:
+        certResolver: letsencrypt-http
+      priority: 50
+
+    # -- Azure Event Grid delivery reports webhook --
+    # Event Grid sends 1 event per POST from Azure IPs; authenticated in-app via
+    # X-ArcReach-Webhook-Secret header.
+    arcreach-webhook:
+      rule: "Host(`arcreach.thejobshelpers.com`) && Path(`/api/webhook`)"
+      entryPoints:
+        - websecure
+      service: arcreach-svc
+      middlewares:
+        - security-headers
+        - arcreach-public-rate-limit
+      tls:
+        certResolver: letsencrypt-http
+      priority: 60
+
+    # -- Main UI & API: mail.jobpromax.com --
+    arcreach-mail:
+      rule: "Host(`mail.jobpromax.com`)"
+      entryPoints:
+        - websecure
+      service: arcreach-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - general-rate-limit
+      tls:
+        certResolver: letsencrypt-http
+
+    # -- Strict rate limit on login: mail.jobpromax.com --
+    arcreach-mail-auth:
+      rule: "Host(`mail.jobpromax.com`) && PathPrefix(`/api/auth/login`)"
+      entryPoints:
+        - websecure
+      service: arcreach-svc
+      middlewares:
+        - crowdsec-bouncer
+        - security-headers
+        - auth-rate-limit
+      tls:
+        certResolver: letsencrypt-http
+      priority: 60
+
+    # -- Email tracking & unsubscribe: mail.jobpromax.com (current APP_URL) --
+    arcreach-mail-public:
+      rule: "Host(`mail.jobpromax.com`) && (PathPrefix(`/api/track/`) || PathPrefix(`/api/unsubscribe`))"
+      entryPoints:
+        - websecure
+      service: arcreach-svc
+      middlewares:
+        - security-headers
+        - arcreach-public-rate-limit
+      tls:
+        certResolver: letsencrypt-http
+      priority: 50
+
+  middlewares:
+    # Generous burst limit for tracking pixels, click links, unsubscribe, and Event Grid
+    arcreach-public-rate-limit:
+      rateLimit:
+        average: 1000
+        period: "1m"
+        burst: 500
+
+  services:
+    arcreach-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.211:3000"
+        passHostHeader: true
