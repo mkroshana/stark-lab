@@ -1,0 +1,31 @@
+# ==============================================
+# Job Extractor Auto-Deploy Webhook (CT 212)
+# Location: /etc/traefik/conf.d/job-extractor-hook.yaml
+#
+# Exposes only POST https://ddns.starklab.mkroshana.com/_hooks/job-extractor-deploy
+# Authenticated via HMAC-SHA256 + 5-min timestamp replay check on CT 212 (:9000).
+# Bypasses CrowdSec so GitHub Actions Azure runner IPs are never false-blocked,
+# guarded by strict auth-rate-limit (5 req/min, burst 3).
+# All other paths on ddns.starklab.mkroshana.com fall through to catch-all (403).
+# ==============================================
+
+http:
+  routers:
+    job-extractor-deploy-hook:
+      rule: "Host(`ddns.starklab.mkroshana.com`) && Path(`/_hooks/job-extractor-deploy`)"
+      entryPoints:
+        - websecure
+      service: job-extractor-deploy-hook-svc
+      middlewares:
+        - security-headers
+        - auth-rate-limit
+      tls:
+        certResolver: cloudflare
+      priority: 70
+
+  services:
+    job-extractor-deploy-hook-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.212:9000"
+        passHostHeader: true
