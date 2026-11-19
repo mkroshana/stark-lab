@@ -69,6 +69,22 @@ http:
         certResolver: letsencrypt-http
       priority: 60
 
+    # -- GitHub Actions authenticated auto-deploy webhook --
+    # HMAC-SHA256 + 5-min timestamp replay check enforced on CT 211 (:9000).
+    # Bypasses CrowdSec so GitHub Actions Azure runner IPs are never false-blocked,
+    # guarded by strict auth-rate-limit (5 req/min, burst 3).
+    arcreach-deploy-hook:
+      rule: "Host(`arcreach.thejobshelpers.com`) && Path(`/_hooks/deploy`)"
+      entryPoints:
+        - websecure
+      service: arcreach-deploy-hook-svc
+      middlewares:
+        - security-headers
+        - auth-rate-limit
+      tls:
+        certResolver: letsencrypt-http
+      priority: 70
+
     # -- Main UI & API: mail.jobpromax.com --
     arcreach-mail:
       rule: "Host(`mail.jobpromax.com`)"
@@ -122,4 +138,10 @@ http:
       loadBalancer:
         servers:
           - url: "http://10.10.10.211:3000"
+        passHostHeader: true
+
+    arcreach-deploy-hook-svc:
+      loadBalancer:
+        servers:
+          - url: "http://10.10.10.211:9000"
         passHostHeader: true
