@@ -459,7 +459,8 @@ curl -sIk --tlsv1.1 --tls-max 1.1 https://jellyfin.starklab.mkroshana.com
 │   ├── plex.yaml
 │   └── homeassistant.yaml
 └── ssl/
-    └── acme.json                      # Let's Encrypt certs (auto-managed)
+    ├── acme.json                      # Let's Encrypt certs via Cloudflare DNS-01 (*.starklab.mkroshana.com)
+    └── acme-http.json                 # Let's Encrypt certs via HTTP-01 (external/work domains)
 
 /etc/systemd/system/traefik.service.d/
 └── env.conf                           # EnvironmentFile=/etc/traefik/.env
@@ -501,7 +502,14 @@ sudo systemctl restart traefik
 
 ## Adding a New Service
 
-See [service_template.md](service_template.md) — just drop a YAML file in `conf.d/` and run `deploy.sh`. **No DNS, no certs, no manual secret handling.**
+See [service_template.md](service_template.md) — just drop a YAML file in `conf.d/` and run `deploy.sh`. **No DNS, no certs, no manual secret handling** for `*.starklab.mkroshana.com`.
+
+### External / Work Domains (Outside `mkroshana.com`)
+
+For work services on separate domains (e.g., JobProMax's `n8n.jobpromax.it.com`), where Traefik's Cloudflare API token only covers `mkroshana.com`:
+1. Use `certResolver: letsencrypt-http` on the public router (HTTP-01 on port 80, stored in `/etc/traefik/ssl/acme-http.json`).
+2. Point the external hostname in DNS as a **DNS-only (grey cloud) `CNAME`** to `ddns.starklab.mkroshana.com` so it tracks the dynamic home IP automatically and lets Let's Encrypt reach port 80 for issuance and renewals.
+3. Add a matching LAN-only route (`local-<service>.yaml`) under `*.local.starklab.mkroshana.com` using `certResolver: cloudflare`, and record both in `D:\Development\service_links.md`.
 
 ---
 

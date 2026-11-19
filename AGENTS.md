@@ -57,7 +57,8 @@ ssh root@10.10.10.31 "pct exec <id> -- /bin/update"
   - **Theme after any Jellyfin update:** the NeutralFin theme lives in `jellyfin-web`'s own `themes/dark/theme.css`, which a package update resets to stock. After updating `CT 121`, run `jellyfin/themes/ship.sh` from this repo (it detects the stock file, asks once and redeploys), or `jellyfin/themes/deploy.sh --live`, and check that `dpkg -V jellyfin-web` lists only that file. See `jellyfin/themes/README.md`.
 - **Built-in Updaters:** Some containers (`CT 117` `radarr`, `CT 118` `sonarr`) use built-in `.NET` updaters; `/bin/update` will either delegate to them or report that the built-in updater should be used.
 - **Home Assistant OS (`VM 150`):** `haos` is a QEMU virtual machine appliance. Its OS, Supervisor, and Core updates are managed exclusively via the Home Assistant Web UI, never via host shell scripts.
-- **jpm-jobextraction (`CT 310`) Caution:** `CT 310` is an isolated tenant container on `vmbr1` (`10.99.0.0/24`) with no Community Script `/bin/update` entrypoint; do not modify or update it during estate updates unless explicitly requested.
+- **jpm-n8n (`CT 210`, Work — JobProMax):** Migrated from Azure VM (`n8n`, `20.171.25.77`) on 2026-11-19. Runs n8n natively with `/opt/n8n.env` (`N8N_USER_FOLDER=/root`, `N8N_PROXY_HOPS=1`, `N8N_SECURE_COOKIE=true`, `n8n.jobpromax.it.com`). `/bin/update` preserves `/opt/n8n.env`. Publicly routed through CT 100 Traefik via `letsencrypt-http` (HTTP-01, `/etc/traefik/ssl/acme-http.json`) and CNAME → `ddns.starklab.mkroshana.com` (DNS-only). Pre-migration Azure archive saved on `pve1` at `/root/backups/azure-n8n-2026-11-19.tar.gz`.
+- **jpm-jobextraction (`CT 310`, Work — JobProMax) Caution:** `CT 310` is an isolated work tenant container on `vmbr1` (`10.99.0.0/24`) with no Community Script `/bin/update` entrypoint; do not modify or update it during estate updates unless explicitly requested.
 
 ## 4. Base OS Upgrade & Cache Cleanup
 Community Script `update` often only updates the target application binary. Always follow up with a non-interactive Debian/Ubuntu `dist-upgrade` and cache purge so `dpkg` conffile prompts never hang the session:
@@ -100,9 +101,16 @@ Verify rather than assert:
 | `130` | `traefik-manager` | Debian 13 | Traefik Manager `1.15.5` (Docker `29.9.3`) | `5000` (`302 Redirect`) | `subvol-130-disk-0@pre-traefik-manager-update` |
 | `200` | `hermesagent` | Debian 13 | Hermes Agent `v0.22.5+3003.gef35e8b` | `9119` (`302 Found`), Gateway `8642` | `subvol-200-disk-0@pre-hermesagent-update` |
 | `201` | `n8n` | Debian 13 | n8n `2.45.7` (Node 24, npm `12.2.1`) | `5678/healthz` (`200 OK`) | `subvol-201-disk-0@pre-n8n-update` |
-| `210` | `jpm-n8n` | Debian 13 | JobProMax n8n `2.45.7` (Node 24, npm `12.2.1`, `n8n.jobpromax.it.com`) | `5678/healthz` (`200 OK`) | `subvol-210-disk-0@pre-jpm-n8n-migrate` |
-| `310` | `jpm-jobextraction` | Debian 13 | Isolated tenant (`Tailscale 1.104.7`, `cloudflared`, `vmbr1` `10.99.0.2/24`) | Tailscale SSH / Cloudflare Tunnel | `subvol-310-disk-0@initial-clean-state` |
 
+### Work / Commercial LXC Containers (JobProMax & TheJobsHelpers)
+Non-personal work workloads hosted on `pve1`. Numbering convention: **`210+`** (`10.10.10.21x` on `vmbr0`, CT ID == last IP octet) for self-managed work services behind Traefik; **`310+`** (`10.99.0.x` on isolated `vmbr1`) for friend/tenant-accessed work containers.
+
+| CT ID | Hostname | OS | Baseline Application Version | Local Port / Check | ZFS Snapshot |
+|---|---|---|---|---|---|
+| `210` | `jpm-n8n` | Debian 13 | JobProMax n8n `2.45.7` (Node 24, npm `12.2.1`, public `n8n.jobpromax.it.com`, LAN `jpm-n8n.local.starklab.mkroshana.com`) | `5678/healthz` (`200 OK`) | `subvol-210-disk-0@pre-jpm-n8n-migrate` |
+| `310` | `jpm-jobextraction` | Debian 13 | Isolated work tenant (`Tailscale 1.104.7`, `cloudflared`, `vmbr1` `10.99.0.2/24`) | Tailscale SSH / Cloudflare Tunnel | `subvol-310-disk-0@initial-clean-state` |
+
+- **External / Work Domain TLS (`CT 100` Traefik):** Domains outside `mkroshana.com` (e.g., `n8n.jobpromax.it.com`) use the `letsencrypt-http` ACME HTTP-01 resolver on port 80 (stored separately in `/etc/traefik/ssl/acme-http.json`) with a DNS-only `CNAME` to `ddns.starklab.mkroshana.com`.
 - **Isolated Bridge (`vmbr1`):** `10.99.0.1/24` on `pve1`, configured via `/etc/network/interfaces.d/vmbr1-isolated`, `/usr/local/sbin/vmbr1-firewall.sh`, and `/etc/sysctl.d/95-isolated-bridge.conf` (NAT egress via `vmbr0`; LAN, CGNAT, link-local, multicast, IPv6, and host input blocked).
 
 ## Stopped (On-Demand) LXC Containers

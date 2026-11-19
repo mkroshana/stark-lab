@@ -13,7 +13,7 @@ A highly secure reverse proxy architecture built with **Traefik v3**. Designed t
 ## ✨ Key Features
 
 - **Traefik v3 (Native Install):** High-performance routing using the robust File Provider architecture.
-- **Automated Wildcard SSL:** Utilizes Let's Encrypt and the Cloudflare DNS-01 challenge to automatically provision and renew wildcard certificates (`*.yourdomain.com`) without exposing Port 80 to the internet.
+- **Automated SSL (Dual Resolvers):** Uses Let's Encrypt with Cloudflare DNS-01 for wildcard homelab certificates (`*.starklab.mkroshana.com` in `acme.json`), plus a separate HTTP-01 resolver (`letsencrypt-http` in `acme-http.json`) for external work domains outside `mkroshana.com` (e.g., `n8n.jobpromax.it.com`).
 - **CrowdSec Integration:** Built-in CrowdSec bouncer middleware to actively block malicious IPs and known threats in real-time.
 - **Defense-in-Depth Security:**
   - Strict security headers (HSTS, XSS protection, Frame Deny).
@@ -120,7 +120,7 @@ To expose a new homelab service:
 
 - **Zero-Trust LAN:** Even internal setups use strict routing. Services like the Traefik Dashboard and internal APIs use the `block-external` middleware to reject traffic originating outside the local subnets (`10.x.x.x`, `192.168.x.x`).
 - **Hairpin NAT:** Ensure your home router supports Hairpin NAT (NAT Loopback) so internal requests to your public domain dynamically loop back to Traefik.
-- **Port Forwarding:** Only forward Port `443` to your Traefik server. Port `80` is not required due to the DNS-01 verification method used by Let's Encrypt.
+- **Port Forwarding:** Forward Ports `80` and `443` to your Traefik server (`10.10.10.100`). Port `80` handles HTTP → HTTPS redirects and Let's Encrypt HTTP-01 challenges for external work domains (`letsencrypt-http`).
 
 
 ---
@@ -195,6 +195,15 @@ Each container and host update is executed sequentially (one guest at a time):
 | **118** | `sonarr` | Debian 12 | Sonarr `4.0.19.2979` | Port `8989` (`200 OK`) | `subvol-118-disk-0@pre-sonarr-update` |
 | **119** | `seerr` | Debian 12 | Seerr `3.4.1` (Node 22, pnpm 10) | Port `5055` (`307 Redirect`) | `subvol-119-disk-0@pre-seerr-update` |
 | **121** | `jellyfin` | Ubuntu 24.04 | Jellyfin `12.0.0` | Port `8096` (`200 OK`) | `subvol-121-disk-0@pre-jellyfin-12` |
+
+#### Work / Commercial LXC Containers (JobProMax & TheJobsHelpers)
+
+Non-personal work workloads migrated to `pve1`. Numbering convention: **`210+`** (`10.10.10.21x` on `vmbr0`) for self-managed work services behind Traefik; **`310+`** (`10.99.0.x` on isolated `vmbr1`) for friend/tenant-accessed work containers.
+
+| CT ID | Hostname | OS | Application / Role | Verification / Access | ZFS Rollback Snapshot |
+|---|---|---|---|---|---|
+| **210** | `jpm-n8n` | Debian 13 | JobProMax n8n `2.45.7` (Node 24, migrated from Azure VM; `n8n.jobpromax.it.com`) | Port `5678/healthz` (`200 OK`), Traefik `letsencrypt-http` | `subvol-210-disk-0@pre-jpm-n8n-migrate` |
+| **310** | `jpm-jobextraction` | Debian 13 | Isolated work tenant (`Tailscale`, `cloudflared`, `vmbr1` `10.99.0.2/24`) | Tailscale SSH / Cloudflare Tunnel (LAN blocked) | `subvol-310-disk-0@initial-clean-state` |
 
 #### Stopped (On-Demand) LXC Containers
 
