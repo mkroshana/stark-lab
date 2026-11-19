@@ -1,0 +1,16 @@
+# ==============================================
+# Local JobProMax n8n Dynamic Configuration (CT 210)
+# Location: /etc/traefik/conf.d/local-jpm-n8n.yaml
+# ==============================================
+
+http:
+  routers:
+    local-jpm-n8n:
+      rule: "Host(`jpm-n8n.local.starklab.mkroshana.com`)"
+      entryPoints:
+        - websecure
+      service: jpm-n8n-svc
+      middlewares:
+        - local-iframe-only
+      tls:
+        certResolver: cloudflare

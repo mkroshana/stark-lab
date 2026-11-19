@@ -35,8 +35,9 @@ entryPoints:
   traefik:
     address: ":8080"
 
-# -- Certificate Resolvers (Let's Encrypt via Cloudflare DNS-01) --
-# NO PORT 80 NEEDED — uses Cloudflare API for domain verification
+# -- Certificate Resolvers --
+# cloudflare: DNS-01 for *.starklab.mkroshana.com (mkroshana.com zone)
+# letsencrypt-http: HTTP-01 via port 80 for external domains (e.g. jobpromax.it.com)
 certificatesResolvers:
   cloudflare:
     acme:
@@ -50,6 +51,12 @@ certificatesResolvers:
           - "8.8.8.8:53"
         propagation:
           delayBeforeChecks: "10s"
+  letsencrypt-http:
+    acme:
+      email: ${ACME_EMAIL}
+      storage: /etc/traefik/ssl/acme-http.json
+      httpChallenge:
+        entryPoint: web
 
 # -- API / Dashboard --
 api:

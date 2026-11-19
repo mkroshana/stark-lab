@@ -154,6 +154,7 @@ sudo chown root:root "${DEPLOY_DIR}/.env"
 sudo chmod 644 "${DEPLOY_DIR}/traefik.yaml"
 sudo chmod 644 "${DEPLOY_DIR}"/conf.d/*.yaml
 sudo chmod 600 "${DEPLOY_DIR}/ssl/acme.json" 2>/dev/null || true
+sudo chmod 600 "${DEPLOY_DIR}/ssl/acme-http.json" 2>/dev/null || true
 
 # --- Create/Update systemd Environment Override ---
 log_info "Setting up systemd EnvironmentFile and WorkingDirectory for Traefik..."
