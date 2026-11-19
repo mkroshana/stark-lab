@@ -198,13 +198,13 @@ Each container and host update is executed sequentially (one guest at a time):
 
 #### Work / Commercial LXC Containers (JobProMax & TheJobsHelpers)
 
-Non-personal work workloads migrated to `pve1`. Numbering convention: **`210+`** (`10.10.10.21x` on `vmbr0`) for self-managed work services behind Traefik; **`310+`** (`10.99.0.x` on isolated `vmbr1`) for friend/tenant-accessed work containers.
+Non-personal work workloads migrated to `pve1`. Numbering convention: **`210+`** (`10.10.10.21x` on `vmbr0`) for self-managed work services.
 
 | CT ID | Hostname | OS | Application / Role | Verification / Access | ZFS Rollback Snapshot |
 |---|---|---|---|---|---|
 | **210** | `jpm-n8n` | Debian 13 | JobProMax n8n `2.45.7` (Node 24, migrated from Azure VM; `n8n.jobpromax.it.com`) | Port `5678/healthz` (`200 OK`), Traefik `letsencrypt-http` | `subvol-210-disk-0@pre-jpm-n8n-migrate` |
-| **211** | `arcreach` | Debian 13 | ArcReach (`Next.js 15.5.26`, Node `22.23.5`, PG `16.16`; migrated from Azure; `arcreach.thejobshelpers.com`, `mail.jobpromax.com`) | Port `3000/login` (`200 OK`), Traefik `letsencrypt-http`, nightly `pg_dump` to Unraid | `subvol-211-disk-0@pre-arcreach-migrate` |
-| **310** | `jpm-jobextraction` | Debian 13 | Isolated work tenant (`Tailscale`, `cloudflared`, `vmbr1` `10.99.0.2/24`) | Tailscale SSH / Cloudflare Tunnel (LAN blocked) | `subvol-310-disk-0@initial-clean-state` |
+| **211** | `jpm-mail` | Debian 13 | ArcReach (`Next.js 15.5.26`, Node `22.23.5`, PG `16.16`; migrated from Azure; `arcreach.thejobshelpers.com`, `mail.jobpromax.com`) | Port `3000/login` (`200 OK`), Traefik `letsencrypt-http`, nightly `pg_dump` to Unraid | `subvol-211-disk-0@pre-arcreach-migrate` |
+| **212** | `job-extractor` | Ubuntu 24.04 | Job Extractor (`Python 3.12.3`, `spacy 3.7.2`, Grafana Alloy `1.22.0`; migrated from Azure VM; outbound cron `0 2 * * *` UTC) | `alloy` `:12345/-/ready` (`200 OK`), `cron` active, deploy via `/usr/local/bin/job-extractor-deploy` | `subvol-212-disk-0@pre-job-extractor-migrate` |
 
 #### Stopped (On-Demand) LXC Containers
 
