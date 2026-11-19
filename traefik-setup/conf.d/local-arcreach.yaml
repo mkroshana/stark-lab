@@ -6,7 +6,7 @@
 http:
   routers:
     local-arcreach:
-      rule: "Host(`arcreach.local.starklab.mkroshana.com`)"
+      rule: "Host(`jpm-mail.local.starklab.mkroshana.com`) || Host(`arcreach.local.starklab.mkroshana.com`)"
       entryPoints:
         - websecure
       service: local-arcreach-svc
