@@ -1,0 +1,12 @@
+# Installed at /etc/systemd/system/ct213-fstrim.timer on pve1.
+# Sunday 04:30, clear of Unraid's 02:30 LeadData snapshot, 03:00 monthly
+# scrub, 03:40 mover and the 06:00 vzdump job.
+[Unit]
+Description=Weekly trim of CT 213 data disks
+
+[Timer]
+OnCalendar=Sun *-*-* 04:30:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

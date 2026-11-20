@@ -1,0 +1,14 @@
+# Installed at /etc/systemd/system/ct213-fstrim.service on pve1.
+# Trims CT 213's data disks (raw images on Unraid NFS storage LeadData) so
+# space freed inside the container is released on spinning-disks/LeadData.
+# Verified 2026-11-20: a 1 GiB file written, deleted and trimmed returned
+# LeadData to its exact previous size. The rootfs line "discard operation
+# is not supported" is expected (ZFS subvolume) and pct still exits 0.
+[Unit]
+Description=Trim CT 213 data disks so freed space returns to Unraid LeadData
+After=pve-guests.service
+
+[Service]
+Type=oneshot
+ExecCondition=/bin/sh -c 'pct status 213 | grep -q running'
+ExecStart=/usr/sbin/pct fstrim 213

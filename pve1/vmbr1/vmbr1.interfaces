@@ -1,0 +1,13 @@
+# Isolated bridge for untrusted guests (CT 213 thejobhelpers-vps).
+# Installed at /etc/network/interfaces.d/vmbr1. No physical port: guests
+# reach the internet only through NAT on pve1, filtered by
+# /etc/network/vmbr1-isolation.nft.
+auto vmbr1
+iface vmbr1 inet static
+	address 10.99.0.1/24
+	bridge-ports none
+	bridge-stp off
+	bridge-fd 0
+	post-up /usr/sbin/sysctl -qw net.ipv6.conf.vmbr1.disable_ipv6=1
+	post-up /usr/sbin/nft -f /etc/network/vmbr1-isolation.nft
+	post-down /usr/sbin/nft delete table inet vmbr1_iso || true

@@ -1,0 +1,58 @@
+#!/usr/sbin/nft -f
+# Isolation and NAT for vmbr1 (10.99.0.0/24) on pve1.
+# Installed at /etc/network/vmbr1-isolation.nft and loaded by the vmbr1
+# post-up hook in /etc/network/interfaces.d/vmbr1.
+#
+# Every rule matches vmbr1 only, so vmbr0 traffic is never touched.
+# Guests on vmbr1 get the internet and nothing else: no LAN, no pve1,
+# no Tailscale CGNAT range, no IPv6.
+
+table inet vmbr1_iso
+delete table inet vmbr1_iso
+
+table inet vmbr1_iso {
+	set blocked4 {
+		type ipv4_addr
+		flags interval
+		elements = {
+			0.0.0.0/8,
+			10.0.0.0/8,
+			100.64.0.0/10,
+			127.0.0.0/8,
+			169.254.0.0/16,
+			172.16.0.0/12,
+			192.0.0.0/24,
+			192.168.0.0/16,
+			198.18.0.0/15,
+			224.0.0.0/4,
+			240.0.0.0/4,
+		}
+	}
+
+	# Guests may not open anything on pve1 itself. Replies to sessions
+	# pve1 opened (ssh -J root@pve1 ... 10.99.0.213) are allowed.
+	chain input {
+		type filter hook input priority filter - 5; policy accept;
+		iifname "vmbr1" ct state established,related accept
+		iifname "vmbr1" counter drop
+	}
+
+	chain forward {
+		type filter hook forward priority filter - 5; policy accept;
+
+		# Inbound to guests: replies only.
+		oifname "vmbr1" ct state established,related accept
+		oifname "vmbr1" counter drop
+
+		# Outbound from guests: public IPv4 via vmbr0 only.
+		iifname "vmbr1" meta nfproto ipv6 counter drop
+		iifname "vmbr1" ip daddr @blocked4 counter drop
+		iifname "vmbr1" oifname "vmbr0" accept
+		iifname "vmbr1" counter drop
+	}
+
+	chain postrouting {
+		type nat hook postrouting priority srcnat; policy accept;
+		ip saddr 10.99.0.0/24 oifname "vmbr0" masquerade
+	}
+}

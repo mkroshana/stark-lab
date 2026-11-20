@@ -1,0 +1,13 @@
+# Installed at /etc/systemd/system/ct213-wait-start.service on pve1.
+[Unit]
+Description=Start CT 213 once the LeadData NFS storage is available
+Wants=network-online.target
+After=network-online.target pve-guests.service pve-storage.target
+
+[Service]
+# simple, not oneshot, so up to 30 minutes of waiting never holds up boot
+Type=simple
+ExecStart=/usr/local/sbin/ct213-wait-start.sh
+
+[Install]
+WantedBy=multi-user.target

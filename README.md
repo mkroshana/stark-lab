@@ -198,13 +198,14 @@ Each container and host update is executed sequentially (one guest at a time):
 
 #### Work / Commercial LXC Containers (JobProMax & TheJobsHelpers)
 
-Non-personal work workloads migrated to `pve1`. Numbering convention: **`210+`** (`10.10.10.21x` on `vmbr0`) for self-managed work services.
+Non-personal work workloads migrated to `pve1`. Numbering convention: **`210+`** (`10.10.10.21x` on `vmbr0`) for self-managed work services. Exception: **213** sits on the isolated bridge `vmbr1` (`10.99.0.0/24`, internet only; config in `pve1/vmbr1/`).
 
 | CT ID | Hostname | OS | Application / Role | Verification / Access | ZFS Rollback Snapshot |
 |---|---|---|---|---|---|
 | **210** | `jpm-n8n` | Debian 13 | JobProMax n8n `2.45.7` (Node 24, migrated from Azure VM; `n8n.jobpromax.it.com`) | Port `5678/healthz` (`200 OK`), Traefik `letsencrypt-http` | `subvol-210-disk-0@pre-jpm-n8n-migrate` |
 | **211** | `jpm-mail` | Debian 13 | ArcReach (`Next.js 15.5.26`, Node `22.23.5`, PG `16.16`; migrated from Azure; `arcreach.thejobshelpers.com`, `mail.jobpromax.com`) | Port `3000/login` (`200 OK`), Traefik `letsencrypt-http`, nightly `pg_dump` to Unraid | `subvol-211-disk-0@pre-arcreach-migrate` |
 | **212** | `job-extractor` | Ubuntu 24.04 | Job Extractor (`Python 3.12.3`, `spacy 3.7.2`; migrated from Azure VM; outbound cron `0 2 * * *` UTC) | `cron` active, CI deploy webhook `:9000` (`/_hooks/job-extractor-deploy`) | `subvol-212-disk-0@pre-job-extractor-migrate` |
+| **213** | `thejobhelpers-vps` | Ubuntu 22.04 | TheJobHelpers lead extraction (PG `14.24`, Docker `29.1.3` Qdrant; migrated from Azure VM; isolated on `vmbr1` `10.99.0.213`, data disks on Unraid `LeadData`) | `pg_lsclusters` online, Qdrant `6333/collections` (`200 OK`); started by `ct213-wait-start.service` | `subvol-213-disk-0@post-tjh-migrate` |
 
 #### Stopped (On-Demand) LXC Containers
 
