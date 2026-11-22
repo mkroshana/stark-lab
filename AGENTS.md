@@ -174,3 +174,17 @@ Two NFS-related outages led to these changes. On 2026-11-11 the host wedged: a l
 - **Short outages:** cuts shorter than 3 min now pass with nothing shutting down. If mains returns after `pve1` has shut down but before the UPS battery runs out, the UPS never drops power, so `pve1` stays off until powered on by hand. Unraid's "Turn off UPS after shutdown" (currently off) would make both machines boot themselves when mains returns.
 - **Unraid pool:** `spinning-disks` (2-disk raidz1) is 94% full, 889 GB free of 14.5 TB. Downloads and Movies live on it, and ZFS writes slow down sharply above about 90%. qBittorrent removes a torrent and its files at ratio 1, with no seeding-time limit.
 
+## Health-Check Fixes (Changed 2026-11-22)
+Found in the 2026-11-21 health check after the Azure migrations. Keep them through updates.
+
+| Where | Change | Reason | Undo |
+|---|---|---|---|
+| `113` `flaresolverr` | Memory `3072` MB (was `2048`; swap `512` unchanged) | Each request opens its own Chromium, held for the full 60 s while a Cloudflare challenge fails. Overlapping `uindex.org` requests hit the 2 GiB limit 1,383 times from 2026-11-20, and Chromium was OOM-killed on 2026-11-21 at 21:57 | `pct set 113 -memory 2048` |
+| `pve1` | `/etc/zfs/zpool.cache` rebuilt from the live pool (`zpool set cachefile=/etc/zfs/zpool.cache rpool`); lists only `rpool` | It still listed `localshare`, a pool on a HGST 500 GB laptop drive (`ata-HGST_HTS725050A7E630`) removed without `zpool export`, so `zfs-import-cache.service` failed at every boot | `/etc/zfs/zpool.cache.bak-2026-11-22`; snapshot `rpool/ROOT/pve-1@pre-zpool-cache-fix` |
+| `210` `jpm-n8n`, `211` `jpm-mail` | `systemd-networkd.socket` and `systemd-networkd.service` disabled (`systemd-network-generator` with them) | ifupdown (`/etc/network/interfaces`) runs `eth0`. networkd managed no links, so `apt-daily` waited 30 s on `systemd-networkd-wait-online` and logged a timeout about 3 times a day | `pct exec <id> -- systemctl enable --now systemd-networkd.socket systemd-networkd.service systemd-network-generator.service`; snapshot `subvol-<id>-disk-0@pre-networkd-disable` |
+
+- **Initramfs:** the boot image still holds the old cache file. This is harmless, because it imports only `rpool`, by name (`root=ZFS=rpool/ROOT/pve-1`). It was not rebuilt by hand, so the ESP is untouched; the next kernel or ZFS update rebuilds it with the clean file.
+- **If the HGST drive comes back:** `localshare` no longer imports at boot. Run `zpool import localshare` once to add it back to the cache.
+- **Other Debian 13 CTs:** `100`–`119`, `130`, `200` and `201` have the same networkd/ifupdown overlap and apt timeouts, and are unchanged. `121`, `212` and `213` are run by networkd and are fine. `103` and `130` have extra interfaces; check them before applying the change there.
+- **Not yet verified:** a reboot of `pve1` (expect `systemctl --failed` to be empty) and of `210`/`211` (expect networkd to stay inactive). For CT 113, `memory.events` `max` was 1,383 at the change; if it stops climbing, the fix held.
+
